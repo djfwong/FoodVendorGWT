@@ -12,7 +12,9 @@ Sneaky_Xpress.iml
 # GWT files/folders
 gwt-unitCache/
 out/
+test-classes/
 war/WEB-INF/classes/com/
 war/WEB-INF/deploy/
 *.cache.html
 *.nocache.js
+.gwt/
