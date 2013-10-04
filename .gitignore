@@ -1,0 +1,11 @@
+# OS files
+.DS_Store
+._*
+
+# IDE files/folders
+.classpath
+.project
+.settings/
+
+# GWT files/folders
+gwt-unitCache/
