@@ -5,20 +5,20 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.sneakyxpress.webapp.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/sneaky_xpress/greet</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>Sneaky_Xpress.html</welcome-file>
-  </welcome-file-list>
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.GreetingServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
+        <url-pattern>/sneaky_xpress/greet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>Sneaky_Xpress.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>
