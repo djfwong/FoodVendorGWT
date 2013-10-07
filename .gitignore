@@ -19,3 +19,9 @@ war/WEB-INF/deploy/
 *.nocache.js
 .gwt/
 
+# Bootstrap folders
+war/sneaky_xpress/css/
+war/sneaky_xpress/font/
+war/sneaky_xpress/img/
+war/sneaky_xpress/js/
+war/sneaky_xpress/prettify/
