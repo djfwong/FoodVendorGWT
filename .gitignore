@@ -3,8 +3,8 @@
 ._*
 
 # IDE files/folders
-.classpath
-.project
+#.classpath
+#.project
 .settings/
 .idea/
 Sneaky_Xpress.iml
