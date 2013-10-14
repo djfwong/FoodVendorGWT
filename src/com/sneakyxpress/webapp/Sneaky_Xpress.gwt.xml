@@ -19,6 +19,7 @@
   <inherits name ="com.github.gwtbootstrap.Bootstrap"/>
 
   <!-- Other module inherits                                      -->
+  <inherits name="com.google.gwt.logging.Logging"/>
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.sneakyxpress.webapp.client.Sneaky_Xpress'/>
