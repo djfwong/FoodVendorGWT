@@ -10,10 +10,18 @@
         <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
         <servlet-class>com.sneakyxpress.webapp.server.GreetingServiceImpl</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
         <url-pattern>/sneaky_xpress/greet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>browseVendorsServiceImpl</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>browseVendorsServiceImpl</servlet-name>
+        <url-pattern>/sneaky_xpress/BrowseVendors</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serve -->
