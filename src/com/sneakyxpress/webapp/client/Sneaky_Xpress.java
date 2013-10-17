@@ -4,8 +4,11 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -42,6 +45,7 @@ public class Sneaky_Xpress implements EntryPoint {
                 RootPanel content = RootPanel.get("content");
                 content.clear();
                 content.add(page.getHTML(""));
+                History.newItem(page.getPageStub());
             }
         }
 
@@ -67,5 +71,31 @@ public class Sneaky_Xpress implements EntryPoint {
             listElement.add(pageLink);
             navbarList.add(listElement);
         }
+
+        // Implements history support
+        History.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String historyToken = event.getValue();
+
+                // Clear the page
+                RootPanel content = RootPanel.get("content");
+                content.clear();
+
+                // Parse the history token
+                boolean foundPage = false;
+                for (Content page : PAGES) {
+                    if (page.getPageStub().equals(historyToken)) {
+                        content.add(page.getHTML(""));
+                        foundPage = true;
+                        break;
+                    }
+                }
+
+                if (!foundPage) {
+                    content.add(HOME_PAGE.getHTML(""));
+                }
+            }
+        });
     }
 }

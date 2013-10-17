@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.HTML;
  */
 public class GreetingContent implements Content {
     private static final String pageName = "Vancouver Food Vendor Reviews";
+    private static final String pageStub = "home";
+
     private final GreetingServiceAsync greetingService = GWT
             .create(GreetingService.class);
 
@@ -18,13 +20,18 @@ public class GreetingContent implements Content {
     }
 
     @Override
+    public String getPageStub() {
+        return pageStub;
+    }
+
+    @Override
     public HTML getHTML(String input) {
         final HTML content = new HTML();
 
         greetingService.greetServer(input,
             new AsyncCallback<String>() {
                 public void onFailure(Throwable caught) {
-                    content.setHTML("<p>Loading failed! Please try again.</p>");
+                    content.setHTML(GENERIC_ERROR_MESSAGE);
                 }
 
                 public void onSuccess(String result) {

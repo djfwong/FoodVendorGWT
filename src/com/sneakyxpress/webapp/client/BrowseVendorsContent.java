@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.HTML;
  */
 public class BrowseVendorsContent implements Content {
     private static final String pageName = "Browse Vendors";
+    private static final String pageStub = "vendors";
+
     private final BrowseVendorsServiceAsync browseVendorsService = GWT
             .create(BrowseVendorsService.class);
 
@@ -18,13 +20,18 @@ public class BrowseVendorsContent implements Content {
     }
 
     @Override
+    public String getPageStub() {
+        return pageStub;
+    }
+
+    @Override
     public HTML getHTML(String input) {
         final HTML content = new HTML();
 
         browseVendorsService.browseVendorsServer(input,
             new AsyncCallback<String>() {
                 public void onFailure(Throwable caught) {
-                    content.setHTML("<p>Loading failed! Please try again.</p>");
+                    content.setHTML(GENERIC_ERROR_MESSAGE);
                 }
 
                 public void onSuccess(String result) {
