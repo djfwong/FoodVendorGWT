@@ -4,6 +4,8 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -13,26 +15,16 @@ import com.google.gwt.user.client.ui.RootPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Sneaky_Xpress implements EntryPoint {
-	/**
-	 * The message displayed to the user when the server cannot be reached or
-	 * returns an error.
-	 */
-	private static final HTML SERVER_ERROR = new HTML("<p>An error occurred while "
-			+ "attempting to contact the server. Please check your network "
-			+ "connection and try again.</p>");
-
-	/**
-	 * Create a remote service proxies to talk to the server-side services.
-	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
-
+    /**
+     * The pages to be shown in the navigation bar
+     */
+    private static final Content HOME_PAGE = new GreetingContent();
     private static final Content[] PAGES = new Content[] {
         new BrowseVendorsContent()
     };
 
 	/**
-	 * This is the entry point method.
+	 * This is the entry point method
 	 */
 	public void onModuleLoad() {
         /**
@@ -52,6 +44,17 @@ public class Sneaky_Xpress implements EntryPoint {
                 content.add(page.getHTML(""));
             }
         }
+
+        // Create the brand/title in the navigation bar
+        Anchor brandLink = new Anchor(HOME_PAGE.getPageName());
+        brandLink.addClickHandler(new NavbarClickHandler(HOME_PAGE));
+        brandLink.addStyleName("brand");
+        RootPanel.get("brand").add(brandLink);
+
+        // Load the homepage
+        RootPanel content = RootPanel.get("content");
+        content.clear();
+        content.add(HOME_PAGE.getHTML(""));
 
         // Create the navigation bar
         RootPanel navbarList = RootPanel.get("navigation-bar");
