@@ -26,6 +26,15 @@ public class Sneaky_Xpress implements EntryPoint {
         new BrowseVendorsContent()
     };
 
+    /**
+     * Changes the contents of the page to the specified Content
+     */
+    private void changeContent(Content content) {
+        RootPanel body = RootPanel.get("content");
+        body.clear();
+        body.add(content.getHTML(""));
+    }
+
 	/**
 	 * This is the entry point method
 	 */
@@ -42,9 +51,7 @@ public class Sneaky_Xpress implements EntryPoint {
 
             @Override
             public void onClick(ClickEvent event) {
-                RootPanel content = RootPanel.get("content");
-                content.clear();
-                content.add(page.getHTML(""));
+                changeContent(page);
                 History.newItem(page.getPageStub());
             }
         }
@@ -56,9 +63,7 @@ public class Sneaky_Xpress implements EntryPoint {
         RootPanel.get("brand").add(brandLink);
 
         // Load the homepage
-        RootPanel content = RootPanel.get("content");
-        content.clear();
-        content.add(HOME_PAGE.getHTML(""));
+        changeContent(HOME_PAGE);
 
         // Create the navigation bar
         RootPanel navbarList = RootPanel.get("navigation-bar");
@@ -78,22 +83,19 @@ public class Sneaky_Xpress implements EntryPoint {
             public void onValueChange(ValueChangeEvent<String> event) {
                 String historyToken = event.getValue();
 
-                // Clear the page
-                RootPanel content = RootPanel.get("content");
-                content.clear();
-
                 // Parse the history token
                 boolean foundPage = false;
                 for (Content page : PAGES) {
                     if (page.getPageStub().equals(historyToken)) {
-                        content.add(page.getHTML(""));
+                        changeContent(page);
                         foundPage = true;
                         break;
                     }
                 }
 
+                // By default return to the home page
                 if (!foundPage) {
-                    content.add(HOME_PAGE.getHTML(""));
+                    changeContent(HOME_PAGE);
                 }
             }
         });
