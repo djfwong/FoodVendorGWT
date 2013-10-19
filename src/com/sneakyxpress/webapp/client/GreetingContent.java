@@ -11,8 +11,7 @@ public class GreetingContent implements Content {
     private static final String pageName = "Vancouver Food Vendor Reviews";
     private static final String pageStub = "home";
 
-    private final GreetingServiceAsync greetingService = GWT
-            .create(GreetingService.class);
+    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
     @Override
     public String getPageName() {

@@ -11,8 +11,7 @@ public class BrowseVendorsContent implements Content {
     private static final String pageName = "Browse Vendors";
     private static final String pageStub = "vendors";
 
-    private final BrowseVendorsServiceAsync browseVendorsService = GWT
-            .create(BrowseVendorsService.class);
+    private final BrowseVendorsServiceAsync browseVendorsService = GWT.create(BrowseVendorsService.class);
 
     @Override
     public String getPageName() {

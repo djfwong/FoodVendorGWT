@@ -1,13 +1,10 @@
 package com.sneakyxpress.webapp.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
@@ -33,6 +30,18 @@ public class Sneaky_Xpress implements EntryPoint {
         RootPanel body = RootPanel.get("content");
         body.clear();
         body.add(content.getHTML(""));
+    }
+
+    /**
+     * Adds a message to the top of the page (user can close it)
+     */
+    private void addMessage(String info) {
+        RootPanel messages = RootPanel.get("messages");
+        HTML alert = new HTML("<div class=\"alert alert-dismissable alert-danger fade in\">"
+                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
+                + "&times;</button><i class=\"icon-exclamation-sign\"></i> "
+                + "<strong>Warning!</strong> " + info + "</div>");
+        messages.add(alert);
     }
 
 	/**

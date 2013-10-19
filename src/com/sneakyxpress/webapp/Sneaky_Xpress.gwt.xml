@@ -8,6 +8,7 @@
 <module rename-to="sneaky_xpress">
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name="com.google.gwt.user.User"/>
+  <inherits name="com.google.gwt.logging.Logging"/>
 
   <!-- Use bootstrap styling                                      -->
   <inherits name ="com.github.gwtbootstrap.Bootstrap"/>
