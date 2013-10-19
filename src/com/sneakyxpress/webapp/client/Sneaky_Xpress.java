@@ -10,11 +10,16 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Sneaky_Xpress implements EntryPoint {
+    // Our logger
+    private static Logger logger = Logger.getLogger("");
+
     /**
      * The pages to be shown in the navigation bar
      */
@@ -30,6 +35,7 @@ public class Sneaky_Xpress implements EntryPoint {
         RootPanel body = RootPanel.get("content");
         body.clear();
         body.add(content.getHTML(""));
+        logger.log(Level.INFO, "changeContent: " + content.getPageStub());
     }
 
     /**
@@ -42,6 +48,7 @@ public class Sneaky_Xpress implements EntryPoint {
                 + "&times;</button><i class=\"icon-exclamation-sign\"></i> "
                 + "<strong>Warning!</strong> " + info + "</div>");
         messages.add(alert);
+        logger.log(Level.INFO, "addMessage: " + info);
     }
 
 	/**
@@ -60,7 +67,6 @@ public class Sneaky_Xpress implements EntryPoint {
 
             @Override
             public void onClick(ClickEvent event) {
-                changeContent(page);
                 History.newItem(page.getPageStub());
             }
         }
@@ -70,9 +76,7 @@ public class Sneaky_Xpress implements EntryPoint {
         brandLink.addClickHandler(new NavbarClickHandler(HOME_PAGE));
         brandLink.addStyleName("brand");
         RootPanel.get("brand").add(brandLink);
-
-        // Load the homepage
-        changeContent(HOME_PAGE);
+        logger.log(Level.INFO, "onModuleLoad: created brand/title");
 
         // Create the navigation bar
         RootPanel navbarList = RootPanel.get("navigation-bar");
@@ -85,6 +89,7 @@ public class Sneaky_Xpress implements EntryPoint {
             listElement.add(pageLink);
             navbarList.add(listElement);
         }
+        logger.log(Level.INFO, "onModuleLoad: created navigation bar");
 
         // Implements history support
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -108,5 +113,11 @@ public class Sneaky_Xpress implements EntryPoint {
                 }
             }
         });
+        logger.log(Level.INFO, "onModuleLoad: added history support");
+
+        // By default load the home page
+        if (History.getToken().length() == 0) {
+            History.newItem(HOME_PAGE.getPageStub());
+        }
     }
 }
