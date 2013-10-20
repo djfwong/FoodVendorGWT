@@ -86,10 +86,11 @@ public class UpdateDataServiceImpl extends RemoteServiceServlet {
             }
 
             // If we've made it this far without exceptions, update the Food Vendor info
-            Query findOld = pm.newQuery("SELECT FROM " + FoodVendor.class.getCanonicalName());
+            Query findOld = pm.newQuery("SELECT FROM " + FoodVendor.class);
             findOld.deletePersistentAll();
             // TODO: Delete all the old FoodVendor information (the above code is not working)
             pm.makePersistentAll(newVendors);
+            logger.log(Level.INFO, "Retrieved data from DataVancouver successfully");
 
         } catch (FileNotFoundException e) {
             logger.log(Level.SEVERE, "UpdateDataServiceImpl: FileNotFoundException " + e.toString());
@@ -103,9 +104,9 @@ public class UpdateDataServiceImpl extends RemoteServiceServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        logger.log(Level.INFO, "Attempting to retrieve new data from DataVancouver");
         parseData();
         // TODO: Fetch the xls file from DataVancouver instead of using a local version
-        logger.log(Level.INFO, "Retrieved new data from DataVancouver");
         // TODO: Delete the xls file
     }
 

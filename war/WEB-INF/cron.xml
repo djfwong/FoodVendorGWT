@@ -3,6 +3,6 @@
     <cron>
         <url>/sneaky_xpress/updateData</url>
         <description>Update the food vendor database</description>
-        <schedule>every 3 months</schedule>
+        <schedule>every 720 hours</schedule>
     </cron>
 </cronentries>
