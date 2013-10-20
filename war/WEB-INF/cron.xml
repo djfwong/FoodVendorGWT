@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cronentries>
+    <cron>
+        <url>/sneaky_xpress/updateData</url>
+        <description>Update the food vendor database</description>
+        <schedule>every 3 months</schedule>
+    </cron>
+</cronentries>

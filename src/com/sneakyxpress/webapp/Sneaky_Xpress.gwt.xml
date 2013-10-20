@@ -22,8 +22,10 @@
   <entry-point class="com.sneakyxpress.webapp.client.Sneaky_Xpress"/>
 
   <!-- Specify other servlets                                     -->
-  <servlet path="/BrowseVendors"
+  <servlet path="/browseVendors"
            class="com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl"/>
+  <servlet path="/updateData"
+           class="com.sneakyxpress.webapp.server.UpdateDataServiceImpl"/>
 
   <!-- Specify the paths for translatable code                    -->
   <source path="client"/>

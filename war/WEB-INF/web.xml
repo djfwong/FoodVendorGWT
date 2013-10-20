@@ -6,6 +6,7 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
     <!-- Servlets -->
+    <!-- Home page -->
     <servlet>
         <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
         <servlet-class>com.sneakyxpress.webapp.server.GreetingServiceImpl</servlet-class>
@@ -15,13 +16,24 @@
         <url-pattern>/sneaky_xpress/greet</url-pattern>
     </servlet-mapping>
 
+    <!-- Browse Vendors page -->
     <servlet>
         <servlet-name>browseVendors</servlet-name>
         <servlet-class>com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>browseVendors</servlet-name>
-        <url-pattern>/sneaky_xpress/BrowseVendors</url-pattern>
+        <url-pattern>/sneaky_xpress/browseVendors</url-pattern>
+    </servlet-mapping>
+
+    <!-- Update Data cron job -->
+    <servlet>
+        <servlet-name>updateData</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.UpdateDataServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>updateData</servlet-name>
+        <url-pattern>/sneaky_xpress/updateData</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serve -->

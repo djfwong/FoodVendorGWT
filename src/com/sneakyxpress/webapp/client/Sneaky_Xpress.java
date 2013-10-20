@@ -115,9 +115,7 @@ public class Sneaky_Xpress implements EntryPoint {
         });
         logger.log(Level.INFO, "onModuleLoad: added history support");
 
-        // By default load the home page
-        if (History.getToken().length() == 0) {
-            History.newItem(HOME_PAGE.getPageStub());
-        }
+        // Load the current page, by default the home page
+        History.fireCurrentHistoryState();
     }
 }

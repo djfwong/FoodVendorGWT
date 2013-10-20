@@ -1,5 +1,6 @@
 package com.sneakyxpress.webapp.server;
 
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Column;
@@ -7,13 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
+@PersistenceCapable
 public class FoodVendor {
 
 	/**
 	 * FoodVendor domain object
 	 */
-	
-
 	// Unique identifier for object
 	@PrimaryKey
 	@Persistent
@@ -22,23 +22,28 @@ public class FoodVendor {
 
 	// Business name
 	@Column(name = "name")
-	private String name;
+    @Persistent
+	private String name = "";
 
 	// Location
 	@Column(name = "location")
-	private String location;
+    @Persistent
+	private String location = "";
 
 	// Description
 	@Column(name = "description")
-	private String description;
+    @Persistent
+	private String description = "";
 
 	// Longitude coordinate
 	@Column(name = "longitude")
-	private double longitude;
+    @Persistent
+	private double longitude = 0;
 
 	// Latitude coordinate
 	@Column(name = "latitude")
-	private double latitude;
+    @Persistent
+	private double latitude = 0;
 
 	public void setVendorId(String vendorId) {
 		this.vendorId = vendorId;
