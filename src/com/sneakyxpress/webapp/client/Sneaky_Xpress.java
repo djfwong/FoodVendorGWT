@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -10,6 +11,13 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+
+import com.google.gwt.dom.client.Document;
+import com.google.maps.gwt.client.GoogleMap;
+import com.google.maps.gwt.client.LatLng;
+import com.google.maps.gwt.client.MapOptions;
+import com.google.maps.gwt.client.MapTypeId;
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -55,7 +63,8 @@ public class Sneaky_Xpress implements EntryPoint {
 	 * This is the entry point method
 	 */
 	public void onModuleLoad() {
-        /**
+     
+	    /**
          * Handles actions invoked by clicking links in the navigation bar
          */
         class NavbarClickHandler implements ClickHandler {
@@ -117,5 +126,13 @@ public class Sneaky_Xpress implements EntryPoint {
 
         // Load the current page, by default the home page
         History.fireCurrentHistoryState();
+        
+        LatLng myLatLng = LatLng.create(49.250, -123.100);
+	    MapOptions myOptions = MapOptions.create();
+	    myOptions.setZoom(12.0);
+	    myOptions.setCenter(myLatLng);
+	    myOptions.setMapTypeId(MapTypeId.ROADMAP);
+	    GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
+	    
     }
 }
