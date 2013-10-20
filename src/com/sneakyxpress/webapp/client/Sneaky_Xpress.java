@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import com.google.gwt.dom.client.Document;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
@@ -42,7 +41,7 @@ public class Sneaky_Xpress implements EntryPoint {
     private void changeContent(Content content) {
         RootPanel body = RootPanel.get("content");
         body.clear();
-        body.add(content.getHTML(""));
+        body.add(content.getContent(""));
         logger.log(Level.INFO, "changeContent: " + content.getPageStub());
     }
 
@@ -126,13 +125,13 @@ public class Sneaky_Xpress implements EntryPoint {
 
         // Load the current page, by default the home page
         History.fireCurrentHistoryState();
-        
+
         LatLng myLatLng = LatLng.create(49.250, -123.100);
 	    MapOptions myOptions = MapOptions.create();
 	    myOptions.setZoom(12.0);
 	    myOptions.setCenter(myLatLng);
 	    myOptions.setMapTypeId(MapTypeId.ROADMAP);
 	    GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
-	    
+
     }
 }

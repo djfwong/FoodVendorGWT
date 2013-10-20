@@ -3,6 +3,7 @@ package com.sneakyxpress.webapp.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * The contents of the Browse Vendors page
@@ -24,7 +25,7 @@ public class BrowseVendorsContent implements Content {
     }
 
     @Override
-    public HTML getHTML(String input) {
+    public Widget getContent(String input) {
         final HTML content = new HTML();
 
         browseVendorsService.browseVendorsServer(input,

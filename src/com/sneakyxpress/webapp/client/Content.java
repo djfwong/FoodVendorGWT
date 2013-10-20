@@ -1,6 +1,6 @@
 package com.sneakyxpress.webapp.client;
 
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Used to create the navigation bar and set actions to change the page contents.
@@ -12,5 +12,5 @@ public interface Content {
 
     public String getPageName();
     public String getPageStub();
-    public HTML getHTML(String input);
+    public Widget getContent(String input);
 }
