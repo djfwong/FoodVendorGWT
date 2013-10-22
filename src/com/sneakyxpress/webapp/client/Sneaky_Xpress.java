@@ -4,15 +4,12 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.*;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
@@ -32,33 +29,19 @@ public class Sneaky_Xpress implements EntryPoint {
      * The pages to be shown in the navigation bar
      */
     private static final Content HOME_PAGE = new GreetingContent();
+    private static final Content SEARCH_PAGE = new SearchContent();
     private static final Content[] PAGES = new Content[] {
         new BrowseVendorsContent()
     };
-    private static final TextBox SEARCH_BOX = new TextBox();
-    private static final Button SEARCH_BUTTON = new Button("search", new ClickHandler(){
-    	public void onClick(ClickEvent event) {
-    		search(SEARCH_BOX.getText());
-    	}
-    });
-    
-    /**
-     * Search database for matches to keyword
-     */
-    private static void search(String keyword){
-    	
-    }
 
     /**
      * Changes the contents of the page to the specified Content
      */
-    private void changeContent(Content content) {
+    private void changeContent(Content content, String input) {
         RootPanel body = RootPanel.get("content");
         body.clear();
-        body.add(content.getContent(""));
+        body.add(content.getContent(input));
         logger.log(Level.INFO, "changeContent: " + content.getPageStub());
-        body.add(SEARCH_BOX);
-        body.add(SEARCH_BUTTON);
     }
     
 
@@ -73,6 +56,13 @@ public class Sneaky_Xpress implements EntryPoint {
                 + "<strong>Warning!</strong> " + info + "</div>");
         messages.add(alert);
         logger.log(Level.INFO, "addMessage: " + info);
+    }
+
+    /**
+     * Clears all messages
+     */
+    private void clearMessages() {
+        RootPanel.get("messages").clear();
     }
 
 	/**
@@ -117,25 +107,55 @@ public class Sneaky_Xpress implements EntryPoint {
         }
         logger.log(Level.INFO, "onModuleLoad: created navigation bar");
 
+        // Create the search form
+        final TextBox searchInput = TextBox.wrap(Document.get().getElementById("search-input"));
+        searchInput.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String input = searchInput.getText().trim();
+                if (!input.matches("(\\w| )*")) {
+                    addMessage("Sorry, \"" + input + "\" contains invalid characters. "
+                            + "Please remove them and try again.");
+                } else if (input.length() > 20) {
+                    addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
+                } else {
+                    History.newItem(SEARCH_PAGE.getPageStub() + "?" + searchInput.getText());
+                }
+            }
+        });
+        logger.log(Level.INFO, "onModuleLoad: created the search form");
+
         // Implements history support
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 String historyToken = event.getValue();
+                String pageStub = historyToken;
+                String input = "";
+                if (historyToken.contains("?")) {
+                    int split = historyToken.lastIndexOf("?");
+                    pageStub = historyToken.substring(0, split);
+                    input = historyToken.substring(split + 1);
+                }
+
+                logger.log(Level.INFO, "History: pageStub=\"" + pageStub + "\" input=\"" + input + "\"");
 
                 // Parse the history token
                 boolean foundPage = false;
                 for (Content page : PAGES) {
-                    if (page.getPageStub().equals(historyToken)) {
-                        changeContent(page);
+                    if (page.getPageStub().equals(pageStub)) {
+                        changeContent(page, input);
                         foundPage = true;
                         break;
                     }
                 }
 
-                // By default return to the home page
                 if (!foundPage) {
-                    changeContent(HOME_PAGE);
+                    if (SEARCH_PAGE.getPageStub().equals(pageStub)) {
+                        changeContent(SEARCH_PAGE, input);
+                    } else { // By default load the home page
+                        changeContent(HOME_PAGE, input);
+                    }
                 }
             }
         });
@@ -144,12 +164,12 @@ public class Sneaky_Xpress implements EntryPoint {
         // Load the current page, by default the home page
         History.fireCurrentHistoryState();
 
-        LatLng myLatLng = LatLng.create(49.250, -123.100);
-	    MapOptions myOptions = MapOptions.create();
-	    myOptions.setZoom(12.0);
-	    myOptions.setCenter(myLatLng);
-	    myOptions.setMapTypeId(MapTypeId.ROADMAP);
-	    GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
+//        LatLng myLatLng = LatLng.create(49.250, -123.100);
+//	    MapOptions myOptions = MapOptions.create();
+//	    myOptions.setZoom(12.0);
+//	    myOptions.setCenter(myLatLng);
+//	    myOptions.setMapTypeId(MapTypeId.ROADMAP);
+//	    GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
 
     }
 }

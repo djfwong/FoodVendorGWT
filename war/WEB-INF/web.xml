@@ -25,6 +25,16 @@
         <servlet-name>browseVendors</servlet-name>
         <url-pattern>/sneaky_xpress/browseVendors</url-pattern>
     </servlet-mapping>
+    
+    <!-- Search Results page -->
+    <servlet>
+        <servlet-name>search</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.SearchServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/sneaky_xpress/search</url-pattern>
+    </servlet-mapping>
 
     <!-- Update Data cron job -->
     <servlet>
