@@ -11,7 +11,8 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Button;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
@@ -26,7 +27,7 @@ import java.util.logging.Level;
 public class Sneaky_Xpress implements EntryPoint {
     // Our logger
     private static Logger logger = Logger.getLogger("");
-
+    
     /**
      * The pages to be shown in the navigation bar
      */
@@ -34,6 +35,19 @@ public class Sneaky_Xpress implements EntryPoint {
     private static final Content[] PAGES = new Content[] {
         new BrowseVendorsContent()
     };
+    private static final TextBox SEARCH_BOX = new TextBox();
+    private static final Button SEARCH_BUTTON = new Button("search", new ClickHandler(){
+    	public void onClick(ClickEvent event) {
+    		search(SEARCH_BOX.getText());
+    	}
+    });
+    
+    /**
+     * Search database for matches to keyword
+     */
+    private static void search(String keyword){
+    	
+    }
 
     /**
      * Changes the contents of the page to the specified Content
@@ -43,7 +57,10 @@ public class Sneaky_Xpress implements EntryPoint {
         body.clear();
         body.add(content.getContent(""));
         logger.log(Level.INFO, "changeContent: " + content.getPageStub());
+        body.add(SEARCH_BOX);
+        body.add(SEARCH_BUTTON);
     }
+    
 
     /**
      * Adds a message to the top of the page (user can close it)
@@ -78,6 +95,7 @@ public class Sneaky_Xpress implements EntryPoint {
                 History.newItem(page.getPageStub());
             }
         }
+        
 
         // Create the brand/title in the navigation bar
         Anchor brandLink = new Anchor(HOME_PAGE.getPageName());

@@ -26,12 +26,10 @@ import java.util.logging.Logger;
  * Updates the Food Vendor data from datavancouver.com
  */
 public class UpdateDataServiceImpl extends RemoteServiceServlet {
-    private static final PersistenceManagerFactory PMF =
-            JDOHelper.getPersistenceManagerFactory("transactions-optional");
     private static Logger logger = Logger.getLogger("");
 
     public void parseData() {
-        PersistenceManager pm = getPersistenceManager();
+        PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
             FileInputStream file = new FileInputStream("data/new_food_vendor_locations.xls");
@@ -110,7 +108,5 @@ public class UpdateDataServiceImpl extends RemoteServiceServlet {
         // TODO: Delete the xls file
     }
 
-    private PersistenceManager getPersistenceManager() {
-        return PMF.getPersistenceManager();
-    }
+   
 }
