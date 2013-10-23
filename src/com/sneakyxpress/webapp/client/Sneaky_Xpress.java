@@ -118,6 +118,8 @@ public class Sneaky_Xpress implements EntryPoint {
                             + "Please remove them and try again.");
                 } else if (input.length() > 20) {
                     addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
+                } else if (input.length() == 0) {
+                    addMessage("Sorry your search query is empty. Please enter something.");
                 } else {
                     History.newItem(SEARCH_PAGE.getPageStub() + "?" + searchInput.getText());
                 }
