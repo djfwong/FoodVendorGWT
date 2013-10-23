@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.sneakyxpress.webapp.shared.FoodVendor;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -12,19 +13,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Updates the Food Vendor data from datavancouver.com
+ * Updates the Food Vendor data from DataVancouver
  */
 public class UpdateDataServiceImpl extends RemoteServiceServlet {
     private static Logger logger = Logger.getLogger("");
+    private static final String DATA_LOCATION
+            = "http://www.ugrad.cs.ubc.ca/~k5r8/data/uploads/new_food_vendor_locations.xls";
 
     /**
      * Parse the new Food Vendor data
@@ -90,12 +92,14 @@ public class UpdateDataServiceImpl extends RemoteServiceServlet {
         Query q = pm.newQuery();
         q.setClass(FoodVendor.class);
         changes[1] = (int) q.deletePersistentAll();
-        
+
         // Persist the new vendors
         pm.makePersistentAll(newVendors);
         changes[0] = newVendors.size();
 
+        // Clean-up
         pm.close();
+        stream.close();
         return changes;
     }
 
@@ -105,15 +109,15 @@ public class UpdateDataServiceImpl extends RemoteServiceServlet {
         logger.log(Level.INFO, "Attempting to retrieve new data from DataVancouver");
 
         // Retrieve the remote data
-        URL url = new URL("http://www.ugrad.cs.ubc.ca/~k5r8/data/uploads/new_food_vendor_locations.xls");
-        URLConnection connection = url.openConnection();
+        URL url = new URL(DATA_LOCATION);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         try {
             int changes[] = parseData(connection.getInputStream()); // Parse the data
-            logger.log(Level.INFO, "Retrieved data successfully: " + String.valueOf(changes[1])
+            logger.log(Level.INFO, "Retrieved & parsed data successfully: " + String.valueOf(changes[1])
                     + " vendors removed, " + String.valueOf(changes[0]) + " vendors added");
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Retrieving data failed: " + e.toString());
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Retrieving or parsing of data failed: " + e.toString());
         }
     }
 }

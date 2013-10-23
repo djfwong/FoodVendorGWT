@@ -3,16 +3,19 @@ package com.sneakyxpress.webapp.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Get the content of our search results
  */
-public class SearchContent implements Content {
+public class SearchContent extends Content {
     private static final String pageName = "Search Results";
     private static final String pageStub = "search";
 
     private final SearchServiceAsync searchService = GWT.create(SearchService.class);
+
+    public SearchContent(Sneaky_Xpress module) {
+        super(module);
+    }
 
     @Override
     public String getPageName() {
@@ -25,20 +28,15 @@ public class SearchContent implements Content {
     }
 
     @Override
-    public Widget getContent(String input) {
-        final HTML content = new HTML();
+    public void getAndChangeContent(String input) {
+        searchService.searchServer(input, new AsyncCallback<String>() {
+                public void onFailure(Throwable caught) {
+                    module.addMessage(GENERIC_ERROR_MESSAGE);
+                }
 
-        searchService.searchServer(input,
-                new AsyncCallback<String>() {
-                    public void onFailure(Throwable caught) {
-                        content.setHTML(GENERIC_ERROR_MESSAGE);
-                    }
-
-                    public void onSuccess(String result) {
-                        content.setHTML(result);
-                    }
-                });
-
-        return content;
+                public void onSuccess(String result) {
+                    module.changeContent(new HTML(result));
+                }
+            });
     }
 }

@@ -1,4 +1,6 @@
-package com.sneakyxpress.webapp.server;
+package com.sneakyxpress.webapp.shared;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -9,7 +11,7 @@ import javax.persistence.Id;
 
 @Entity
 @PersistenceCapable
-public class FoodVendor {
+public class FoodVendor implements IsSerializable {
 
 	/**
 	 * FoodVendor domain object

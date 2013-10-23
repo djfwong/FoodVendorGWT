@@ -4,16 +4,10 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.*;
-import com.google.maps.gwt.client.GoogleMap;
-import com.google.maps.gwt.client.LatLng;
-import com.google.maps.gwt.client.MapOptions;
-import com.google.maps.gwt.client.MapTypeId;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -28,27 +22,26 @@ public class Sneaky_Xpress implements EntryPoint {
     /**
      * The pages to be shown in the navigation bar
      */
-    private static final Content HOME_PAGE = new GreetingContent();
-    private static final Content SEARCH_PAGE = new SearchContent();
-    private static final Content[] PAGES = new Content[] {
-        new BrowseVendorsContent()
+    private final Content HOME_PAGE = new GreetingContent(this);
+    private final Content SEARCH_PAGE = new SearchContent(this);
+    private final Content[] PAGES = new Content[] {
+        new BrowseVendorsContent(this)
     };
 
     /**
      * Changes the contents of the page to the specified Content
      */
-    private void changeContent(Content content, String input) {
+    public void changeContent(Widget content) {
         RootPanel body = RootPanel.get("content");
         body.clear();
-        body.add(content.getContent(input));
-        logger.log(Level.INFO, "changeContent: " + content.getPageStub());
+        body.add(content);
     }
     
 
     /**
      * Adds a message to the top of the page (user can close it)
      */
-    private void addMessage(String info) {
+    public void addMessage(String info) {
         RootPanel messages = RootPanel.get("messages");
         HTML alert = new HTML("<div class=\"alert alert-dismissable alert-danger fade in\">"
                 + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
@@ -146,7 +139,7 @@ public class Sneaky_Xpress implements EntryPoint {
                 boolean foundPage = false;
                 for (Content page : PAGES) {
                     if (page.getPageStub().equals(pageStub)) {
-                        changeContent(page, input);
+                        page.getAndChangeContent(input);
                         foundPage = true;
                         break;
                     }
@@ -154,9 +147,9 @@ public class Sneaky_Xpress implements EntryPoint {
 
                 if (!foundPage) {
                     if (SEARCH_PAGE.getPageStub().equals(pageStub)) {
-                        changeContent(SEARCH_PAGE, input);
+                        SEARCH_PAGE.getAndChangeContent(input);
                     } else { // By default load the home page
-                        changeContent(HOME_PAGE, input);
+                        HOME_PAGE.getAndChangeContent(input);
                     }
                 }
             }

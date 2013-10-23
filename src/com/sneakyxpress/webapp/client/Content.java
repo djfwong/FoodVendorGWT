@@ -1,16 +1,22 @@
 package com.sneakyxpress.webapp.client;
 
 import com.google.gwt.user.client.ui.Widget;
+import java.util.logging.Logger;
 
 /**
  * Used to create the navigation bar and set actions to change the page contents.
  */
-public interface Content {
-    public static final String GENERIC_ERROR_MESSAGE = "<div class=\"container-fluid\" style=\"padding-top: 20px;\">"
-            + "<p class=\"text-error lead\" style=\"text-align: center;\">"
-            + "<i class=\"icon-exclamation-sign\"></i> Loading failed! Please try again.</p></div>";
+public abstract class Content {
+    public static Logger logger = Logger.getLogger("");
+    public static Sneaky_Xpress module;
 
-    public String getPageName();
-    public String getPageStub();
-    public Widget getContent(String input);
+    public static final String GENERIC_ERROR_MESSAGE = "Loading failed! Please try again.";
+
+    public Content(Sneaky_Xpress module) {
+        this.module = module;
+    }
+
+    public abstract String getPageName();
+    public abstract String getPageStub();
+    public abstract void getAndChangeContent(String input);
 }

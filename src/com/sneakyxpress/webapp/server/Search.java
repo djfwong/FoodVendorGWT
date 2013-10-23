@@ -1,5 +1,7 @@
 package com.sneakyxpress.webapp.server;
 
+import com.sneakyxpress.webapp.shared.FoodVendor;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import java.util.List;

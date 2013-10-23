@@ -3,16 +3,19 @@ package com.sneakyxpress.webapp.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Get the content for our home page.
  */
-public class GreetingContent implements Content {
+public class GreetingContent extends Content {
     private static final String pageName = "Vancouver Food Vendor Reviews";
     private static final String pageStub = "home";
 
     private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+
+    public GreetingContent(Sneaky_Xpress module) {
+        super(module);
+    }
 
     @Override
     public String getPageName() {
@@ -25,20 +28,15 @@ public class GreetingContent implements Content {
     }
 
     @Override
-    public Widget getContent(String input) {
-        final HTML content = new HTML();
-
-        greetingService.greetServer(input,
-            new AsyncCallback<String>() {
+    public void getAndChangeContent(String input) {
+        greetingService.greetServer(input, new AsyncCallback<String>() {
                 public void onFailure(Throwable caught) {
-                    content.setHTML(GENERIC_ERROR_MESSAGE);
+                    module.addMessage(GENERIC_ERROR_MESSAGE);
                 }
 
                 public void onSuccess(String result) {
-                    content.setHTML(result);
+                    module.changeContent(new HTML(result));
                 }
             });
-
-        return content;
     }
 }

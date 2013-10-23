@@ -15,6 +15,7 @@ out/
 test-classes/
 war/WEB-INF/classes/com/
 war/WEB-INF/deploy/
+war/sneaky_xpress/
 *.cache.html
 *.nocache.js
 .gwt/

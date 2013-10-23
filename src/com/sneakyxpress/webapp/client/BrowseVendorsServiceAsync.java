@@ -1,13 +1,14 @@
 package com.sneakyxpress.webapp.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.sneakyxpress.webapp.shared.FoodVendor;
+
+import java.util.List;
 
 /**
  * The async counterpart of <code>BrowseVendorsService</code>.
  */
 public interface BrowseVendorsServiceAsync {
-    void browseVendorsServer(String input, AsyncCallback<String> callback)
+    void browseVendorsServer(String input, AsyncCallback<List<FoodVendor>> callback)
             throws IllegalArgumentException;
 }
