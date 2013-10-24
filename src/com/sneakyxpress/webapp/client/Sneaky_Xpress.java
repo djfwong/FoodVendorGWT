@@ -35,6 +35,7 @@ public class Sneaky_Xpress implements EntryPoint {
         RootPanel body = RootPanel.get("content");
         body.clear();
         body.add(content);
+        RootPanel.get("loading").setVisible(false); // Remove the loading bar
     }
     
 
@@ -124,6 +125,8 @@ public class Sneaky_Xpress implements EntryPoint {
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
+                RootPanel.get("loading").setVisible(true); // Show the loading bar
+
                 String historyToken = event.getValue();
                 String pageStub = historyToken;
                 String input = "";
