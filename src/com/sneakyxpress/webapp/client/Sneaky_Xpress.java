@@ -49,6 +49,8 @@ public class Sneaky_Xpress implements EntryPoint {
         alert.addStyleName("alert alert-danger fade in");
         RootPanel.get("messages").add(alert);
 
+        loading.addStyleName("collapsed"); // Remove the loading bar if it exists
+
         logger.log(Level.INFO, "addMessage: " + info);
     }
 
@@ -56,26 +58,9 @@ public class Sneaky_Xpress implements EntryPoint {
 	 * This is the entry point method
 	 */
 	public void onModuleLoad() {
-	    /**
-         * Handles actions invoked by clicking links in the navigation bar
-         */
-        class NavbarClickHandler implements ClickHandler {
-            Content page;
-            public NavbarClickHandler(Content page) {
-                super();
-                this.page = page;
-            }
-
-            @Override
-            public void onClick(ClickEvent event) {
-                History.newItem(page.getPageStub());
-            }
-        }
-        
-
         // Create the brand/title in the navigation bar
         Anchor brandLink = new Anchor(HOME_PAGE.getPageName());
-        brandLink.addClickHandler(new NavbarClickHandler(HOME_PAGE));
+        brandLink.addClickHandler(new PageClickHandler(HOME_PAGE, ""));
         brandLink.addStyleName("brand");
         RootPanel.get("brand").add(brandLink);
         logger.log(Level.INFO, "onModuleLoad: created brand/title");
@@ -85,7 +70,7 @@ public class Sneaky_Xpress implements EntryPoint {
         for (Content page : PAGES) {
             Anchor pageLink = new Anchor(page.getPageName());
 
-            pageLink.addClickHandler(new NavbarClickHandler(page));
+            pageLink.addClickHandler(new PageClickHandler(page, ""));
 
             HTMLPanel listElement = new HTMLPanel("li", "");
             listElement.add(pageLink);
