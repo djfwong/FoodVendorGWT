@@ -2,8 +2,7 @@ package com.sneakyxpress.webapp.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
@@ -18,6 +17,7 @@ import java.util.logging.Level;
 public class Sneaky_Xpress implements EntryPoint {
     // Our logger
     private static Logger logger = Logger.getLogger("");
+    private static RootPanel loading = RootPanel.get("loading");
     
     /**
      * The pages to be shown in the navigation bar
@@ -35,7 +35,8 @@ public class Sneaky_Xpress implements EntryPoint {
         RootPanel body = RootPanel.get("content");
         body.clear();
         body.add(content);
-        RootPanel.get("loading").setVisible(false); // Remove the loading bar
+
+        loading.addStyleName("collapsed"); // Remove the loading bar
     }
     
 
@@ -43,27 +44,18 @@ public class Sneaky_Xpress implements EntryPoint {
      * Adds a message to the top of the page (user can close it)
      */
     public void addMessage(String info) {
-        RootPanel messages = RootPanel.get("messages");
-        HTML alert = new HTML("<div class=\"alert alert-dismissable alert-danger fade in\">"
-                + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
-                + "&times;</button><i class=\"icon-exclamation-sign\"></i> "
-                + "<strong>Warning!</strong> " + info + "</div>");
-        messages.add(alert);
-        logger.log(Level.INFO, "addMessage: " + info);
-    }
+        HTML alert = new HTML("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
+                + "&times;</button><i class=\"icon-exclamation-sign\"></i> <strong>Warning!</strong> " + info);
+        alert.addStyleName("alert alert-danger fade in");
+        RootPanel.get("messages").add(alert);
 
-    /**
-     * Clears all messages
-     */
-    private void clearMessages() {
-        RootPanel.get("messages").clear();
+        logger.log(Level.INFO, "addMessage: " + info);
     }
 
 	/**
 	 * This is the entry point method
 	 */
 	public void onModuleLoad() {
-     
 	    /**
          * Handles actions invoked by clicking links in the navigation bar
          */
@@ -103,19 +95,21 @@ public class Sneaky_Xpress implements EntryPoint {
 
         // Create the search form
         final TextBox searchInput = TextBox.wrap(Document.get().getElementById("search-input"));
-        searchInput.addValueChangeHandler(new ValueChangeHandler<String>() {
+        searchInput.addKeyUpHandler(new KeyUpHandler() {
             @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                String input = searchInput.getText().trim();
-                if (!input.matches("(\\w| )*")) {
-                    addMessage("Sorry, \"" + input + "\" contains invalid characters. "
-                            + "Please remove them and try again.");
-                } else if (input.length() > 20) {
-                    addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
-                } else if (input.length() == 0) {
-                    addMessage("Sorry your search query is empty. Please enter something.");
-                } else {
-                    History.newItem(SEARCH_PAGE.getPageStub() + "?" + searchInput.getText());
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                    String input = searchInput.getText().trim();
+                    if (!input.matches("(\\w| )*")) {
+                        addMessage("Sorry, \"" + input + "\" contains invalid characters. "
+                                + "Please remove them and try again.");
+                    } else if (input.length() > 20) {
+                        addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
+                    } else if (input.length() == 0) {
+                        addMessage("Sorry your search query is empty. Please enter something.");
+                    } else {
+                        History.newItem(SEARCH_PAGE.getPageStub() + "?" + searchInput.getText());
+                    }
                 }
             }
         });
@@ -125,7 +119,7 @@ public class Sneaky_Xpress implements EntryPoint {
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
-                RootPanel.get("loading").setVisible(true); // Show the loading bar
+                loading.removeStyleName("collapsed"); // Add the loading bar
 
                 String historyToken = event.getValue();
                 String pageStub = historyToken;
