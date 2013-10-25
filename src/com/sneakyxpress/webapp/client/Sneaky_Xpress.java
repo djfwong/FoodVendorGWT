@@ -85,15 +85,16 @@ public class Sneaky_Xpress implements EntryPoint {
             public void onKeyUp(KeyUpEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
                     String input = searchInput.getText().trim();
+
                     if (!input.matches("(\\w| )*")) {
                         addMessage("Sorry, \"" + input + "\" contains invalid characters. "
-                                + "Please remove them and try again.");
+                                + "Only letters and spaces are allowed. Please remove them and try again.");
                     } else if (input.length() > 20) {
                         addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
                     } else if (input.length() == 0) {
                         addMessage("Sorry your search query is empty. Please enter something.");
                     } else {
-                        History.newItem(SEARCH_PAGE.getPageStub() + "?" + searchInput.getText());
+                        History.newItem(SEARCH_PAGE.getPageStub() + "?" + input);
                     }
                 }
             }
