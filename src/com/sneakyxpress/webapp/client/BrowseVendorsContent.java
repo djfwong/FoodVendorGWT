@@ -3,7 +3,6 @@ package com.sneakyxpress.webapp.client;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -86,7 +85,7 @@ public class BrowseVendorsContent extends Content {
 
 							// Add data table under List view
 							Widget table = displayDataInTable(result);
-							listView.add(table);
+							content.add(table);
 						}
 
 						module.changeContent(content);
@@ -94,12 +93,13 @@ public class BrowseVendorsContent extends Content {
 				});
 	}
 
-	public Widget displayDataInTable(List<FoodVendor> vendorList) {
+	private Widget displayDataInTable(List<FoodVendor> vendorList) {
 		// Create new cell table object
 		CellTable<FoodVendor> table = new CellTable<FoodVendor>();
 
 		// Configure table to display all results onto one page
 		table.setPageSize(vendorList.size());
+        table.addStyleName("table table-striped");
 
 		// Add Key column
 		TextColumn<FoodVendor> keyCol = new TextColumn<FoodVendor>() {
@@ -108,7 +108,7 @@ public class BrowseVendorsContent extends Content {
 				return vendor.getVendorId();
 			}
 		};
-		table.addColumn(keyCol, "Key");
+        table.addColumn(keyCol, "Key");
 
 		// Add Name column
 		TextColumn<FoodVendor> nameCol = new TextColumn<FoodVendor>() {
@@ -148,7 +148,6 @@ public class BrowseVendorsContent extends Content {
 
 		// return table and display on page
 		return table;
-
 	}
 
 }
