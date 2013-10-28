@@ -20,12 +20,11 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
     	
     	List<FoodVendor> search_results = new ArrayList<FoodVendor>();
     	PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query q = pm.newQuery(FoodVendor.class);
-		q.setFilter("name == input");
-		q.declareParameters("String input");
+    	String queryString1 = String.format("name.startsWith('%s')", input);
+		Query q1 = pm.newQuery(FoodVendor.class, queryString1);
 		
 		try {
-			List<FoodVendor> results = (List<FoodVendor>) q.execute(input);
+			List<FoodVendor> results = (List<FoodVendor>) q1.execute();
 			if (!results.isEmpty()) {
 				for (FoodVendor f: results) {
 					// process result f
@@ -34,10 +33,55 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 			} else {
 			}
 		} finally {
-				q.closeAll();
+				q1.closeAll();
 				}
+		
+		String queryString2 = String.format("location.startsWith('%s')", input);
+		Query q2 = pm.newQuery(FoodVendor.class, queryString2);
+		
+		try {
+			List<FoodVendor> results = (List<FoodVendor>) q2.execute();
+			if (!results.isEmpty()) {
+				for (FoodVendor f: results) {
+					// process result f
+					if (!containedInResults(search_results, f)){
+					search_results.add(f);
+					}
+				}
+			} else {
+			}
+		} finally {
+				q2.closeAll();
+				}
+		
+		String queryString3 = String.format("description.startsWith('%s')", input);
+		Query q3 = pm.newQuery(FoodVendor.class, queryString3);
+		
+		try {
+			List<FoodVendor> results = (List<FoodVendor>) q3.execute();
+			if (!results.isEmpty()) {
+				for (FoodVendor f: results) {
+					// process result f
+					if (!containedInResults(search_results, f)){
+					search_results.add(f);
+					}
+				}
+			} else {
+			}
+		} finally {
+				q3.closeAll();
+				}
+
 		return search_results;
     	
         //return "<h1>Search results (stub) for input: " + input + "</h1>";
+    }
+    
+    private boolean containedInResults(List<FoodVendor> search_results, FoodVendor f){
+    	for (FoodVendor fv : search_results){
+    		if (f.getVendorId() == fv.getVendorId()){
+    			return true;
+    		}
+    	} return false;
     }
 }
