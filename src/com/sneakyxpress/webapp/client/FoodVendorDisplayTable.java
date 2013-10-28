@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.MultiSelectionModel;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 public class FoodVendorDisplayTable {
@@ -20,59 +22,78 @@ public class FoodVendorDisplayTable {
 	
 	public Widget getWidget() {
 		// Create new cell table object
-		CellTable<FoodVendor> table = new CellTable<FoodVendor>();
+				CellTable<FoodVendor> table = new CellTable<FoodVendor>();
 
-		// Configure table to display all results onto one page
-		table.setPageSize(vendorList.size());
-        table.addStyleName("table table-striped");
+				// Configure table to display all results onto one page
+				table.setPageSize(vendorList.size());
 
-		// Add Key column
-		TextColumn<FoodVendor> keyCol = new TextColumn<FoodVendor>() {
-			@Override
-			public String getValue(FoodVendor vendor) {
-				return vendor.getVendorId();
-			}
-		};
-        table.addColumn(keyCol, "Key");
+				// Configure to select a row vs one cell at a time
+				MultiSelectionModel<FoodVendor> selectionModel = new MultiSelectionModel<FoodVendor>();
+				table.setSelectionModel(selectionModel);
 
-		// Add Name column
-		TextColumn<FoodVendor> nameCol = new TextColumn<FoodVendor>() {
-			@Override
-			public String getValue(FoodVendor vendor) {
-				return vendor.getName();
-			}
-		};
-		table.addColumn(nameCol, "Name");
+				// Create a list data provider.
+				final ListDataProvider<FoodVendor> dataProvider = new ListDataProvider<FoodVendor>();
 
-		// Add Location column
-		TextColumn<FoodVendor> locCol = new TextColumn<FoodVendor>() {
-			@Override
-			public String getValue(FoodVendor vendor) {
-				return vendor.getLocation();
-			}
-		};
-		table.addColumn(locCol, "Location");
+				// Instantiate sort handler
+				ListHandler<FoodVendor> colSortHandler = new ListHandler<FoodVendor>(
+						vendorList);
 
-		// Add Description column
-		TextColumn<FoodVendor> desCol = new TextColumn<FoodVendor>() {
-			@Override
-			public String getValue(FoodVendor vendor) {
-				return vendor.getDescription();
-			}
-		};
-		table.addColumn(desCol, "Description");
+				// Add Key column and sort to column
+				TextColumn<FoodVendor> keyCol = new TextColumn<FoodVendor>() {
+					@Override
+					public String getValue(FoodVendor vendor) {
+						return vendor.getVendorId();
+					}
+				};
+				table.addColumn(keyCol, "Key");
+				keyCol.setSortable(true);
+				colSortHandler.setComparator(keyCol, new KeyComparator());
+				keyCol.setDefaultSortAscending(true);
 
-		// Create a list data provider.
-		final ListDataProvider<FoodVendor> dataProvider = new ListDataProvider<FoodVendor>();
+				// Add Name column and sort to column
+				TextColumn<FoodVendor> nameCol = new TextColumn<FoodVendor>() {
+					@Override
+					public String getValue(FoodVendor vendor) {
+						return vendor.getName();
+					}
+				};
+				table.addColumn(nameCol, "Name");
+				nameCol.setSortable(true);
+				colSortHandler.setComparator(nameCol, new NameComparator());
 
-		// Add the cellList to the dataProvider.
-		dataProvider.addDataDisplay(table);
+				// Add Location column
+				TextColumn<FoodVendor> locCol = new TextColumn<FoodVendor>() {
+					@Override
+					public String getValue(FoodVendor vendor) {
+						return vendor.getLocation();
+					}
+				};
+				table.addColumn(locCol, "Location");
+				locCol.setSortable(true);
+				colSortHandler.setComparator(locCol, new LocComparator());
 
-		// Set to query result
-		dataProvider.setList(vendorList);
+				// Add Description column
+				TextColumn<FoodVendor> desCol = new TextColumn<FoodVendor>() {
+					@Override
+					public String getValue(FoodVendor vendor) {
+						return vendor.getDescription();
+					}
+				};
+				table.addColumn(desCol, "Description");
+				desCol.setSortable(true);
+				colSortHandler.setComparator(desCol, new DesComparator());
 
-		// return table and display on page
-		return table;
+				// Add the cell table to the dataProvider.
+				dataProvider.addDataDisplay(table);
+
+				// Set to query result
+				dataProvider.setList(vendorList);
+				
+				// Add col sort handler to table
+				table.addColumnSortHandler(colSortHandler);
+				table.getColumnSortList().push(keyCol);
+
+				// return table and display on page
+				return table;
 	}
-
 }
