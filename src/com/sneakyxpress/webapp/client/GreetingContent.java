@@ -48,8 +48,10 @@ public class GreetingContent extends Content {
                 public void onSuccess(String result) {
                     module.changeContent(new HTML(result));
                     
+                    //Not permanent, map is to be on Browse Vendors page
                     LatLng myLatLng = LatLng.create(49.250, -123.100);
-            	    MapOptions myOptions = MapOptions.create();
+            	    
+                    MapOptions myOptions = MapOptions.create();
             	    myOptions.setZoom(12.0);
             	    myOptions.setCenter(myLatLng);
             	    myOptions.setMapTypeId(MapTypeId.ROADMAP);
