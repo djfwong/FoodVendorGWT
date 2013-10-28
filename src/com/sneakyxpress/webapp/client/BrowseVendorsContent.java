@@ -84,7 +84,8 @@ public class BrowseVendorsContent extends Content {
 							mapView.removeStyleName("active");
 
 							// Add data table under List view
-							Widget table = displayDataInTable(result);
+							Widget table = new FoodVendorDisplayTable(result).getWidget();
+							//Widget table = displayDataInTable(result);
 							content.add(table);
 						}
 
@@ -92,7 +93,10 @@ public class BrowseVendorsContent extends Content {
 					}
 				});
 	}
+	
+	
 
+	/*
 	private Widget displayDataInTable(List<FoodVendor> vendorList) {
 		// Create new cell table object
 		CellTable<FoodVendor> table = new CellTable<FoodVendor>();
@@ -149,5 +153,6 @@ public class BrowseVendorsContent extends Content {
 		// return table and display on page
 		return table;
 	}
+	*/
 
 }

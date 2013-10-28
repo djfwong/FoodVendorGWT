@@ -1,5 +1,6 @@
 package com.sneakyxpress.webapp.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -15,9 +16,9 @@ import com.sneakyxpress.webapp.shared.FoodVendor;
 public class SearchServiceImpl extends RemoteServiceServlet implements
         SearchService {
 
-    public String searchServer(String input) throws IllegalArgumentException {
+    public List<FoodVendor> searchServer(String input) throws IllegalArgumentException {
     	
-    	String search_results = "<h1>Search results for " + input + ":</h1>";
+    	List<FoodVendor> search_results = new ArrayList<FoodVendor>();
     	PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = pm.newQuery(FoodVendor.class);
 		q.setFilter("name == input");
@@ -28,13 +29,11 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 			if (!results.isEmpty()) {
 				for (FoodVendor f: results) {
 					// process result f
-					search_results = search_results.concat("<br>" + f.getName());
+					search_results.add(f);
 				}
 			} else {
-				// handle "no results" case
-				search_results = "<h1>Sorry, no food vendors match your search. Maybe you spelled it wrong.</h1>";
-				}
-			} finally {
+			}
+		} finally {
 				q.closeAll();
 				}
 		return search_results;
