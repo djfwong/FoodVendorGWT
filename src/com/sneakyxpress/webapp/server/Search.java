@@ -13,7 +13,8 @@ public class Search {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
 		Query q = pm.newQuery(FoodVendor.class);
-		q.setFilter("Food Vendor ==" + keyword);
+		q.setFilter("name == input");
+		q.declareParameters("String input");
 		
 		try {
 			List<FoodVendor> results = (List<FoodVendor>) q.execute(keyword);
