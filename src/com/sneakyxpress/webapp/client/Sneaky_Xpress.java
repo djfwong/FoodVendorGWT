@@ -28,6 +28,7 @@ public class Sneaky_Xpress implements EntryPoint {
      */
     private final Content HOME_PAGE = new GreetingContent(this);
     private final Content SEARCH_PAGE = new SearchContent(this);
+    private final Content VENDOR_PAGE = new ViewVendorContent(this);
     private final Content[] PAGES = new Content[] {
         new BrowseVendorsContent(this)
     };
@@ -136,6 +137,8 @@ public class Sneaky_Xpress implements EntryPoint {
                 if (!foundPage) {
                     if (SEARCH_PAGE.getPageStub().equals(pageStub)) {
                         SEARCH_PAGE.getAndChangeContent(input);
+                    } else if (VENDOR_PAGE.getPageStub().equals(pageStub)) {
+                        VENDOR_PAGE.getAndChangeContent(input);
                     } else { // By default load the home page
                         HOME_PAGE.getAndChangeContent(input);
                     }

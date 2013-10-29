@@ -14,7 +14,7 @@ import com.sneakyxpress.webapp.shared.FoodVendor;
  */
 public class BrowseVendorsContent extends Content {
 	private static final String pageName = "Browse Vendors";
-	private static final String pageStub = "vendors";
+	private static final String pageStub = "browse";
 
 	private final BrowseVendorsServiceAsync browseVendorsService = GWT
 			.create(BrowseVendorsService.class);

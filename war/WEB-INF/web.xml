@@ -36,6 +36,16 @@
         <url-pattern>/sneaky_xpress/search</url-pattern>
     </servlet-mapping>
 
+    <!-- View vendor page -->
+    <servlet>
+        <servlet-name>viewVendor</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.ViewVendorServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>viewVendor</servlet-name>
+        <url-pattern>/sneaky_xpress/viewVendor</url-pattern>
+    </servlet-mapping>
+
     <!-- Update Data cron job -->
     <servlet>
         <servlet-name>updateData</servlet-name>
