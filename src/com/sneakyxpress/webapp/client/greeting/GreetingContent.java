@@ -53,7 +53,7 @@ public class GreetingContent extends Content {
     public void getAndChangeContent(String input) {
         greetingService.greetServer(input, new AsyncCallback<String>() {
                 public void onFailure(Throwable caught) {
-                    module.addMessage(GENERIC_ERROR_MESSAGE);
+                    module.addMessage(GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
                 }
 
                 public void onSuccess(String result) {
