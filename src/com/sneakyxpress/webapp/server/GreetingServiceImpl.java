@@ -10,6 +10,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
 	public String greetServer(String input) throws IllegalArgumentException {
-        return "<h1>This is (a stub for) the homepage!!!</h1> <div id=\"map_canvas\" style=\"width: 1000px; height: 500px;\"></div>";
+		return "<h1>This is (a stub for) the homepage!!!</h1>"
+        		+ "<br />"
+        		+ "<input type=\"button\" value=\"Clear POIs\" onclick=\"clearOverlays();\">"
+        		+ "<input type=\"button\" value=\"Show POIs\" onclick=\"showOverlays();\">"
+        		+ "<br />"
+        		+ "<div id=\"map_canvas\" style=\"width: 100%; height: 500px;\"></div>";
     }
 }
