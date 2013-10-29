@@ -22,6 +22,9 @@ public class FoodVendorDisplayTable {
 		// Create new cell table object
 		CellTable<FoodVendor> table = new CellTable<FoodVendor>();
 
+		// Configure table to display all results onto one page
+		table.setPageSize(vendorList.size());
+		
 		// Add Key column and sort to column
 		TextColumn<FoodVendor> keyCol = new TextColumn<FoodVendor>() {
 			@Override
