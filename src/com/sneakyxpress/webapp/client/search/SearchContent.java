@@ -46,7 +46,7 @@ public class SearchContent extends Content {
                 	HTMLPanel content = new HTMLPanel("");
                 	
                 	if (!search_results.isEmpty()){
-                		Widget table = new FoodVendorDisplayTable(search_results).getWidget();
+                		Widget table = new FoodVendorDisplayTable(search_results, module.getVendorPage()).getWidget();
                 		content.add(table);
                 	} else {
                 		Widget no_matches = new Label("Sorry, no matches were found :(");

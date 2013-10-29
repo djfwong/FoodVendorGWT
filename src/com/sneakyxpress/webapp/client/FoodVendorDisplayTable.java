@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -19,9 +19,11 @@ import com.sneakyxpress.webapp.shared.FoodVendor;
 public class FoodVendorDisplayTable {
 
 	private List<FoodVendor> vendorList;
+    private Content vendorPage;
 
-	public FoodVendorDisplayTable(List<FoodVendor> vendors) {
+	public FoodVendorDisplayTable(List<FoodVendor> vendors, Content page) {
 		vendorList = vendors;
+        vendorPage = page;
 	}
 
 	public Widget getWidget() {
@@ -117,11 +119,10 @@ public class FoodVendorDisplayTable {
 
 					@Override
 					public void onSelectionChange(SelectionChangeEvent event) {
-						FoodVendor selected = selectionModel
-								.getSelectedObject();
+						FoodVendor selected = selectionModel.getSelectedObject();
 						if (selected != null) {
-							Window.alert("You selected: "
-									+ selected.getVendorId());
+                            // Load the vendor's specific page
+                            History.newItem(vendorPage.getPageStub() + "?" + selected.getVendorId());
 						}
 
 					}

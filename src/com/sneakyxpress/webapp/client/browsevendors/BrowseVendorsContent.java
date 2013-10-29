@@ -85,7 +85,7 @@ public class BrowseVendorsContent extends Content {
 							mapView.removeStyleName("active");
 
 							// Add data table under List view
-							Widget table = new FoodVendorDisplayTable(result).getWidget();
+							Widget table = new FoodVendorDisplayTable(result, module.getVendorPage()).getWidget();
 							//Widget table = displayDataInTable(result);
 							content.add(table);
 						}
