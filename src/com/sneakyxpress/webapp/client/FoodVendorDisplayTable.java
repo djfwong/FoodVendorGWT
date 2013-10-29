@@ -24,7 +24,7 @@ public class FoodVendorDisplayTable {
 
 		// Configure table to display all results onto one page
 		table.setPageSize(vendorList.size());
-		
+
 		// Add Key column and sort to column
 		TextColumn<FoodVendor> keyCol = new TextColumn<FoodVendor>() {
 			@Override
@@ -46,16 +46,6 @@ public class FoodVendorDisplayTable {
 		table.addColumn(nameCol, "Name");
 		nameCol.setSortable(true);
 
-		// Add Location column
-		TextColumn<FoodVendor> locCol = new TextColumn<FoodVendor>() {
-			@Override
-			public String getValue(FoodVendor vendor) {
-				return vendor.getLocation();
-			}
-		};
-		table.addColumn(locCol, "Location");
-		locCol.setSortable(true);
-
 		// Add Description column
 		TextColumn<FoodVendor> desCol = new TextColumn<FoodVendor>() {
 			@Override
@@ -66,12 +56,22 @@ public class FoodVendorDisplayTable {
 		desCol.setSortable(true);
 		table.addColumn(desCol, "Description");
 
+		// Add Location column
+		TextColumn<FoodVendor> locCol = new TextColumn<FoodVendor>() {
+			@Override
+			public String getValue(FoodVendor vendor) {
+				return vendor.getLocation();
+			}
+		};
+		table.addColumn(locCol, "Location");
+		locCol.setSortable(true);
+
 		// Create a list data provider.
 		final ListDataProvider<FoodVendor> dataProvider = new ListDataProvider<FoodVendor>();
 		// Add the cell table to the dataProvider.
 		dataProvider.addDataDisplay(table);
 
-		// List to add results to for data provider 
+		// List to add results to for data provider
 		List<FoodVendor> list = dataProvider.getList();
 
 		for (FoodVendor fd : vendorList) {
