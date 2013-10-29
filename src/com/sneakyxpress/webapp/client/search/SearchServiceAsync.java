@@ -1,4 +1,4 @@
-package com.sneakyxpress.webapp.client;
+package com.sneakyxpress.webapp.client.search;
 
 import java.util.List;
 

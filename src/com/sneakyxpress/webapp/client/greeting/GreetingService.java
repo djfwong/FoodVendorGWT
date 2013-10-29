@@ -1,4 +1,4 @@
-package com.sneakyxpress.webapp.client;
+package com.sneakyxpress.webapp.client.greeting;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

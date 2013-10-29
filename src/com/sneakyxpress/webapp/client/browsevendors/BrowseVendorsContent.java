@@ -1,4 +1,4 @@
-package com.sneakyxpress.webapp.client;
+package com.sneakyxpress.webapp.client.browsevendors;
 
 import java.util.List;
 
@@ -7,6 +7,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sneakyxpress.webapp.client.Content;
+import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
+import com.sneakyxpress.webapp.client.PageClickHandler;
+import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**

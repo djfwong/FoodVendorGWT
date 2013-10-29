@@ -1,4 +1,4 @@
-package com.sneakyxpress.webapp.client;
+package com.sneakyxpress.webapp.client.browsevendors;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sneakyxpress.webapp.shared.FoodVendor;

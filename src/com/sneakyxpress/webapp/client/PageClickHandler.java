@@ -7,7 +7,7 @@ import com.google.gwt.user.client.History;
 /**
  * Handles actions invoked by clicking links in the navigation bar
  */
-class PageClickHandler implements ClickHandler {
+public class PageClickHandler implements ClickHandler {
     Content page;
     String input;
 

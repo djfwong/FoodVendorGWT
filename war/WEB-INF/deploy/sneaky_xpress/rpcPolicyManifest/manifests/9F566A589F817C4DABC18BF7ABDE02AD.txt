@@ -1,2 +1,2 @@
-serviceClass: com.sneakyxpress.webapp.client.GreetingService
+serviceClass: com.sneakyxpress.webapp.client.greeting.GreetingService
 path: D76DB4499258BB89B39CA198489869A2.gwt.rpc

@@ -1,16 +1,15 @@
-package com.sneakyxpress.webapp.client;
+package com.sneakyxpress.webapp.client.search;
 
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
+import com.sneakyxpress.webapp.client.Content;
+import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
+import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**

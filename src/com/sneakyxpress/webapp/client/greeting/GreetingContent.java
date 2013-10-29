@@ -1,4 +1,4 @@
-package com.sneakyxpress.webapp.client;
+package com.sneakyxpress.webapp.client.greeting;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -14,6 +14,8 @@ import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.google.maps.gwt.client.MarkerOptions;
 import com.google.maps.gwt.client.MouseEvent;
+import com.sneakyxpress.webapp.client.Content;
+import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 
 /**
  * Get the content for our home page.

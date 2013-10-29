@@ -10,6 +10,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.sneakyxpress.webapp.client.comparators.DesComparator;
+import com.sneakyxpress.webapp.client.comparators.KeyComparator;
+import com.sneakyxpress.webapp.client.comparators.LocComparator;
+import com.sneakyxpress.webapp.client.comparators.NameComparator;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 public class FoodVendorDisplayTable {

@@ -1,8 +1,10 @@
-package com.sneakyxpress.webapp.client;
+package com.sneakyxpress.webapp.client.viewvendor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.sneakyxpress.webapp.client.Content;
+import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**

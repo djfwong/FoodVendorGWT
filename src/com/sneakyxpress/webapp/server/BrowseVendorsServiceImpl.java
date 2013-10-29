@@ -7,7 +7,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sneakyxpress.webapp.client.BrowseVendorsService;
+import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsService;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**

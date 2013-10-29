@@ -4,10 +4,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sneakyxpress.webapp.client.ViewVendorService;
+import com.sneakyxpress.webapp.client.viewvendor.ViewVendorService;
 import com.sneakyxpress.webapp.shared.FoodVendor;
-
-import java.util.List;
 
 /**
  * The server side implementation of the RPC service.

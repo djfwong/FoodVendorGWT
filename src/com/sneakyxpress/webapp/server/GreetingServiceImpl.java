@@ -1,6 +1,6 @@
 package com.sneakyxpress.webapp.server;
 
-import com.sneakyxpress.webapp.client.GreetingService;
+import com.sneakyxpress.webapp.client.greeting.GreetingService;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**

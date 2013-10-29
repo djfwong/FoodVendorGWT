@@ -7,10 +7,10 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.*;
-import com.google.maps.gwt.client.GoogleMap;
-import com.google.maps.gwt.client.LatLng;
-import com.google.maps.gwt.client.MapOptions;
-import com.google.maps.gwt.client.MapTypeId;
+import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
+import com.sneakyxpress.webapp.client.greeting.GreetingContent;
+import com.sneakyxpress.webapp.client.search.SearchContent;
+import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
