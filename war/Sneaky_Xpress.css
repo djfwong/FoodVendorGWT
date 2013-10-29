@@ -13,3 +13,10 @@
     visibility: hidden;
     transition: 0.3s all;
 }
+.map_canvas img{
+ 	max-width: none;
+}
+#map_canvas img{
+ 	max-width: none;
+ 	
+}

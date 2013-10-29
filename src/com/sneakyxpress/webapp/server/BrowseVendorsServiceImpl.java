@@ -1,13 +1,14 @@
 package com.sneakyxpress.webapp.server;
 
-import com.sneakyxpress.webapp.client.BrowseVendorsService;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sneakyxpress.webapp.shared.FoodVendor;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.sneakyxpress.webapp.client.BrowseVendorsService;
+import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**
  * The server side implementation of the RPC service.
