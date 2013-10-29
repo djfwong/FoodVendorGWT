@@ -10,10 +10,13 @@ public class NameComparator implements Comparator<FoodVendor> {
 			return 0;
 		}
 
-		// Compare the title columns.
-		if (o1 != null) {
-			return (o2 != null) ? o1.getName().compareTo(o2.getName()) : 1;
-		}
-		return -1;
+		// Compare the title columns
+		if (o1 == null || o1.getName().isEmpty()) {
+            return 1;
+        } else if (o2 == null || o2.getName().isEmpty()) {
+            return -1;
+        } else {
+            return o1.getName().compareTo(o2.getName());
+        }
 	}
 }
