@@ -5,8 +5,11 @@ import java.util.List;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 public class FoodVendorDisplayTable {
@@ -91,10 +94,33 @@ public class FoodVendorDisplayTable {
 		// Add column sort handler to table
 		table.addColumnSortHandler(colSortHandler);
 
-		// Set to query result
+		// Return default column
 		table.getColumnSortList().push(keyCol);
+		
+		clickTableRow(table);
 
 		// return table and display on page
 		return table;
+	}
+
+	public void clickTableRow(CellTable<FoodVendor> table) {
+		// Add a selection model to handle user selection 
+		// Base implementation for opening vendor pages from Food Vendor table
+		final SingleSelectionModel<FoodVendor> selectionModel = new SingleSelectionModel<FoodVendor>();
+		table.setSelectionModel(selectionModel);
+		selectionModel
+				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+
+					@Override
+					public void onSelectionChange(SelectionChangeEvent event) {
+						FoodVendor selected = selectionModel
+								.getSelectedObject();
+						if (selected != null) {
+							Window.alert("You selected: "
+									+ selected.getVendorId());
+						}
+
+					}
+				});
 	}
 }
