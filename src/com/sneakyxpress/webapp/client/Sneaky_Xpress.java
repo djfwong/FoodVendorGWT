@@ -151,4 +151,12 @@ public class Sneaky_Xpress implements EntryPoint {
         History.fireCurrentHistoryState();
 
     }
+
+    /**
+     * Getter for the VENDOR_PAGE
+     * @return      VENDOR_PAGE
+     */
+    public Content getVendorPage() {
+        return VENDOR_PAGE;
+    }
 }
