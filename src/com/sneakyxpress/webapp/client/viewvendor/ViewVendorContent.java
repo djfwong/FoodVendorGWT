@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.maps.gwt.client.*;
 import com.sneakyxpress.webapp.client.Content;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.shared.FoodVendor;
@@ -50,22 +51,38 @@ public class ViewVendorContent extends Content {
                         info.addStyleName("row-fluid");
 
                         // The basic text information
-                        HTMLPanel textInfo = new HTMLPanel("");
-                        textInfo.addStyleName("span6");
-
                         String name = vendor.getName();
                         if (name.isEmpty()) {
                             name = "<em class=\"muted\">No Name</em>";
                         }
-                        textInfo.add(new HTML("<h2>" + name + "</h2><hr style=\"padding-bottom: 10px\">"));
+
+                        HTMLPanel textInfo = new HTMLPanel("<h2>" + name + "</h2><hr style=\"padding-bottom: 10px\">");
+                        textInfo.addStyleName("span6");
 
                         textInfo.add(getInfoWidget("Description", vendor.getDescription()));
                         textInfo.add(getInfoWidget("Location", vendor.getLocation()));
 
                         // A simple map
                         HTMLPanel mapInfo = new HTMLPanel("");
-                        mapInfo.addStyleName("span6");
-                        mapInfo.add(new HTML("<p class=\"muted\">Stub for the vendor map!</p>"));
+                        mapInfo.addStyleName("span6 map_canvas");
+                        mapInfo.setHeight("400px");
+
+                        MapOptions options = MapOptions.create();
+                        options.setZoom(12.0);
+                        options.setCenter(LatLng.create(vendor.getLatitude(), vendor.getLongitude()));
+                        options.setMapTypeId(MapTypeId.ROADMAP);
+                        options.setDraggable(true);
+                        options.setMapTypeControl(true);
+                        options.setScaleControl(true);
+                        options.setScrollwheel(false);
+
+                        GoogleMap map = GoogleMap.create(mapInfo.getElement(), options);
+
+                        MarkerOptions markerOptions = MarkerOptions.create();
+                        markerOptions.setPosition(LatLng.create(vendor.getLatitude(), vendor.getLongitude()));
+                        markerOptions.setMap(map);
+                        markerOptions.setTitle(vendor.getName());
+                        Marker marker = Marker.create(markerOptions);
 
                         // Group all the basic information together
                         info.add(textInfo);
@@ -77,14 +94,14 @@ public class ViewVendorContent extends Content {
                         content.add(info);
                         module.changeContent(content);
                     }
+
+                    private Widget getInfoWidget(String title, String info) {
+                        if (info.isEmpty()) {
+                            info = "<em class=\"muted\">Information currently not available</em>";
+                        }
+
+                        return new HTML("<p><strong>" + title + "</strong><br>" + info + "</p>");
+                    }
                 });
-    }
-
-    private Widget getInfoWidget(String title, String info) {
-        if (info.isEmpty()) {
-            info = "<em class=\"muted\">Information currently not available.</em>";
-        }
-
-        return new HTML("<p><strong>" + title + "</strong><br>" + info + "</p>");
     }
 }
