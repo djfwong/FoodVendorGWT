@@ -16,12 +16,16 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.maps.gwt.client.GoogleMap;
+import com.google.maps.gwt.client.InfoWindow;
+import com.google.maps.gwt.client.InfoWindowOptions;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.MarkerImage;
 import com.google.maps.gwt.client.MarkerOptions;
+import com.google.maps.gwt.client.MouseEvent;
+import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.sneakyxpress.webapp.client.Content;
 import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
 import com.sneakyxpress.webapp.client.PageClickHandler;
@@ -129,12 +133,32 @@ public class BrowseVendorsContent extends Content {
 	                            	    newMarkerOpts.setTitle("Your Location");
 	                            	    Marker.create(newMarkerOpts);
 	                	    		}
-	                	    		
+
 	    							@Override
 	    							public void onFailure(PositionError reason) {
 	    								logger.log(Level.SEVERE, "Error adding user marker. Reason: " + reason.getMessage());
 	    							}
 	                	    	});
+	                	    }
+
+	                	    final InfoWindow infowindow = InfoWindow.create();
+	                	    
+	                	    // Plot POIs
+	                	    for(int i = 0; i < result.size(); i++) {
+	                	    	final FoodVendor tmp = result.get(i);
+	                	    	
+	                	    	MarkerOptions newMarkerOpts = MarkerOptions.create();
+	                    	    newMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
+	                    	    newMarkerOpts.setMap(map);
+	                    	    newMarkerOpts.setTitle(tmp.getName());
+	                    	    final Marker marker = Marker.create(newMarkerOpts);
+	                    	   	                    	    
+	                    	    marker.addClickListener(new ClickHandler() {
+	                    	    	public void handle(MouseEvent event) {
+	                    	    		infowindow.setContent(tmp.getDescription());
+	                    	    		infowindow.open(map, marker);
+	                    	    	}
+	                    	    });
 	                	    }
 						} else {
 							// By default load the list view
@@ -151,5 +175,3 @@ public class BrowseVendorsContent extends Content {
 				});
     }
 }
-
-
