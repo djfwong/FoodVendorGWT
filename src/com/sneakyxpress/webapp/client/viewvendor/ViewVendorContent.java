@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.client.viewvendor;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -53,7 +54,7 @@ public class ViewVendorContent extends Content {
                         // The basic text information
                         String name = vendor.getName();
                         if (name.isEmpty()) {
-                            name = "<em class=\"muted\">No Name</em>";
+                            name = "<em class=\"muted\">No Name Available</em>";
                         }
 
                         HTMLPanel textInfo = new HTMLPanel("<h2>" + name + "</h2><hr style=\"padding-bottom: 10px\">");
@@ -62,13 +63,24 @@ public class ViewVendorContent extends Content {
                         textInfo.add(getInfoWidget("Description", vendor.getDescription()));
                         textInfo.add(getInfoWidget("Location", vendor.getLocation()));
 
-                        // A simple map
+                        // Group all the information together
                         HTMLPanel mapInfo = new HTMLPanel("");
-                        mapInfo.addStyleName("span6 map_canvas");
-                        mapInfo.setHeight("400px");
+                        mapInfo.setStyleName("span6 map_canvas");
+                        mapInfo.getElement().setId("small_map_canvas");
 
+                        info.add(textInfo);
+                        info.add(mapInfo);
+
+                        content.add(info);
+
+                        // TODO: Reviews will go here
+
+                        // Change the content
+                        module.changeContent(content);
+
+                        // A simple map (it must be last or else it doesn't really work)
                         MapOptions options = MapOptions.create();
-                        options.setZoom(12.0);
+                        options.setZoom(14.0);
                         options.setCenter(LatLng.create(vendor.getLatitude(), vendor.getLongitude()));
                         options.setMapTypeId(MapTypeId.ROADMAP);
                         options.setDraggable(true);
@@ -76,23 +88,13 @@ public class ViewVendorContent extends Content {
                         options.setScaleControl(true);
                         options.setScrollwheel(false);
 
-                        GoogleMap map = GoogleMap.create(mapInfo.getElement(), options);
+                        GoogleMap map = GoogleMap.create(Document.get().getElementById("small_map_canvas"), options);
 
                         MarkerOptions markerOptions = MarkerOptions.create();
                         markerOptions.setPosition(LatLng.create(vendor.getLatitude(), vendor.getLongitude()));
                         markerOptions.setMap(map);
                         markerOptions.setTitle(vendor.getName());
-                        Marker marker = Marker.create(markerOptions);
-
-                        // Group all the basic information together
-                        info.add(textInfo);
-                        info.add(mapInfo);
-
-                        // TODO: Reviews will go here
-
-                        // Group all of our content together & change the content of the page
-                        content.add(info);
-                        module.changeContent(content);
+                        Marker.create(markerOptions);
                     }
 
                     private Widget getInfoWidget(String title, String info) {
