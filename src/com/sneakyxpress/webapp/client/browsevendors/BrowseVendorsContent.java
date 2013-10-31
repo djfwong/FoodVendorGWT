@@ -2,11 +2,25 @@ package com.sneakyxpress.webapp.client.browsevendors;
 
 import java.util.List;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.geolocation.client.Geolocation;
+import com.google.gwt.geolocation.client.Position;
+import com.google.gwt.geolocation.client.Position.Coordinates;
+import com.google.gwt.geolocation.client.PositionError;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.maps.gwt.client.GoogleMap;
+import com.google.maps.gwt.client.LatLng;
+import com.google.maps.gwt.client.MapOptions;
+import com.google.maps.gwt.client.MapTypeId;
+import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.MarkerImage;
+import com.google.maps.gwt.client.MarkerOptions;
 import com.sneakyxpress.webapp.client.Content;
 import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
 import com.sneakyxpress.webapp.client.PageClickHandler;
@@ -19,6 +33,8 @@ import com.sneakyxpress.webapp.shared.FoodVendor;
 public class BrowseVendorsContent extends Content {
 	private static final String pageName = "Browse Vendors";
 	private static final String pageStub = "browse";
+	
+	private GoogleMap map;
 
 	private final BrowseVendorsServiceAsync browseVendorsService = GWT
 			.create(BrowseVendorsService.class);
@@ -78,8 +94,48 @@ public class BrowseVendorsContent extends Content {
 						if (input.equals("map")) {
 							mapView.addStyleName("active");
 							listView.removeStyleName("active");
+							
 							// Add the map etc.
-						} else {
+							content.add(new HTML("<div id=\"map_canvas\"></div>"));
+							
+							// Create page
+							module.changeContent(content);
+	                        
+							// Add map
+	                        LatLng myLatLng = LatLng.create(49.250, -123.100);
+	                	    MapOptions myOptions = MapOptions.create();
+	                	    myOptions.setZoom(12.0);
+	                	    myOptions.setCenter(myLatLng);
+	                	    myOptions.setMapTypeId(MapTypeId.ROADMAP);
+	                	    map = GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
+	                	    
+	                	    // Get user's location
+	                	    if (Geolocation.isSupported()) {
+	                	    	Geolocation geo = Geolocation.getIfSupported();
+	                	    	geo.getCurrentPosition(new Callback<Position, PositionError>() {
+	                	    		
+	                	    		public void onSuccess(Position position) {
+	                	    			Coordinates c = position.getCoordinates();
+	                	    			
+	                	    			MarkerOptions newMarkerOpts = MarkerOptions.create();
+	                	    			newMarkerOpts.setPosition(LatLng.create(c.getLatitude(), c.getLongitude()));
+	                	    			//Custom icon from my Dropbox
+	                	    			newMarkerOpts.setIcon(MarkerImage.create("https://dl.dropboxusercontent.com/u/15430100/user.png"));
+	                            	    newMarkerOpts.setMap(map);
+	                            	    newMarkerOpts.setTitle("Your Location");
+	                            	    Marker.create(newMarkerOpts);
+	                	    		}
+	                	    		
+	    							@Override
+	    							public void onFailure(PositionError reason) {
+	    								System.out.println(reason.getMessage());
+	    							}
+	                	    	});
+	                	    }
+	                	   
+						} 
+						
+						else {
 							// By default load the list view
 							listView.addStyleName("active");
 							mapView.removeStyleName("active");
@@ -88,9 +144,9 @@ public class BrowseVendorsContent extends Content {
 							Widget table = new FoodVendorDisplayTable(result, module.getVendorPage()).getWidget();
 							//Widget table = displayDataInTable(result);
 							content.add(table);
+							
+							module.changeContent(content);
 						}
-
-						module.changeContent(content);
 					}
 				});
 	}	
