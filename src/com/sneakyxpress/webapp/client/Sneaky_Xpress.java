@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.google.maps.gwt.client.GoogleMap;
 import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
 import com.sneakyxpress.webapp.client.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.search.SearchContent;
@@ -45,7 +46,6 @@ public class Sneaky_Xpress implements EntryPoint {
         Window.scrollTo(0, 0); // Scroll to the top of the page
         loading.addStyleName("collapsed"); // Remove the loading bar
     }
-    
 
     /**
      * Adds a message to the top of the page (user can close it)

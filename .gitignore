@@ -10,6 +10,7 @@
 Sneaky_Xpress.iml
 
 # GWT files/folders
+classes/
 gwt-unitCache/
 out/
 test-classes/
