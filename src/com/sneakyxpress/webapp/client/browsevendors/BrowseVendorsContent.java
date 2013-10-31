@@ -9,6 +9,7 @@ import com.google.gwt.geolocation.client.Geolocation;
 import com.google.gwt.geolocation.client.Position;
 import com.google.gwt.geolocation.client.Position.Coordinates;
 import com.google.gwt.geolocation.client.PositionError;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
@@ -146,13 +147,17 @@ public class BrowseVendorsContent extends Content {
 	                	    	MarkerOptions newMarkerOpts = MarkerOptions.create();
 	                    	    newMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
 	                    	    newMarkerOpts.setMap(map);
-	                    	    newMarkerOpts.setTitle(tmp.getName());
+	                    	    if (tmp.getName().equals("")){
+	                    	    	newMarkerOpts.setTitle(tmp.getDescription());
+	                    	    }
+	                    	    else {
+	                    	    	newMarkerOpts.setTitle(tmp.getName());
+	                    	    }
 	                    	    final Marker marker = Marker.create(newMarkerOpts);
-	                    	   	                    	    
+	                    	    	                    	   	                    	    
 	                    	    marker.addClickListener(new ClickHandler() {
 	                    	    	public void handle(MouseEvent event) {
-	                    	    		infowindow.setContent(tmp.getDescription());
-	                    	    		infowindow.open(map, marker);
+	                    	    		History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
 	                    	    	}
 	                    	    });
 	                	    }
