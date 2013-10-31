@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.client.browsevendors;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
@@ -62,9 +63,7 @@ public class BrowseVendorsContent extends Content {
 					}
 
 					public void onSuccess(List<FoodVendor> result) {
-						HTMLPanel content = new HTMLPanel(""); // The new
-																// content to
-																// return
+						HTMLPanel content = new HTMLPanel(""); // The new content to return
 
 						// The sub-navigation bar
 						HTMLPanel list = new HTMLPanel("ul", "");
@@ -96,11 +95,14 @@ public class BrowseVendorsContent extends Content {
 							listView.removeStyleName("active");
 							
 							// Add the map etc.
-							content.add(new HTML("<div id=\"map_canvas\"></div>"));
-							
-							// Create page
-							module.changeContent(content);
-	                        
+                            HTMLPanel mapDiv = new HTMLPanel("");
+                            mapDiv.addStyleName("map_canvas");
+                            mapDiv.setSize("100%", "500px");
+
+                            // Change the page content
+                            content.add(new HTML("<div id=\"map_canvas\"></div>"));
+                            module.changeContent(content);
+
 							// Add map
 	                        LatLng myLatLng = LatLng.create(49.250, -123.100);
 	                	    MapOptions myOptions = MapOptions.create();
@@ -108,18 +110,20 @@ public class BrowseVendorsContent extends Content {
 	                	    myOptions.setCenter(myLatLng);
 	                	    myOptions.setMapTypeId(MapTypeId.ROADMAP);
 	                	    map = GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
-	                	    
+
 	                	    // Get user's location
 	                	    if (Geolocation.isSupported()) {
 	                	    	Geolocation geo = Geolocation.getIfSupported();
 	                	    	geo.getCurrentPosition(new Callback<Position, PositionError>() {
-	                	    		
+
+                                    @Override
 	                	    		public void onSuccess(Position position) {
 	                	    			Coordinates c = position.getCoordinates();
 	                	    			
 	                	    			MarkerOptions newMarkerOpts = MarkerOptions.create();
 	                	    			newMarkerOpts.setPosition(LatLng.create(c.getLatitude(), c.getLongitude()));
-	                	    			//Custom icon from my Dropbox
+
+	                	    			// Custom icon from my Dropbox
 	                	    			newMarkerOpts.setIcon(MarkerImage.create("https://dl.dropboxusercontent.com/u/15430100/user.png"));
 	                            	    newMarkerOpts.setMap(map);
 	                            	    newMarkerOpts.setTitle("Your Location");
@@ -128,28 +132,24 @@ public class BrowseVendorsContent extends Content {
 	                	    		
 	    							@Override
 	    							public void onFailure(PositionError reason) {
-	    								System.out.println(reason.getMessage());
+	    								logger.log(Level.SEVERE, "Error adding user marker. Reason: " + reason.getMessage());
 	    							}
 	                	    	});
 	                	    }
-	                	   
-						} 
-						
-						else {
+						} else {
 							// By default load the list view
 							listView.addStyleName("active");
 							mapView.removeStyleName("active");
 
 							// Add data table under List view
 							Widget table = new FoodVendorDisplayTable(result, module.getVendorPage()).getWidget();
-							//Widget table = displayDataInTable(result);
 							content.add(table);
-							
-							module.changeContent(content);
-						}
+
+                            module.changeContent(content); // Change the page content
+                        }
 					}
 				});
-	}	
+    }
 }
 
 

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
+
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
@@ -24,6 +25,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+
 import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
 import com.sneakyxpress.webapp.client.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.search.SearchContent;
