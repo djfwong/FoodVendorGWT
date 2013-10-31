@@ -68,7 +68,7 @@ public class BrowseVendorsContent extends Content {
 					}
 
 					public void onSuccess(final List<FoodVendor> result) {
-						HTMLPanel content = new HTMLPanel(""); // The new content to return
+						final HTMLPanel content = new HTMLPanel(""); // The new content to return
 
 						// The sub-navigation bar
 						HTMLPanel list = new HTMLPanel("ul", "");
@@ -217,17 +217,18 @@ public class BrowseVendorsContent extends Content {
                                             final Marker marker = Marker.create(tempMarkerOpts);
 
                                             marker.addClickListener(new ClickHandler() {
-                                                public void handle(MouseEvent event) {
-                                                    infowindow.setContent(tmp.getDescription());
-                                                    infowindow.open(map, marker);
-                                                }
-                                            });
+            	                    	    	public void handle(MouseEvent event) {
+            	                    	    		History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
+            	                    	    	}
+            	                    	    });
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(PositionError reason) {
-                                        logger.log(Level.SEVERE, "Error getting user's location. Reason: " + reason.getMessage());
+                                    	module.changeContent(new HTML("<div id=\"map_canvas\"><p class=\"lead\" "
+                                    + "style=\"text-align: center;\">We coudln't find your location!</p></div>"));
+                                    	logger.log(Level.SEVERE, "Error getting user's location. Reason: " + reason.getMessage());
                                     }
                                 });
                             }
