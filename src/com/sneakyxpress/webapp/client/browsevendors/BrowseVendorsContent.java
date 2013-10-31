@@ -66,7 +66,7 @@ public class BrowseVendorsContent extends Content {
 						module.addMessage(GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
 					}
 
-					public void onSuccess(List<FoodVendor> result) {
+					public void onSuccess(final List<FoodVendor> result) {
 						HTMLPanel content = new HTMLPanel(""); // The new content to return
 
 						// The sub-navigation bar
@@ -76,6 +76,7 @@ public class BrowseVendorsContent extends Content {
 						// The tabs in the sub-navigation bar
 						HTMLPanel listView = new HTMLPanel("li", "");
 						HTMLPanel mapView = new HTMLPanel("li", "");
+                        HTMLPanel localView = new HTMLPanel("li", "");
 
 						// Links for the tabs
 						Anchor listViewLink = new Anchor("List View");
@@ -88,20 +89,23 @@ public class BrowseVendorsContent extends Content {
 								BrowseVendorsContent.this, "map"));
 						mapView.add(mapViewLink);
 
+                        Anchor localViewLink = new Anchor("Vendors Near Me");
+                        localViewLink.addClickHandler(new PageClickHandler(
+                                BrowseVendorsContent.this, "local"));
+                        localView.add(localViewLink);
+
 						// Create the sub-navigation bar
 						list.add(listView);
 						list.add(mapView);
+                        list.add(localView);
+
 						content.add(list);
 
 						// Load the appropriate view
 						if (input.equals("map")) {
 							mapView.addStyleName("active");
 							listView.removeStyleName("active");
-							
-							// Add the map etc.
-                            HTMLPanel mapDiv = new HTMLPanel("");
-                            mapDiv.addStyleName("map_canvas");
-                            mapDiv.setSize("100%", "500px");
+                            localView.removeStyleName("active");
 
                             // Change the page content
                             content.add(new HTML("<div id=\"map_canvas\"></div>"));
@@ -160,7 +164,69 @@ public class BrowseVendorsContent extends Content {
 	                    	    	}
 	                    	    });
 	                	    }
-						} else {
+						} else if (input.equals("local")) {
+                            localView.addStyleName("active");
+                            listView.removeStyleName("active");
+                            mapView.removeStyleName("active");
+
+                            // Change the page content
+                            content.add(new HTML("<div id=\"map_canvas\"><p class=\"lead\" "
+                                    + "style=\"text-align: center;\">Please wait. Getting your location...</p></div>"));
+                            module.changeContent(content);
+
+                            // Get user's location
+                            if (Geolocation.isSupported()) {
+                                Geolocation geo = Geolocation.getIfSupported();
+                                geo.getCurrentPosition(new Callback<Position, PositionError>() {
+
+                                    @Override
+                                    public void onSuccess(Position position) {
+                                        Coordinates c = position.getCoordinates();
+
+                                        // Add map
+                                        LatLng userLatLng = LatLng.create(c.getLatitude(), c.getLongitude());
+                                        MapOptions myOptions = MapOptions.create();
+                                        myOptions.setZoom(16.0);
+                                        myOptions.setCenter(userLatLng);
+                                        myOptions.setMapTypeId(MapTypeId.ROADMAP);
+                                        map = GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
+
+                                        // Add the user marker
+                                        MarkerOptions newMarkerOpts = MarkerOptions.create();
+                                        newMarkerOpts.setPosition(userLatLng);
+                                        newMarkerOpts.setIcon(MarkerImage.create("https://dl.dropboxusercontent.com/u/15430100/user.png"));
+                                        newMarkerOpts.setMap(map);
+                                        newMarkerOpts.setTitle("Your Location");
+                                        Marker.create(newMarkerOpts);
+
+                                        final InfoWindow infowindow = InfoWindow.create();
+
+                                        // Plot POIs
+                                        for(int i = 0; i < result.size(); i++) {
+                                            final FoodVendor tmp = result.get(i);
+
+                                            MarkerOptions tempMarkerOpts = MarkerOptions.create();
+                                            tempMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
+                                            tempMarkerOpts.setMap(map);
+                                            tempMarkerOpts.setTitle(tmp.getName());
+                                            final Marker marker = Marker.create(tempMarkerOpts);
+
+                                            marker.addClickListener(new ClickHandler() {
+                                                public void handle(MouseEvent event) {
+                                                    infowindow.setContent(tmp.getDescription());
+                                                    infowindow.open(map, marker);
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(PositionError reason) {
+                                        logger.log(Level.SEVERE, "Error getting user's location. Reason: " + reason.getMessage());
+                                    }
+                                });
+                            }
+                        } else {
 							// By default load the list view
 							listView.addStyleName("active");
 							mapView.removeStyleName("active");

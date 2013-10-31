@@ -80,7 +80,7 @@ public class ViewVendorContent extends Content {
 
                         // A simple map (it must be last or else it doesn't really work)
                         MapOptions options = MapOptions.create();
-                        options.setZoom(12.0);
+                        options.setZoom(14.0);
                         options.setCenter(LatLng.create(vendor.getLatitude(), vendor.getLongitude()));
                         options.setMapTypeId(MapTypeId.ROADMAP);
                         options.setDraggable(true);
