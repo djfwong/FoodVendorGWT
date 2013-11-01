@@ -175,7 +175,7 @@ public class BrowseVendorsContent extends Content {
                             mapView.removeStyleName("active");
 
                             // Change the page content
-                            content.add(new HTML("<div id=\"map_canvas\"><p class=\"lead\" "
+                            content.add(new HTML("<div id=\"map_canvas\"><p class=\"lead\" id=\"geoMessage\" "
                                     + "style=\"text-align: center;\">Please wait. Getting your location...</p></div>"));
                             module.changeContent(content);
 
@@ -224,11 +224,10 @@ public class BrowseVendorsContent extends Content {
                                         }
                                     }
 
+                                    // If getting Geolocation fails
                                     @Override
                                     public void onFailure(PositionError reason) {
-                                    	module.changeContent(new HTML("<div id=\"map_canvas\"><p class=\"lead\" "
-                                    + "style=\"text-align: center;\">We coudln't find your location!</p></div>"));
-                                    	logger.log(Level.SEVERE, "Error getting user's location. Reason: " + reason.getMessage());
+                                    	content.getElementById("geoMessage").setInnerHTML("We couldn't find your location!");
                                     }
                                 });
                             }
