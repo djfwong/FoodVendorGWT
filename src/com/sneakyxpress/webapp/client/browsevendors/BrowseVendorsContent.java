@@ -143,8 +143,6 @@ public class BrowseVendorsContent extends Content {
 	    							}
 	                	    	});
 	                	    }
-
-	                	    //final InfoWindow infowindow = InfoWindow.create();
 	                	    
 	                	    // Plot POIs
 	                	    for(int i = 0; i < result.size(); i++) {
@@ -202,8 +200,6 @@ public class BrowseVendorsContent extends Content {
                                         newMarkerOpts.setTitle("Your Location");
                                         Marker.create(newMarkerOpts);
 
-                                        //final InfoWindow infowindow = InfoWindow.create();
-
                                         // Plot POIs
                                         for(int i = 0; i < result.size(); i++) {
                                             final FoodVendor tmp = result.get(i);
@@ -219,7 +215,6 @@ public class BrowseVendorsContent extends Content {
                                             	tempMarkerOpts.setTitle(tmp.getName());
                                             }
                                             
-                                            //tempMarkerOpts.setTitle(tmp.getName());
                                             final Marker marker = Marker.create(tempMarkerOpts);
 
                                             marker.addClickListener(new ClickHandler() {
