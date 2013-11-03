@@ -71,6 +71,7 @@ public class BrowseVendorsContent extends Content {
 						// The sub-navigation bar
 						HTMLPanel list = new HTMLPanel("ul", "");
 						list.addStyleName("nav nav-tabs");
+						list.add(new HTML("<p><b>In our list view, click on any vendor to view it's profile page. On our map views, hover over the pins for the vendor information, or click on the pin to view the vendor's profile page.</b></p>"));
 
 						// The tabs in the sub-navigation bar
 						HTMLPanel listView = new HTMLPanel("li", "");
