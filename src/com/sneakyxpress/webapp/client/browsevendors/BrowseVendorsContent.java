@@ -17,16 +17,14 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.maps.gwt.client.GoogleMap;
-import com.google.maps.gwt.client.InfoWindow;
-import com.google.maps.gwt.client.InfoWindowOptions;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.google.maps.gwt.client.MarkerImage;
 import com.google.maps.gwt.client.MarkerOptions;
 import com.google.maps.gwt.client.MouseEvent;
-import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.sneakyxpress.webapp.client.Content;
 import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
 import com.sneakyxpress.webapp.client.PageClickHandler;
@@ -146,7 +144,7 @@ public class BrowseVendorsContent extends Content {
 	                	    	});
 	                	    }
 
-	                	    final InfoWindow infowindow = InfoWindow.create();
+	                	    //final InfoWindow infowindow = InfoWindow.create();
 	                	    
 	                	    // Plot POIs
 	                	    for(int i = 0; i < result.size(); i++) {
@@ -204,7 +202,7 @@ public class BrowseVendorsContent extends Content {
                                         newMarkerOpts.setTitle("Your Location");
                                         Marker.create(newMarkerOpts);
 
-                                        final InfoWindow infowindow = InfoWindow.create();
+                                        //final InfoWindow infowindow = InfoWindow.create();
 
                                         // Plot POIs
                                         for(int i = 0; i < result.size(); i++) {
@@ -213,7 +211,15 @@ public class BrowseVendorsContent extends Content {
                                             MarkerOptions tempMarkerOpts = MarkerOptions.create();
                                             tempMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
                                             tempMarkerOpts.setMap(map);
-                                            tempMarkerOpts.setTitle(tmp.getName());
+                                            
+                                            if(tmp.getName().equals("")){
+                                            	tempMarkerOpts.setTitle(tmp.getDescription());
+                                            }
+                                            else{
+                                            	tempMarkerOpts.setTitle(tmp.getName());
+                                            }
+                                            
+                                            //tempMarkerOpts.setTitle(tmp.getName());
                                             final Marker marker = Marker.create(tempMarkerOpts);
 
                                             marker.addClickListener(new ClickHandler() {
