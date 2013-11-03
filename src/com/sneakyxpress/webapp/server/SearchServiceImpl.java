@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-
+import org.apache.commons.lang3.StringUtils;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sneakyxpress.webapp.client.search.SearchService;
 import com.sneakyxpress.webapp.shared.FoodVendor;
@@ -23,11 +23,11 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
     	Query q1 = pm.newQuery(FoodVendor.class);
     	List<FoodVendor> all_vendors = (List<FoodVendor>) q1.execute();
     	for (FoodVendor f : all_vendors){
-    		if (f.getName().contains(input)){
+    		if (StringUtils.containsIgnoreCase(f.getName(), input)){
     			search_results.add(f);
-    		} else if (f.getDescription().contains(input)){
+    		} else if (StringUtils.containsIgnoreCase(f.getDescription(), input)){
     			search_results.add(f);
-    		} else if (f.getLocation().contains(input)){
+    		} else if (StringUtils.containsIgnoreCase(f.getLocation(), input)){
     			search_results.add(f);
     		}
     	}
