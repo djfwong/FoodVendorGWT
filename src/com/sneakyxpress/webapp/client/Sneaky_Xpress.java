@@ -122,6 +122,11 @@ public class Sneaky_Xpress implements EntryPoint {
         loginListElement.add(getLoginLink());
         navbarList.add(loginListElement);
 
+        // Add the update data button
+        HTMLPanel dataListElement = new HTMLPanel("li", "");
+        dataListElement.add(getDataLink());
+        navbarList.add(dataListElement);
+
 		// Create the search form
 		final TextBox searchInput = TextBox.wrap(Document.get().getElementById(
 				"search-input"));
@@ -233,4 +238,17 @@ public class Sneaky_Xpress implements EntryPoint {
 
         return link;
 	}
+
+    private Anchor getDataLink() {
+        Anchor link = new Anchor("Update Data");
+        link.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.open(GWT.getModuleBaseURL() + "updateData", "_blank", "enabled,height=40,width=200,menubar=no," +
+                        "status=yes,toolbar=no,location=no");
+            }
+        });
+
+        return link;
+    }
 }

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -112,12 +113,21 @@ public class UpdateDataServiceImpl extends RemoteServiceServlet {
         URL url = new URL(DATA_LOCATION);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+        String response = "";
         try {
             int changes[] = parseData(connection.getInputStream()); // Parse the data
-            logger.log(Level.INFO, "Retrieved & parsed data successfully: " + String.valueOf(changes[1])
-                    + " vendors removed, " + String.valueOf(changes[0]) + " vendors added");
+            response = "Retrieved & parsed data successfully: " + String.valueOf(changes[1])
+                    + " vendors removed, " + String.valueOf(changes[0]) + " vendors added";
+            logger.log(Level.INFO, response);
+            resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Retrieving or parsing of data failed: " + e.toString());
+            response = "Retrieving or parsing of data failed: " + e.toString();
+            logger.log(Level.SEVERE, response);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+
+        // Add information to the body of the response
+        OutputStream bodyStream = resp.getOutputStream();
+        bodyStream.write(response.getBytes(Charset.forName("UTF-8")));
     }
 }
