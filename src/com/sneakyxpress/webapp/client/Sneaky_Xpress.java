@@ -8,6 +8,8 @@ import com.google.api.gwt.oauth2.client.AuthRequest;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -18,6 +20,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -115,9 +118,9 @@ public class Sneaky_Xpress implements EntryPoint {
 		logger.log(Level.INFO, "onModuleLoad: created navigation bar");
 
         // Add the login button
-        HTMLPanel listElement = new HTMLPanel("li", "");
-        listElement.add(getLoginLink());
-        navbarList.add(listElement);
+        HTMLPanel loginListElement = new HTMLPanel("li", "");
+        loginListElement.add(getLoginLink());
+        navbarList.add(loginListElement);
 
 		// Create the search form
 		final TextBox searchInput = TextBox.wrap(Document.get().getElementById(
@@ -218,8 +221,6 @@ public class Sneaky_Xpress implements EntryPoint {
                     @Override
                     public void onSuccess(String token) {
                         logger.log(Level.INFO, "Got facebook oauth login token");
-
-                        AUTH.login();
                     }
 
                     @Override

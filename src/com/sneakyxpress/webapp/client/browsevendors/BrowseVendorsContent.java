@@ -71,7 +71,6 @@ public class BrowseVendorsContent extends Content {
 						// The sub-navigation bar
 						HTMLPanel list = new HTMLPanel("ul", "");
 						list.addStyleName("nav nav-tabs");
-						list.add(new HTML("<p><b>In our list view, click on any vendor to view it's profile page. On our map views, hover over the pins for the vendor information, or click on the pin to view the vendor's profile page.</b></p>"));
 
 						// The tabs in the sub-navigation bar
 						HTMLPanel listView = new HTMLPanel("li", "");
@@ -106,6 +105,9 @@ public class BrowseVendorsContent extends Content {
 							mapView.addStyleName("active");
 							listView.removeStyleName("active");
                             localView.removeStyleName("active");
+
+                            // Add instructions
+                            content.add(new HTML("<p class=\"lead\">Hover over a pin for a description of the vendor. Click on the pin to view the vendor's profile page.</p>"));
 
                             // Change the page content
                             content.add(new HTML("<div id=\"map_canvas\"></div>"));
@@ -170,6 +172,9 @@ public class BrowseVendorsContent extends Content {
                             localView.addStyleName("active");
                             listView.removeStyleName("active");
                             mapView.removeStyleName("active");
+
+                            // Add instructions
+                            content.add(new HTML("<p class=\"lead\">Hover over a pin for a description of the vendor. Click on the pin to view the vendor's profile page.</p>"));
 
                             // Change the page content
                             content.add(new HTML("<div id=\"map_canvas\"><p class=\"lead\" id=\"geoMessage\" "
@@ -237,6 +242,10 @@ public class BrowseVendorsContent extends Content {
 							// By default load the list view
 							listView.addStyleName("active");
 							mapView.removeStyleName("active");
+                            localView.removeStyleName("active");
+
+                            // Add instructions
+                            content.add(new HTML("<p class=\"lead\">Click on a row in the table to view the vendor's profile page.</p>"));
 
 							// Add data table under List view
 							Widget table = new FoodVendorDisplayTable(result, module.getVendorPage()).getWidget();

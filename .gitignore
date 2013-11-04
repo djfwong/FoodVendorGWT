@@ -16,6 +16,7 @@ out/
 test-classes/
 war/WEB-INF/classes/com/
 war/WEB-INF/deploy/
+war/WEB-INF/appengine-web.xml
 war/sneaky_xpress/
 *.cache.html
 *.nocache.js
