@@ -62,6 +62,7 @@ public class ViewVendorContent extends Content {
 
                         textInfo.add(getInfoWidget("Description", vendor.getDescription()));
                         textInfo.add(getInfoWidget("Location", vendor.getLocation()));
+                        textInfo.add(new HTML("<br>")); // Some padding
 
                         // Group all the information together
                         HTMLPanel mapInfo = new HTMLPanel("");
