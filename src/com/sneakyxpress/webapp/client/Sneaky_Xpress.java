@@ -19,7 +19,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -95,10 +94,6 @@ public class Sneaky_Xpress implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
-		addFacebookAuth();
-		// Export the JS method that can be called in pure JS
-	    Auth.export();
-
 		// Create the brand/title in the navigation bar
 		Anchor brandLink = new Anchor(HOME_PAGE.getPageName());
 		brandLink.addClickHandler(new PageClickHandler(HOME_PAGE, ""));
@@ -118,6 +113,11 @@ public class Sneaky_Xpress implements EntryPoint {
 			navbarList.add(listElement);
 		}
 		logger.log(Level.INFO, "onModuleLoad: created navigation bar");
+
+        // Add the login button
+        HTMLPanel listElement = new HTMLPanel("li", "");
+        listElement.add(getLoginLink());
+        navbarList.add(listElement);
 
 		// Create the search form
 		final TextBox searchInput = TextBox.wrap(Document.get().getElementById(
@@ -200,37 +200,36 @@ public class Sneaky_Xpress implements EntryPoint {
 		return VENDOR_PAGE;
 	}
 
-	private void addFacebookAuth() {
+	private Anchor getLoginLink() {
 		// Since the auth flow requires opening a popup window, it must be
 		// started
 		// as a direct result of a user action, such as clicking a button or
 		// link.
 		// Otherwise, a browser's popup blocker may block the popup.
-		Button button = new Button("Authenticate with Facebook");
-		button.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				final AuthRequest req = new AuthRequest(FACEBOOK_AUTH_URL,
-						FACEBOOK_CLIENT_ID).withScopes(FACEBOOK_EMAIL_SCOPE,
-						FACEBOOK_BIRTHDAY_SCOPE)
-				// Facebook expects a comma-delimited list of scopes
-						.withScopeDelimiter(",");
-				AUTH.login(req, new Callback<String, Throwable>() {
-					@Override
-					public void onSuccess(String token) {
-						Window.alert("Got an OAuth token:\n" + token + "\n"
-								+ "Token expires in " + AUTH.expiresIn(req)
-								+ " ms\n");
-					}
+		Anchor link = new Anchor("Login");
+		link.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                final AuthRequest req = new AuthRequest(FACEBOOK_AUTH_URL, FACEBOOK_CLIENT_ID)
+                        .withScopes(FACEBOOK_EMAIL_SCOPE, FACEBOOK_BIRTHDAY_SCOPE)
+                        .withScopeDelimiter(","); // Facebook expects a comma-delimited list of scopes
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Error:\n" + caught.getMessage());
-					}
-				});
-			}
-		});
-		RootPanel.get().add(button);
+                AUTH.login(req, new Callback<String, Throwable>() {
+                    @Override
+                    public void onSuccess(String token) {
+                        logger.log(Level.INFO, "Got facebook oauth login token");
+
+                        AUTH.login();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        logger.log(Level.SEVERE, "Facebook login failed. Reason: " + caught.getMessage());
+                    }
+                });
+            }
+        });
+
+        return link;
 	}
-
 }
