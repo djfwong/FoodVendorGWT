@@ -1,5 +1,5 @@
 package com.sneakyxpress.test;
 
-public class dummyTest {
+public class DummyTest {
 
 }

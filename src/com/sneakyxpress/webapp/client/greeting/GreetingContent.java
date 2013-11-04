@@ -30,9 +30,6 @@ public class GreetingContent extends Content {
     private static final String pageName = "Vancouver Food Vendor Reviews";
     private static final String pageStub = "home";
 
-    private Marker marker;
-    private GoogleMap map;
-    
     private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
     public GreetingContent(Sneaky_Xpress module) {
