@@ -10,22 +10,21 @@ import com.google.gwt.geolocation.client.Geolocation;
 import com.google.gwt.geolocation.client.Position;
 import com.google.gwt.geolocation.client.Position.Coordinates;
 import com.google.gwt.geolocation.client.PositionError;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.maps.gwt.client.GoogleMap;
-import com.google.maps.gwt.client.InfoWindow;
-import com.google.maps.gwt.client.InfoWindowOptions;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.google.maps.gwt.client.MarkerImage;
 import com.google.maps.gwt.client.MarkerOptions;
 import com.google.maps.gwt.client.MouseEvent;
-import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.sneakyxpress.webapp.client.Content;
 import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
 import com.sneakyxpress.webapp.client.PageClickHandler;
@@ -67,11 +66,12 @@ public class BrowseVendorsContent extends Content {
 					}
 
 					public void onSuccess(final List<FoodVendor> result) {
-						HTMLPanel content = new HTMLPanel(""); // The new content to return
+						final HTMLPanel content = new HTMLPanel(""); // The new content to return
 
 						// The sub-navigation bar
 						HTMLPanel list = new HTMLPanel("ul", "");
 						list.addStyleName("nav nav-tabs");
+						list.add(new HTML("<p><b>In our list view, click on any vendor to view it's profile page. On our map views, hover over the pins for the vendor information, or click on the pin to view the vendor's profile page.</b></p>"));
 
 						// The tabs in the sub-navigation bar
 						HTMLPanel listView = new HTMLPanel("li", "");
@@ -144,8 +144,6 @@ public class BrowseVendorsContent extends Content {
 	    							}
 	                	    	});
 	                	    }
-
-	                	    final InfoWindow infowindow = InfoWindow.create();
 	                	    
 	                	    // Plot POIs
 	                	    for(int i = 0; i < result.size(); i++) {
@@ -154,13 +152,17 @@ public class BrowseVendorsContent extends Content {
 	                	    	MarkerOptions newMarkerOpts = MarkerOptions.create();
 	                    	    newMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
 	                    	    newMarkerOpts.setMap(map);
-	                    	    newMarkerOpts.setTitle(tmp.getName());
+	                    	    if (tmp.getName().equals("")){
+	                    	    	newMarkerOpts.setTitle(tmp.getDescription());
+	                    	    }
+	                    	    else {
+	                    	    	newMarkerOpts.setTitle(tmp.getName());
+	                    	    }
 	                    	    final Marker marker = Marker.create(newMarkerOpts);
-	                    	   	                    	    
+	                    	    	                    	   	                    	    
 	                    	    marker.addClickListener(new ClickHandler() {
 	                    	    	public void handle(MouseEvent event) {
-	                    	    		infowindow.setContent(tmp.getDescription());
-	                    	    		infowindow.open(map, marker);
+	                    	    		History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
 	                    	    	}
 	                    	    });
 	                	    }
@@ -170,7 +172,7 @@ public class BrowseVendorsContent extends Content {
                             mapView.removeStyleName("active");
 
                             // Change the page content
-                            content.add(new HTML("<div id=\"map_canvas\"><p class=\"lead\" "
+                            content.add(new HTML("<div id=\"map_canvas\"><p class=\"lead\" id=\"geoMessage\" "
                                     + "style=\"text-align: center;\">Please wait. Getting your location...</p></div>"));
                             module.changeContent(content);
 
@@ -199,8 +201,6 @@ public class BrowseVendorsContent extends Content {
                                         newMarkerOpts.setTitle("Your Location");
                                         Marker.create(newMarkerOpts);
 
-                                        final InfoWindow infowindow = InfoWindow.create();
-
                                         // Plot POIs
                                         for(int i = 0; i < result.size(); i++) {
                                             final FoodVendor tmp = result.get(i);
@@ -208,21 +208,28 @@ public class BrowseVendorsContent extends Content {
                                             MarkerOptions tempMarkerOpts = MarkerOptions.create();
                                             tempMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
                                             tempMarkerOpts.setMap(map);
-                                            tempMarkerOpts.setTitle(tmp.getName());
+                                            
+                                            if(tmp.getName().equals("")){
+                                            	tempMarkerOpts.setTitle(tmp.getDescription());
+                                            }
+                                            else{
+                                            	tempMarkerOpts.setTitle(tmp.getName());
+                                            }
+                                            
                                             final Marker marker = Marker.create(tempMarkerOpts);
 
                                             marker.addClickListener(new ClickHandler() {
-                                                public void handle(MouseEvent event) {
-                                                    infowindow.setContent(tmp.getDescription());
-                                                    infowindow.open(map, marker);
-                                                }
-                                            });
+            	                    	    	public void handle(MouseEvent event) {
+            	                    	    		History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
+            	                    	    	}
+            	                    	    });
                                         }
                                     }
 
+                                    // If getting Geolocation fails
                                     @Override
                                     public void onFailure(PositionError reason) {
-                                        logger.log(Level.SEVERE, "Error getting user's location. Reason: " + reason.getMessage());
+                                    	content.getElementById("geoMessage").setInnerHTML("We couldn't find your location!");
                                     }
                                 });
                             }
