@@ -30,7 +30,7 @@ public class FacebookTools {
 
 	// This app's personal client ID assigned by the Facebook Developer App
 	// (http://www.facebook.com/developers).
-	private static final String FACEBOOK_CLIENT_ID = "383766345086697";
+	private static final String FACEBOOK_APP_ID = "383766345086697"; // 181220262080855 (Michael's)
 
 	// All available scopes are listed here:
 	// http://developers.facebook.com/docs/authentication/permissions/
@@ -45,7 +45,11 @@ public class FacebookTools {
 
 	// Our oath token. If we don't have one, it's an empty string.
 	private static String token = "";
+
+    // Data retrieved from facebook, by default null
 	JSONObject userInfo = null;
+    JSONObject userFriends = null;
+
 
 	/**
 	 * Constructor for FacebookTools
@@ -57,17 +61,24 @@ public class FacebookTools {
 		this.module = module;
 	}
 
-	public JSONObject getUserInfo() throws NotLoggedInException {
+
+	public JSONObject getUserInfo() throws NoUserInfoException {
 		if (userInfo == null) {
-			throw new NotLoggedInException();
+			throw new NoUserInfoException();
 		}
 
 		return userInfo;
 	}
 
-	public JSONObject getFriends() {
-		return null;
+
+	public JSONObject getUserFriends() throws NoUserInfoException {
+		if (userFriends == null) {
+            throw new NoUserInfoException();
+        }
+
+        return userInfo;
 	}
+
 
 	/**
 	 * Returns an anchor that, when clicked, retrieves an OAuth token from
@@ -85,28 +96,25 @@ public class FacebookTools {
 		link.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				login();
+				loginAndUpdate();
 			}
 		});
 
 		return link;
 	}
 
+
 	/**
 	 * If the user is not logged in, displays a window so the user can log in.
 	 * If the user accepts this login, we get an access token that we save.
 	 * 
-	 * Once we have the access token, we use it to retrieve the user's
-	 * information.
+	 * Once we have the access token, we use it to retrieve the user's information.
 	 */
-	private void login() {
+	private void loginAndUpdate() {
+        // Facebook expects a comma-delimited list of scopes
 		final AuthRequest req = new AuthRequest(FACEBOOK_AUTH_URL,
-				FACEBOOK_CLIENT_ID).withScopes(FACEBOOK_EMAIL_SCOPE,
-				FACEBOOK_BIRTHDAY_SCOPE).withScopeDelimiter(","); // Facebook
-		// expects a
-		// comma-delimited
-		// list of
-		// scopes
+                FACEBOOK_APP_ID).withScopes(FACEBOOK_EMAIL_SCOPE,
+				FACEBOOK_BIRTHDAY_SCOPE).withScopeDelimiter(",");
 
 		AUTH.login(req, new Callback<String, Throwable>() {
 			@Override
@@ -114,18 +122,20 @@ public class FacebookTools {
 				logger.log(Level.INFO, "Got facebook oauth login token");
 				FacebookTools.token = token;
 
+                // Update the user's information
 				retrieveUserInfo();
+                retrieveUserFriends();
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				String message = "Facebook login failed. Reason: "
-						+ caught.getMessage();
+				String message = "Facebook login failed. Reason: " + caught.getMessage();
 				logger.log(Level.SEVERE, message);
 				module.addMessage(message);
 			}
 		});
 	}
+
 
 	private void retrieveUserInfo() {
 		String url = FACEBOOK_GRAPH_URL + "/me?access_token=" + token;
@@ -141,8 +151,7 @@ public class FacebookTools {
 
 			@Override
 			public void onSuccess(JavaScriptObject jsObj) {
-				logger.log(Level.INFO,
-						"Successfully retrieved user data from facebook");
+				logger.log(Level.INFO, "Successfully retrieved user data from facebook");
 				userInfo = new JSONObject(jsObj);
 
 				// Grab user details and make new user object from JSON object
@@ -175,8 +184,12 @@ public class FacebookTools {
 		});
 	}
 
-	// TODO:Method to add user to data store
-	public boolean persistNewUser(User user, String email) {
+    private void retrieveUserFriends() {
+        // TODO: Implement
+    }
+
+	// TODO: Method to add user to data store
+	private boolean persistNewUser(User user, String email) {
 		return false;	
 	}
 }
