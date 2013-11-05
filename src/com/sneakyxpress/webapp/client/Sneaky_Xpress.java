@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.greeting.GreetingContent;
+import com.sneakyxpress.webapp.client.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.search.SearchContent;
 import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
 
@@ -42,9 +43,10 @@ public class Sneaky_Xpress implements EntryPoint {
 	private final Content SEARCH_PAGE = new SearchContent(this);
 	private final Content VENDOR_PAGE = new ViewVendorContent(this);
     private final Content BROWSE_PAGE = new BrowseVendorsContent(this);
+    private final Content PROFILE_PAGE = new ProfileContent(this);
 
     // Register all pages here so they can be iterated over (used for History support)
-    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE };
+    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE };
 
 
     /**

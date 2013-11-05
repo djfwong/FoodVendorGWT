@@ -47,8 +47,9 @@ public class FacebookTools {
 	private static String token = "";
 
     // Data retrieved from facebook, by default null
-	JSONObject userInfo = null;
-    JSONObject userFriends = null;
+	private JSONObject userInfo = null;
+    private JSONObject userFriends = null;
+    private String userId = null;
 
 
 	/**
@@ -62,9 +63,18 @@ public class FacebookTools {
 	}
 
 
+    public String getUserId() throws NoUserInfoException {
+        if (userId == null) {
+            throw new NoUserInfoException("No user ID available");
+        }
+
+        return userId;
+    }
+
+
 	public JSONObject getUserInfo() throws NoUserInfoException {
 		if (userInfo == null) {
-			throw new NoUserInfoException();
+			throw new NoUserInfoException("No user info available");
 		}
 
 		return userInfo;
@@ -73,7 +83,7 @@ public class FacebookTools {
 
 	public JSONObject getUserFriends() throws NoUserInfoException {
 		if (userFriends == null) {
-            throw new NoUserInfoException();
+            throw new NoUserInfoException("No user friends available");
         }
 
         return userInfo;
