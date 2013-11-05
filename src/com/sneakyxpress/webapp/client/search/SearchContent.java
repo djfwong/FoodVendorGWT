@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -48,11 +49,12 @@ public class SearchContent extends Content {
                 	if (!search_results.isEmpty()){
                 		Widget table = new FoodVendorDisplayTable(search_results, module.getVendorPage()).getWidget();
                 		content.add(table);
+                        module.changeContent(content);
                 	} else {
-                		Widget no_matches = new Label("Sorry, no matches were found :(");
-                		content.add(no_matches);
+                		content.add(new HTML("<p class=\"lead\" id=\"geoMessage\" style=\"text-align: center;\">" +
+                                "Sorry, no matches were found :(</p></div>"));
                 	}
-                	
+
                     module.changeContent(content);
                 }
             });
