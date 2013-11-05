@@ -169,19 +169,11 @@ public class FacebookTools {
 
 				if (userInfo.containsKey("email")) {
 					user.setEmail(userInfo.get("email").toString());
-					Window.alert(userInfo.get("email").toString());
+					System.out.println(userInfo.get("email").toString());
 				}
-				if (userInfo.containsKey("first_name")) {
-					user.setFname(userInfo.get("first_name").toString());
-					Window.alert(userInfo.get("first_name").toString());
-				}
-				if (userInfo.containsKey("last_name")) {
-					user.setLname(userInfo.get("last_name").toString());
-					Window.alert(userInfo.get("last_name").toString());
-				}
-				if (userInfo.containsKey("gender")) {
-					user.setGender(userInfo.get("gender").toString());
-					Window.alert(userInfo.get("gender").toString());
+				if (userInfo.containsKey("id")) {
+					user.setId(userInfo.get("id").toString());
+					System.out.println((userInfo.get("id").toString()));
 				}
 
 				// TODO: Persist user object to app engine datastore
