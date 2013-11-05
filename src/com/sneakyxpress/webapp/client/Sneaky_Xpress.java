@@ -3,13 +3,8 @@ package com.sneakyxpress.webapp.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.api.gwt.oauth2.client.Auth;
-import com.google.api.gwt.oauth2.client.AuthRequest;
-
-import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -20,7 +15,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -29,6 +23,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.search.SearchContent;
 import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
@@ -38,24 +33,9 @@ import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
  */
 public class Sneaky_Xpress implements EntryPoint {
 	// Our logger
-	private static Logger logger = Logger.getLogger("");
-	private static RootPanel loading = RootPanel.get("loading");
-
-	// Use the implementation of Auth intended to be used in the GWT client app.
-	private static final Auth AUTH = Auth.get();
-	private static final String FACEBOOK_AUTH_URL = "https://www.facebook.com/dialog/oauth";
-
-	// This app's personal client ID assigned by the Facebook Developer App
-	// (http://www.facebook.com/developers).
-	private static final String FACEBOOK_CLIENT_ID = "383766345086697";
-
-	// All available scopes are listed here:
-	// http://developers.facebook.com/docs/authentication/permissions/
-	// This scope allows the app to access the user's email address.
-	private static final String FACEBOOK_EMAIL_SCOPE = "email";
-
-	// This scope allows the app to access the user's birthday.
-	private static final String FACEBOOK_BIRTHDAY_SCOPE = "user_birthday";
+	private final Logger logger = Logger.getLogger("");
+	private final RootPanel loading = RootPanel.get("loading");
+    private final FacebookTools facebookTools = new FacebookTools(this);
 
 	/**
 	 * The pages to be shown in the navigation bar
@@ -119,7 +99,7 @@ public class Sneaky_Xpress implements EntryPoint {
 
         // Add the login button
         HTMLPanel loginListElement = new HTMLPanel("li", "");
-        loginListElement.add(getLoginLink());
+        loginListElement.add(facebookTools.getLoginLink());
         navbarList.add(loginListElement);
 
         // Add the update data button
@@ -206,37 +186,6 @@ public class Sneaky_Xpress implements EntryPoint {
 	 */
 	public Content getVendorPage() {
 		return VENDOR_PAGE;
-	}
-
-	private Anchor getLoginLink() {
-		// Since the auth flow requires opening a popup window, it must be
-		// started
-		// as a direct result of a user action, such as clicking a button or
-		// link.
-		// Otherwise, a browser's popup blocker may block the popup.
-		Anchor link = new Anchor("Login");
-		link.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                final AuthRequest req = new AuthRequest(FACEBOOK_AUTH_URL, FACEBOOK_CLIENT_ID)
-                        .withScopes(FACEBOOK_EMAIL_SCOPE, FACEBOOK_BIRTHDAY_SCOPE)
-                        .withScopeDelimiter(","); // Facebook expects a comma-delimited list of scopes
-
-                AUTH.login(req, new Callback<String, Throwable>() {
-                    @Override
-                    public void onSuccess(String token) {
-                        logger.log(Level.INFO, "Got facebook oauth login token");
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        logger.log(Level.SEVERE, "Facebook login failed. Reason: " + caught.getMessage());
-                    }
-                });
-            }
-        });
-
-        return link;
 	}
 
     private Anchor getDataLink() {
