@@ -1,10 +1,12 @@
 package com.sneakyxpress.webapp.client.facebook;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
+
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,8 +16,10 @@ import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.shared.User;
+
 
 /**
  * Contains various functions to help with Facebook integration and OAuth login
@@ -47,9 +51,9 @@ public class FacebookTools {
 	private static String token = "";
 
     // Data retrieved from facebook, by default null
-	private JSONObject userInfo = null;
-    private JSONObject userFriends = null;
-    private String userId = null;
+    private List<String> userFriendsIds = null;
+    private String userId = "";
+    private String userName = "";
 
 
 	/**
@@ -63,30 +67,18 @@ public class FacebookTools {
 	}
 
 
-    public String getUserId() throws NoUserInfoException {
-        if (userId == null) {
-            throw new NoUserInfoException("No user ID available");
-        }
-
+    public String getUserId() {
         return userId;
     }
 
 
-	public JSONObject getUserInfo() throws NoUserInfoException {
-		if (userInfo == null) {
-			throw new NoUserInfoException("No user info available");
-		}
-
-		return userInfo;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
 
-	public JSONObject getUserFriends() throws NoUserInfoException {
-		if (userFriends == null) {
-            throw new NoUserInfoException("No user friends available");
-        }
-
-        return userInfo;
+	public List<String> getUserFriends() {
+        return userFriendsIds;
 	}
 
 
@@ -162,19 +154,27 @@ public class FacebookTools {
 			@Override
 			public void onSuccess(JavaScriptObject jsObj) {
 				logger.log(Level.INFO, "Successfully retrieved user data from facebook");
-				userInfo = new JSONObject(jsObj);
+				JSONObject userInfo = new JSONObject(jsObj);
 
 				// Grab user details and make new user object from JSON object
 				User user = new User();
 
 				if (userInfo.containsKey("email")) {
 					user.setEmail(userInfo.get("email").toString());
-					System.out.println(userInfo.get("email").toString());
+					logger.log(Level.INFO, "Parsed user email: " + userInfo.get("email").toString());
 				}
+
 				if (userInfo.containsKey("id")) {
-					user.setId(userInfo.get("id").toString());
-					System.out.println((userInfo.get("id").toString()));
+                    userId = userInfo.get("id").toString();
+					user.setId(userId);
+                    logger.log(Level.INFO, "Parsed user ID: " + userId);
 				}
+
+                if (userInfo.containsKey("name")) {
+                    userName = userInfo.get("name").toString();
+                    user.setName(userName);
+                    logger.log(Level.INFO, "Parsed user name: " + userName);
+                }
 
 				// TODO: Persist user object to app engine datastore
 				if (persistNewUser(user, user.getEmail())) {
@@ -186,9 +186,11 @@ public class FacebookTools {
 		});
 	}
 
+
     private void retrieveUserFriends() {
         // TODO: Implement
     }
+
 
 	// TODO: Method to add user to data store
 	private boolean persistNewUser(User user, String email) {

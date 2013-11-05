@@ -17,16 +17,19 @@ public class User implements IsSerializable {
 	 * User domain object
 	 */
 
+    // Facebook Id of User
+    @PrimaryKey
+    @Persistent
+    @Id
+    private String id;
+
 	// Unique identifier for object, email
 	@Column(name = "email")
 	@Persistent
-	@Id
 	private String email = "";
 
-	// Facebook Id of User
-	@PrimaryKey
-	@Persistent
-	private String id;
+    @Persistent
+    private String name = "No Name Available";
 
 	public String getEmail() {
 		return email;
@@ -43,5 +46,12 @@ public class User implements IsSerializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -57,7 +57,7 @@ public class ViewVendorContent extends Content {
                             name = "<em class=\"muted\">No Name Available</em>";
                         }
 
-                        HTMLPanel textInfo = new HTMLPanel("<h2>" + name + "</h2><hr style=\"padding-bottom: 10px\">");
+                        HTMLPanel textInfo = new HTMLPanel("<div class=\"page-header\"><h2>" + name + "</h2></div>");
                         textInfo.addStyleName("span6");
 
                         textInfo.add(getInfoWidget("Description", vendor.getDescription()));
@@ -98,7 +98,7 @@ public class ViewVendorContent extends Content {
                         Marker.create(markerOptions);
                     }
 
-                    private Widget getInfoWidget(String title, String info) {
+                    private HTML getInfoWidget(String title, String info) {
                         if (info.isEmpty()) {
                             info = "<em class=\"muted\">Information currently not available</em>";
                         }
