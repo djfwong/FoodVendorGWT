@@ -163,7 +163,7 @@ public class FacebookTools {
 				}
 				if (userInfo.containsKey("id")) {
 					user.setId(userInfo.get("id").toString());
-					System.out.println((userInfo.get("first_name").toString()));
+					System.out.println((userInfo.get("id").toString()));
 				}
 
 				// TODO: Persist user object to app engine datastore
