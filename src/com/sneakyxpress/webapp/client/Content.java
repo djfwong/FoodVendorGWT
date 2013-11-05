@@ -1,6 +1,5 @@
 package com.sneakyxpress.webapp.client;
 
-import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
 
 /**

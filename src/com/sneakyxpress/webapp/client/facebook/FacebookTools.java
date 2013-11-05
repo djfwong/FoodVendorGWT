@@ -1,5 +1,8 @@
 package com.sneakyxpress.webapp.client.facebook;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
 import com.google.gwt.core.client.Callback;
@@ -8,12 +11,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Contains various functions to help with Facebook integration and OAuth login
@@ -126,9 +127,24 @@ public class FacebookTools {
             }
 
             @Override
-            public void onSuccess(JavaScriptObject result) {
+            public void onSuccess(JavaScriptObject jsObj) {
                 logger.log(Level.INFO, "Successfully retrieved user data from facebook");
-                userInfo = new JSONObject(result);
+                userInfo = new JSONObject(jsObj);
+              
+                
+                if (userInfo.containsKey("email")){
+                	Window.alert(userInfo.get("email").toString());
+                }
+                if (userInfo.containsKey("first_name")){
+                	Window.alert(userInfo.get("first_name").toString());
+                }
+                if (userInfo.containsKey("last_name")){
+                	Window.alert(userInfo.get("last_name").toString());
+                }
+                if (userInfo.containsKey("gender")){
+                	Window.alert(userInfo.get("gender").toString());
+                }
+           
             }
         });
     }
