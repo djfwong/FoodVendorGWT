@@ -1,7 +1,11 @@
 package com.sneakyxpress.webapp.client.facebook;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
@@ -15,6 +19,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.server.PMF;
 import com.sneakyxpress.webapp.shared.User;
 
 /**
@@ -103,10 +108,10 @@ public class FacebookTools {
 		final AuthRequest req = new AuthRequest(FACEBOOK_AUTH_URL,
 				FACEBOOK_CLIENT_ID).withScopes(FACEBOOK_EMAIL_SCOPE,
 				FACEBOOK_BIRTHDAY_SCOPE).withScopeDelimiter(","); // Facebook
-																	// expects a
-																	// comma-delimited
-																	// list of
-																	// scopes
+		// expects a
+		// comma-delimited
+		// list of
+		// scopes
 
 		AUTH.login(req, new Callback<String, Throwable>() {
 			@Override
@@ -166,8 +171,17 @@ public class FacebookTools {
 				}
 
 				// TODO: Persist user object to app engine datastore
-
+				if (persistNewUser(user, user.getEmail())) {
+					Window.alert("Welcome new member");
+				} else {
+					Window.alert("Adding to DB failed");
+				}
 			}
 		});
+	}
+
+	// TODO:Method to add user to data store
+	public boolean persistNewUser(User user, String email) {
+		return false;	
 	}
 }
