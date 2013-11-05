@@ -1,11 +1,7 @@
 package com.sneakyxpress.webapp.client.facebook;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
 import com.google.api.gwt.oauth2.client.Auth;
 import com.google.api.gwt.oauth2.client.AuthRequest;
@@ -19,7 +15,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
-import com.sneakyxpress.webapp.server.PMF;
 import com.sneakyxpress.webapp.shared.User;
 
 /**

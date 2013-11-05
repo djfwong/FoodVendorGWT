@@ -32,22 +32,25 @@ import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Sneaky_Xpress implements EntryPoint {
-	// Our logger
 	private final Logger logger = Logger.getLogger("");
-	private final RootPanel loading = RootPanel.get("loading");
+    private final RootPanel loading = RootPanel.get("loading");
+
     private final FacebookTools facebookTools = new FacebookTools(this);
 
-	/**
-	 * The pages to be shown in the navigation bar
-	 */
+	// The pages to be shown in the navigation bar
 	private final Content HOME_PAGE = new GreetingContent(this);
 	private final Content SEARCH_PAGE = new SearchContent(this);
 	private final Content VENDOR_PAGE = new ViewVendorContent(this);
-	private final Content[] PAGES = new Content[] { new BrowseVendorsContent(
-			this) };
+    private final Content BROWSE_PAGE = new BrowseVendorsContent(this);
+
+    // Register all pages here so they can be iterated over (used for History support)
+    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE };
+
 
     /**
      * Changes the contents of the page to the specified Content
+     *
+     * @param content   the content to change the page to
      */
     public void changeContent(Widget content) {
         RootPanel body = RootPanel.get("content");
@@ -58,8 +61,11 @@ public class Sneaky_Xpress implements EntryPoint {
         loading.addStyleName("collapsed"); // Remove the loading bar
     }
 
+
     /**
      * Adds a message to the top of the page (user can close it)
+     *
+     * @param info      the information to be displayed in the message
      */
     public void addMessage(String info) {
         HTML alert = new HTML("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
@@ -72,129 +78,162 @@ public class Sneaky_Xpress implements EntryPoint {
         logger.log(Level.INFO, "addMessage: " + info);
     }
 
+
 	/**
 	 * This is the entry point method
 	 */
 	public void onModuleLoad() {
+        addBrandName(); // Create the brand link in the navigation bar
 
-		// Create the brand/title in the navigation bar
-		Anchor brandLink = new Anchor(HOME_PAGE.getPageName());
-		brandLink.addClickHandler(new PageClickHandler(HOME_PAGE, ""));
-		brandLink.addStyleName("brand");
-		RootPanel.get("brand").add(brandLink);
-		logger.log(Level.INFO, "onModuleLoad: created brand/title");
+        addNavigationLinks(); // Add page & function links to the navigation bar
 
-		// Create the navigation bar
-		RootPanel navbarList = RootPanel.get("navigation-bar");
-		for (Content page : PAGES) {
-			Anchor pageLink = new Anchor(page.getPageName());
+        addSearchForm(); // Add the search form to the navigation bar
 
-			pageLink.addClickHandler(new PageClickHandler(page, ""));
+        initializeHistory(); // Add history support
 
-			HTMLPanel listElement = new HTMLPanel("li", "");
-			listElement.add(pageLink);
-			navbarList.add(listElement);
-		}
-		logger.log(Level.INFO, "onModuleLoad: created navigation bar");
+        History.fireCurrentHistoryState(); // Load the current page, by default the home page
+    }
 
-        // Add the login button
+
+    /**
+     * Adds the large brand name to the navigation bar. The text links to our home page.
+     */
+    private void addBrandName() {
+        Anchor brandLink = new Anchor(HOME_PAGE.getPageName());
+        brandLink.addClickHandler(new PageClickHandler(HOME_PAGE, ""));
+        brandLink.addStyleName("brand");
+        RootPanel.get("brand").add(brandLink);
+        logger.log(Level.INFO, "addBrandName: created the brand name link");
+    }
+
+
+    /**
+     * Adds the navigation links to the navigation bar. This includes page links and other functional links (such as
+     * login etc.)
+     */
+    private void addNavigationLinks() {
+        RootPanel navbarList = RootPanel.get("navigation-bar");
+
+        // Add the browse vendors link
+        HTMLPanel browseListElement = new HTMLPanel("li", "");
+        Anchor browseLink = new Anchor(BROWSE_PAGE.getPageName());
+        browseLink.addClickHandler(new PageClickHandler(BROWSE_PAGE, "list"));
+        browseListElement.add(browseLink);
+        navbarList.add(browseListElement);
+        logger.log(Level.INFO, "addNavigationLinks: created the browse link");
+
+        // Add the login link
         HTMLPanel loginListElement = new HTMLPanel("li", "");
         loginListElement.add(facebookTools.getLoginLink());
         navbarList.add(loginListElement);
+        logger.log(Level.INFO, "addNavigationLinks: created the login link");
 
-        // Add the update data button
+        // Add the update data link
         HTMLPanel dataListElement = new HTMLPanel("li", "");
         dataListElement.add(getDataLink());
         navbarList.add(dataListElement);
+        logger.log(Level.INFO, "addNavigationLinks: created the update data link");
+    }
 
-		// Create the search form
-		final TextBox searchInput = TextBox.wrap(Document.get().getElementById(
-				"search-input"));
-		searchInput.addKeyUpHandler(new KeyUpHandler() {
-			@Override
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					String input = searchInput.getText().trim();
 
-					if (!input.matches("(\\w| )*")) {
-						addMessage("Sorry, \""
-								+ input
-								+ "\" contains invalid characters. "
-								+ "Only letters and spaces are allowed. Please remove them and try again.");
-					} else if (input.length() > 20) {
-						addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
-					} else if (input.length() == 0) {
-						addMessage("Sorry your search query is empty. Please enter something.");
-					} else {
-						History.newItem(SEARCH_PAGE.getPageStub() + "?" + input);
-					}
-				}
-			}
-		});
-		logger.log(Level.INFO, "onModuleLoad: created the search form");
+    /**
+     * Adds the search form to the navigation bar
+     */
+    private void addSearchForm() {
+        // Create the search form
+        final TextBox searchInput = TextBox.wrap(Document.get().getElementById("search-input"));
+        searchInput.addKeyUpHandler(new KeyUpHandler() {
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                    String input = searchInput.getText().trim(); // Remove extra whitespace
 
-		// Implements history support
-		History.addValueChangeHandler(new ValueChangeHandler<String>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				loading.removeStyleName("collapsed"); // Add the loading bar
+                    if (!input.matches("(\\w| )*")) {
+                        addMessage("Sorry, \"" + input + "\" contains invalid characters. "
+                                + "Only letters and spaces are allowed. Please remove them and try again.");
+                    } else if (input.length() > 20) {
+                        addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
+                    } else if (input.length() == 0) {
+                        addMessage("Sorry your search query is empty. Please enter something.");
+                    } else {
+                        History.newItem(SEARCH_PAGE.getPageStub() + "?" + input);
+                    }
+                }
+            }
+        });
+        logger.log(Level.INFO, "addSearchForm: created the search form");
+    }
 
-				String historyToken = event.getValue();
-				String pageStub = historyToken;
-				String input = "";
-				if (historyToken.contains("?")) {
-					int split = historyToken.lastIndexOf("?");
-					pageStub = historyToken.substring(0, split);
-					input = historyToken.substring(split + 1);
-				}
 
-				logger.log(Level.INFO, "History: pageStub=\"" + pageStub
-						+ "\" input=\"" + input + "\"");
+    /**
+     * Adds history support to our application. History manages the forward/back functions of the application and also
+     * which page to load depending on the url.
+     */
+    private void initializeHistory() {
+        History.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                loading.removeStyleName("collapsed"); // Add the loading bar
 
-				// Parse the history token
-				boolean foundPage = false;
-				for (Content page : PAGES) {
-					if (page.getPageStub().equals(pageStub)) {
-						page.getAndChangeContent(input);
-						foundPage = true;
-						break;
-					}
-				}
+                String historyToken = event.getValue();
+                String pageStub = historyToken;
+                String input = "";
+                if (historyToken.contains("?")) {
+                    int split = historyToken.lastIndexOf("?");
+                    pageStub = historyToken.substring(0, split);
+                    input = historyToken.substring(split + 1);
+                }
 
-				if (!foundPage) {
-					if (SEARCH_PAGE.getPageStub().equals(pageStub)) {
-						SEARCH_PAGE.getAndChangeContent(input);
-					} else if (VENDOR_PAGE.getPageStub().equals(pageStub)) {
-						VENDOR_PAGE.getAndChangeContent(input);
-					} else { // By default load the home page
-						HOME_PAGE.getAndChangeContent(input);
-					}
-				}
-			}
-		});
-		logger.log(Level.INFO, "onModuleLoad: added history support");
+                logger.log(Level.INFO, "History: pageStub=\"" + pageStub + "\" input=\"" + input + "\"");
 
-		// Load the current page, by default the home page
-		History.fireCurrentHistoryState();
+                // Parse the history token
+                for (Content page : ALL_PAGES) {
+                    if (page.getPageStub().equals(pageStub)) {
+                        page.getAndChangeContent(input);
+                        return;
+                    }
+                }
 
-	}
+                // By default load the home page
+                HOME_PAGE.getAndChangeContent("");
+            }
+        });
+        logger.log(Level.INFO, "initializeHistory: added history support");
+    }
 
-	/**
+
+    /**
 	 * Getter for the VENDOR_PAGE
 	 * 
-	 * @return VENDOR_PAGE
+	 * @return      VENDOR_PAGE
 	 */
 	public Content getVendorPage() {
 		return VENDOR_PAGE;
 	}
 
+
+    /**
+     * Getter for our instance of FacebookTools
+     *
+     * @return      facebookTools
+     */
+    public FacebookTools getFacebookTools() {
+        return facebookTools;
+    }
+
+
+    /**
+     * Creates the link used to update food vendor data
+     *
+     * @return      the link
+     */
     private Anchor getDataLink() {
         Anchor link = new Anchor("Update Data");
         link.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open(GWT.getModuleBaseURL() + "updateData", "_blank", "enabled,height=40,width=200,menubar=no," +
-                        "status=yes,toolbar=no,location=no");
+                Window.open(GWT.getModuleBaseURL() + "updateData", "_blank", "enabled,height=40,width=200,menubar=no,"
+                        + "status=yes,toolbar=no,location=no");
             }
         });
 
