@@ -18,20 +18,15 @@ public class User implements IsSerializable {
 	 */
 
 	// Unique identifier for object, email
-	@PrimaryKey
+	@Column(name = "email")
 	@Persistent
 	@Id
-	private String email;
+	private String email = "";
 
-	// First name
-	@Column(name = "fname")
+	// Facebook Id of User
+	@PrimaryKey
 	@Persistent
-	private String fname;
-
-	// last name
-	@Column(name = "lname")
-	@Persistent
-	private String lname;
+	private String id;
 
 	public String getEmail() {
 		return email;
@@ -41,32 +36,12 @@ public class User implements IsSerializable {
 		this.email = email;
 	}
 
-	public String getFname() {
-		return fname;
+	public String getId() {
+		return id;
 	}
 
-	public void setFname(String fname) {
-		this.fname = fname;
+	public void setId(String id) {
+		this.id = id;
 	}
-
-	public String getLname() {
-		return lname;
-	}
-
-	public void setLname(String lname) {
-		this.lname = lname;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	// gender
-	@Column(name = "gender")
-	@Persistent
-	private String gender;
+	
 }
