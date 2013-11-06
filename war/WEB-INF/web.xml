@@ -1,73 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
-         xmlns="http://java.sun.com/xml/ns/javaee">
+	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
-    <!-- Servlets -->
-    <!-- Home page -->
-    <servlet>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
-        <servlet-class>com.sneakyxpress.webapp.server.GreetingServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
-        <url-pattern>/sneaky_xpress/greet</url-pattern>
-    </servlet-mapping>
+	<!-- Servlets -->
+	<!-- Home page -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.GreetingServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
+		<url-pattern>/sneaky_xpress/greet</url-pattern>
+	</servlet-mapping>
 
-    <!-- Browse Vendors page -->
-    <servlet>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress BrowseVendorsService</servlet-name>
-        <servlet-class>com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress BrowseVendorsService</servlet-name>
-        <url-pattern>/sneaky_xpress/browseVendors</url-pattern>
-    </servlet-mapping>
-    
-    <!-- Search Results page -->
-    <servlet>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress SearchService</servlet-name>
-        <servlet-class>com.sneakyxpress.webapp.server.SearchServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress SearchService</servlet-name>
-        <url-pattern>/sneaky_xpress/search</url-pattern>
-    </servlet-mapping>
+	<!-- Browse Vendors page -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+			BrowseVendorsService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+			BrowseVendorsService</servlet-name>
+		<url-pattern>/sneaky_xpress/browseVendors</url-pattern>
+	</servlet-mapping>
 
-    <!-- View vendor page -->
-    <servlet>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ViewVendorService</servlet-name>
-        <servlet-class>com.sneakyxpress.webapp.server.ViewVendorServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ViewVendorService</servlet-name>
-        <url-pattern>/sneaky_xpress/viewVendor</url-pattern>
-    </servlet-mapping>
+	
+	<!-- Login -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress PersistUserService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.PersistUserServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress PersistUserService</servlet-name>
+		<url-pattern>/sneaky_xpress/addUser</url-pattern>
+	</servlet-mapping>
 
-    <!-- Profile page -->
-    <servlet>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ProfileService</servlet-name>
-        <servlet-class>com.sneakyxpress.webapp.server.ProfileServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ProfileService</servlet-name>
-        <url-pattern>/sneaky_xpress/profile</url-pattern>
-    </servlet-mapping>
 
-    <!-- Update Data cron job -->
-    <servlet>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>
-        <servlet-class>com.sneakyxpress.webapp.server.UpdateDataServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>
-        <url-pattern>/sneaky_xpress/updateData</url-pattern>
-    </servlet-mapping>
+	<!-- Search Results page -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress SearchService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.SearchServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress SearchService</servlet-name>
+		<url-pattern>/sneaky_xpress/search</url-pattern>
+	</servlet-mapping>
 
-    <!-- Default page to serve -->
-    <welcome-file-list>
-        <welcome-file>Sneaky_Xpress.html</welcome-file>
-    </welcome-file-list>
+	<!-- View vendor page -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ViewVendorService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.ViewVendorServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ViewVendorService</servlet-name>
+		<url-pattern>/sneaky_xpress/viewVendor</url-pattern>
+	</servlet-mapping>
+
+	<!-- Profile page -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ProfileService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.ProfileServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ProfileService</servlet-name>
+		<url-pattern>/sneaky_xpress/profile</url-pattern>
+	</servlet-mapping>
+
+	<!-- Update Data cron job -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.UpdateDataServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>
+		<url-pattern>/sneaky_xpress/updateData</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>Sneaky_Xpress.html</welcome-file>
+	</welcome-file-list>
 </web-app>

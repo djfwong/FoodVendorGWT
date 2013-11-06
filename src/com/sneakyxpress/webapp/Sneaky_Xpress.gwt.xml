@@ -31,6 +31,8 @@
 		class="com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl" />
 	<servlet path="/updateData"
 		class="com.sneakyxpress.webapp.server.UpdateDataServiceImpl" />
+	<servlet path="/addUser"
+		class="com.sneakyxpress.webapp.server.PersistUserServiceImpl" />
 
 	<!-- Specify the paths for translatable code -->
 	<source path="client" />
