@@ -23,24 +23,19 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements Pers
 
 
 	@Override
-	public String persistNewUserToDatastore(User user)
+	public Boolean persistNewUserToDatastore(User user)
 			throws IllegalArgumentException {
 		try {
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 
-			// Add non-duplicate new user to app engine datastore
-			Query q = pm.newQuery(User.class, "id == idParam");
-			q.declareParameters("String idParam");
-			
-			// Search by id 
-			List<User> results = (List<User>) q.execute(user.getId());
-
 			// Add to datastore
-			if (results.isEmpty()) {
+			if (!userInDatabase(user.getId())) {
 				pm.makePersistentAll(user);
 	
 				// Clean-up
 				pm.close();
+				
+				return true;
 			}
 			
 			else {
@@ -50,6 +45,29 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements Pers
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
-		return null;
+		return false;
+	}
+
+
+	@Override
+	public boolean userInDatabase(String userId) {
+		try {
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+
+			// Add non-duplicate new user to app engine datastore
+			Query q = pm.newQuery(User.class, "id == idParam");
+			q.declareParameters("String idParam");
+			
+			// Search by id 
+			List<User> results = (List<User>) q.execute(userId);
+			
+			if(!results.isEmpty()){
+				return true;
+			}
+		}
+		catch(Exception e){
+			logger.log(Level.SEVERE, e.getMessage());
+		}
+		return false;
 	}
 }

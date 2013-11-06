@@ -5,7 +5,10 @@ import com.sneakyxpress.webapp.shared.User;
 
 public interface PersistUserServiceAsync {
 
-	void persistNewUserToDatastore(User user, AsyncCallback<String> callback);
+	void persistNewUserToDatastore(User user, AsyncCallback<Boolean> callback);
+
+	void userInDatabase(String userId, AsyncCallback<Boolean> callback);
+
 
 }
 	

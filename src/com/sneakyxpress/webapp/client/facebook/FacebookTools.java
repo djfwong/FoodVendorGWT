@@ -37,7 +37,6 @@ public class FacebookTools {
 	// (http://www.facebook.com/developers).
 	private static final String FACEBOOK_APP_ID = "383766345086697"; // 181220262080855
 																		// (Michael's)
-
 	// All available scopes are listed here:
 	// http://developers.facebook.com/docs/authentication/permissions/
 	// This scope allows the app to access the user's email address.
@@ -169,17 +168,10 @@ public class FacebookTools {
 					logger.log(Level.INFO, "Parsed user ID: " + userId);
 				}
 
-				if (userInfo.containsKey("name")) {
-					userName = userInfo.get("name").toString();
-					user.setName(userName);
-					logger.log(Level.INFO, "Parsed user name: " + userName);
-				}
-
-				// TODO: Persist user object to app engine datastore
-				if (persistNewUser(user, user.getEmail())) {
+				if (persistNewUser(user, user.getId())) {
 					Window.alert("Welcome new member");
 				} else {
-					Window.alert("Adding to DB failed");
+					Window.alert("Welcome back" + user.getEmail());
 				}
 			}
 		});
@@ -192,7 +184,7 @@ public class FacebookTools {
 	//Method to add user to data store
 	private boolean persistNewUser(User user, String id) {
 		persistService.persistNewUserToDatastore(user,
-				new AsyncCallback<String>() {
+				new AsyncCallback<Boolean>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -201,11 +193,9 @@ public class FacebookTools {
 					}
 
 					@Override
-					public void onSuccess(String result) {
+					public void onSuccess(Boolean result) {
 						// TODO Auto-generated method stub
-						if(result != null){
-							logger.log(Level.INFO, result.toString());
-						}						
+						logger.log(Level.INFO, "Persist user result: " + result);				
 					}
 
 				});

@@ -31,9 +31,6 @@ public class User implements IsSerializable {
 	@Persistent
 	private String email = "";
 
-    @Persistent
-    private String name = "No Name Available";
-
 	public String getEmail() {
 		return email;
 	}
@@ -49,12 +46,4 @@ public class User implements IsSerializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
