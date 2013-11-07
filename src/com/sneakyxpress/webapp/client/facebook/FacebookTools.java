@@ -1,5 +1,6 @@
 package com.sneakyxpress.webapp.client.facebook;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,13 +10,17 @@ import com.google.api.gwt.oauth2.client.AuthRequest;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.sneakyxpress.webapp.client.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.shared.User;
 
@@ -51,38 +56,59 @@ public class FacebookTools {
 	// Our oath token. If we don't have one, it's an empty string.
 	private static String token = "";
 
+    // Keeps track of whether or not we are logged in
+    private boolean loggedIn = false;
+
 	// Data retrieved from facebook, by default null
-	private List<String> userFriendsIds = null;
-	private String userId = "";
-	private String userName = "";
+	private List<String> userFriendsIds = new LinkedList<String>();
+	private String userId = "<em class=\"muted\">No ID Available</em>";
+	private String userName = "<em class=\"muted\">No Name Available</em>";
+
+    private Anchor loginLink;
+    private HandlerRegistration clickHandlerReg;
 
 	/**
 	 * Constructor for FacebookTools
 	 * 
-	 * @param module
-	 *            The module that is using this tool set
+	 * @param module    The module that is using this tool set
 	 */
 	public FacebookTools(Sneaky_Xpress module) {
 		this.module = module;
 	}
 
-	public String getUserId() {
-		return userId;
+
+	public String getUserId() throws NotLoggedInException {
+		if (!loggedIn) {
+            throw new NotLoggedInException();
+        } else {
+            return userId;
+        }
 	}
 
-	public String getUserName() {
-		return userName;
+
+	public String getUserName() throws NotLoggedInException {
+		if (!loggedIn) {
+            throw new NotLoggedInException();
+        } else {
+            return userName;
+        }
 	}
 
-	public List<String> getUserFriends() {
-		return userFriendsIds;
+
+	public List<String> getUserFriendsIds() throws NotLoggedInException {
+		if (!loggedIn) {
+            throw new NotLoggedInException();
+        } else {
+            return userFriendsIds;
+        }
 	}
+
 
 	/**
 	 * Returns an anchor that, when clicked, retrieves an OAuth token from
 	 * Facebook and saves the token in this utility class.
 	 * 
-	 * @return The login anchor
+	 * @return          The login anchor
 	 */
 	public Anchor getLoginLink() {
 		// Since the auth flow requires opening a popup window, it must be
@@ -90,16 +116,29 @@ public class FacebookTools {
 		// as a direct result of a user action, such as clicking a button or
 		// link.
 		// Otherwise, a browser's popup blocker may block the popup.
-		Anchor link = new Anchor("Login");
-		link.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				loginAndUpdate();
-			}
-		});
+		loginLink = new Anchor("Login");
+		clickHandlerReg = loginLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                loginAndUpdate();
+            }
+        });
 
-		return link;
+		return loginLink;
 	}
+
+
+    /**
+     * Change the login link into a profile link. The user must be logged in.
+     */
+    private void convertLoginLink() {
+        clickHandlerReg.removeHandler(); // Remove the login action from the link
+
+        // Change the text and action to be for the profile page
+        loginLink.setText("My Profile");
+        loginLink.addClickHandler(new PageClickHandler(module.PROFILE_PAGE, userId));
+    }
+
 
 	/**
 	 * If the user is not logged in, displays a window so the user can log in.
@@ -135,6 +174,7 @@ public class FacebookTools {
 		});
 	}
 
+
 	private void retrieveUserInfo() {
 		String url = FACEBOOK_GRAPH_URL + "/me?access_token=" + token;
 
@@ -143,8 +183,7 @@ public class FacebookTools {
 			@Override
 			public void onFailure(Throwable caught) {
 				logger.log(Level.SEVERE,
-						"Retrieving user data from facebook failed. Reason: "
-								+ caught.getMessage());
+						"Retrieving user data from facebook failed. Reason: " + caught.getMessage());
 			}
 
 			@Override
@@ -158,8 +197,7 @@ public class FacebookTools {
 
 				if (userInfo.containsKey("email")) {
 					user.setEmail(userInfo.get("email").toString());
-					logger.log(Level.INFO, "Parsed user email: "
-							+ userInfo.get("email").toString());
+					logger.log(Level.INFO, "Parsed user email: " + userInfo.get("email").toString());
 				}
 
 				if (userInfo.containsKey("id")) {
@@ -168,45 +206,50 @@ public class FacebookTools {
 					logger.log(Level.INFO, "Parsed user ID: " + userId);
 				}
 
-				if (persistNewUser(user, user.getId())) {
-					Window.alert("Welcome new member");
-				} else {
-					Window.alert("Welcome back" + user.getEmail());
-				}
+				persistNewUser(user);
 			}
 		});
 	}
+
 
 	private void retrieveUserFriends() {
 		// TODO: Implement
 	}
 
-	//Method to add user to data store
-	private boolean persistNewUser(User user, String id) {
+
+	// Method to add user to data store
+	private void persistNewUser(final User user) {
 		persistService.persistNewUserToDatastore(user,
 				new AsyncCallback<Boolean>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
 						logger.log(Level.SEVERE, caught.getMessage());
+                        module.addMessage("Could not log in. Reason: " + caught.getMessage());
 					}
 
 					@Override
 					public void onSuccess(Boolean result) {
-						// TODO Auto-generated method stub
-						logger.log(Level.INFO, "Persist user result: " + result);				
-					}
+                        convertLoginLink();
 
+						logger.log(Level.INFO, "Persist user result: " + result);
+                        if (result) {
+                            module.addMessage("Welcome new member. Enjoy your stay!");
+					    } else {
+                            module.addMessage("Welcome back " + user.getEmail());
+                        }
+
+                        retrieveUserFriends(); // Get the user's friends
+                    }
 				});
-		return false;
 	}
+
 
 	/**
 	 * Returns an anchor that, when clicked, retrieves an OAuth token from
 	 * Facebook and saves the token in this utility class.
 	 * 
-	 * @return The login anchor
+	 * @return      The login anchor
 	 */
 	public Anchor getLogoutLink() {
 		// Clear token
@@ -220,5 +263,4 @@ public class FacebookTools {
 		});
 		return link;
 	}
-	
 }

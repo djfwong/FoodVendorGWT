@@ -161,7 +161,7 @@ public class BrowseVendorsContent extends Content {
 
                                 marker.addClickListener(new ClickHandler() {
                                     public void handle(MouseEvent event) {
-                                        History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
+                                        History.newItem(module.VENDOR_PAGE.getPageStub() + "?" + tmp.getVendorId());
                                     }
                                 });
                             }
@@ -220,7 +220,7 @@ public class BrowseVendorsContent extends Content {
 
                                             marker.addClickListener(new ClickHandler() {
                                                 public void handle(MouseEvent event) {
-                                                    History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
+                                                    History.newItem(module.VENDOR_PAGE.getPageStub() + "?" + tmp.getVendorId());
                                                 }
                                             });
                                         }
@@ -243,7 +243,7 @@ public class BrowseVendorsContent extends Content {
                             content.add(new HTML("<p class=\"lead\">Click on a row in the table to view the vendor's profile page.</p>"));
 
 							// Add data table under List view
-							Widget table = new FoodVendorDisplayTable(result, module.getVendorPage()).getWidget();
+							Widget table = new FoodVendorDisplayTable(result, module.VENDOR_PAGE).getWidget();
 							content.add(table);
 
                             module.changeContent(content); // Change the page content

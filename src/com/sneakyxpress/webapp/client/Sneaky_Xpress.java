@@ -36,14 +36,14 @@ public class Sneaky_Xpress implements EntryPoint {
 	private final Logger logger = Logger.getLogger("");
     private final RootPanel loading = RootPanel.get("loading");
 
-    private final FacebookTools facebookTools = new FacebookTools(this);
+    public final FacebookTools FACEBOOK_TOOLS = new FacebookTools(this);
 
 	// The pages to be shown in the navigation bar
-	private final Content HOME_PAGE = new GreetingContent(this);
-	private final Content SEARCH_PAGE = new SearchContent(this);
-	private final Content VENDOR_PAGE = new ViewVendorContent(this);
-    private final Content BROWSE_PAGE = new BrowseVendorsContent(this);
-    private final Content PROFILE_PAGE = new ProfileContent(this);
+	public final Content HOME_PAGE = new GreetingContent(this);
+    public final Content SEARCH_PAGE = new SearchContent(this);
+    public final Content VENDOR_PAGE = new ViewVendorContent(this);
+    public final Content BROWSE_PAGE = new BrowseVendorsContent(this);
+    public final Content PROFILE_PAGE = new ProfileContent(this);
 
     // Register all pages here so they can be iterated over (used for History support)
     private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE };
@@ -126,13 +126,13 @@ public class Sneaky_Xpress implements EntryPoint {
 
         // Add the login link
         HTMLPanel loginListElement = new HTMLPanel("li", "");
-        loginListElement.add(facebookTools.getLoginLink());
+        loginListElement.add(FACEBOOK_TOOLS.getLoginLink());
         navbarList.add(loginListElement);
         logger.log(Level.INFO, "addNavigationLinks: created the login link");
         
         // Add the logout link
         HTMLPanel logoutListElement = new HTMLPanel("li", "");
-        logoutListElement.add(facebookTools.getLogoutLink());
+        logoutListElement.add(FACEBOOK_TOOLS.getLogoutLink());
         navbarList.add(logoutListElement);
         logger.log(Level.INFO, "addNavigationLinks: created the login link");
 
@@ -207,26 +207,6 @@ public class Sneaky_Xpress implements EntryPoint {
             }
         });
         logger.log(Level.INFO, "initializeHistory: added history support");
-    }
-
-
-    /**
-	 * Getter for the VENDOR_PAGE
-	 * 
-	 * @return      VENDOR_PAGE
-	 */
-	public Content getVendorPage() {
-		return VENDOR_PAGE;
-	}
-
-
-    /**
-     * Getter for our instance of FacebookTools
-     *
-     * @return      facebookTools
-     */
-    public FacebookTools getFacebookTools() {
-        return facebookTools;
     }
 
 

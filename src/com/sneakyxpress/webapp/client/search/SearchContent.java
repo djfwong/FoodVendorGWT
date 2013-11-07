@@ -47,11 +47,11 @@ public class SearchContent extends Content {
                 	HTMLPanel content = new HTMLPanel("");
                 	
                 	if (!search_results.isEmpty()){
-                		Widget table = new FoodVendorDisplayTable(search_results, module.getVendorPage()).getWidget();
+                		Widget table = new FoodVendorDisplayTable(search_results, module.VENDOR_PAGE).getWidget();
                 		content.add(table);
                         module.changeContent(content);
                 	} else {
-                		content.add(new HTML("<p class=\"lead\" id=\"geoMessage\" style=\"text-align: center;\">" +
+                		content.add(new HTML("<p class=\"lead\" style=\"text-align: center;\">" +
                                 "Sorry, no matches were found :(</p></div>"));
                 	}
 
