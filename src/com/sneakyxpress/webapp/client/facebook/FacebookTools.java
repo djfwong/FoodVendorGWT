@@ -201,4 +201,24 @@ public class FacebookTools {
 				});
 		return false;
 	}
+
+	/**
+	 * Returns an anchor that, when clicked, retrieves an OAuth token from
+	 * Facebook and saves the token in this utility class.
+	 * 
+	 * @return The login anchor
+	 */
+	public Anchor getLogoutLink() {
+		// Clear token
+		Anchor link = new Anchor("Logout");
+		link.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Auth.get().clearAllTokens();
+		        Window.alert("All tokens cleared");
+			}
+		});
+		return link;
+	}
+	
 }

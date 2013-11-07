@@ -129,6 +129,12 @@ public class Sneaky_Xpress implements EntryPoint {
         loginListElement.add(facebookTools.getLoginLink());
         navbarList.add(loginListElement);
         logger.log(Level.INFO, "addNavigationLinks: created the login link");
+        
+        // Add the logout link
+        HTMLPanel logoutListElement = new HTMLPanel("li", "");
+        logoutListElement.add(facebookTools.getLogoutLink());
+        navbarList.add(logoutListElement);
+        logger.log(Level.INFO, "addNavigationLinks: created the login link");
 
         // Add the update data link
         HTMLPanel dataListElement = new HTMLPanel("li", "");
