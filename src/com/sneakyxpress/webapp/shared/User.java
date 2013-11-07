@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.datanucleus.jpa.annotations.Extension;
+import javax.jdo.annotations.Extension;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 

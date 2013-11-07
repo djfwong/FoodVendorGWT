@@ -19,6 +19,11 @@
 	height: 500px;
 }
 
+#map_canvas_2 {
+    width: 100%;
+    height: 500px;
+}
+
 #small_map_canvas {
     height: 400px;
 }

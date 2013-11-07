@@ -148,36 +148,34 @@ public class BrowseVendorsContent extends Content {
 	                	    }
 	                	    
 	                	    // Plot POIs
-	                	    for(int i = 0; i < result.size(); i++) {
-	                	    	final FoodVendor tmp = result.get(i);
-	                	    	
-	                	    	MarkerOptions newMarkerOpts = MarkerOptions.create();
-	                    	    newMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
-	                    	    newMarkerOpts.setMap(map);
-	                    	    if (tmp.getName().equals("")){
-	                    	    	newMarkerOpts.setTitle(tmp.getDescription());
-	                    	    }
-	                    	    else {
-	                    	    	newMarkerOpts.setTitle(tmp.getName());
-	                    	    }
-	                    	    final Marker marker = Marker.create(newMarkerOpts);
-	                    	    	                    	   	                    	    
-	                    	    marker.addClickListener(new ClickHandler() {
-	                    	    	public void handle(MouseEvent event) {
-	                    	    		History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
-	                    	    	}
-	                    	    });
-	                	    }
+                            for (final FoodVendor tmp : result) {
+                                MarkerOptions newMarkerOpts = MarkerOptions.create();
+                                newMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
+                                newMarkerOpts.setMap(map);
+                                if (tmp.getName().equals("")) {
+                                    newMarkerOpts.setTitle(tmp.getDescription());
+                                } else {
+                                    newMarkerOpts.setTitle(tmp.getName());
+                                }
+                                final Marker marker = Marker.create(newMarkerOpts);
+
+                                marker.addClickListener(new ClickHandler() {
+                                    public void handle(MouseEvent event) {
+                                        History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
+                                    }
+                                });
+                            }
 						} else if (input.equals("local")) {
                             localView.addStyleName("active");
                             listView.removeStyleName("active");
                             mapView.removeStyleName("active");
 
                             // Add instructions
-                            content.add(new HTML("<p class=\"lead\">Hover over a pin for a description of the vendor. Click on the pin to view the vendor's profile page.</p>"));
+                            content.add(new HTML("<p class=\"lead\">Hover over a pin for a description of the vendor. " +
+                                    "Click on the pin to view the vendor's profile page.</p>"));
 
                             // Change the page content
-                            content.add(new HTML("<div id=\"map_canvas\"><p class=\"lead\" id=\"geoMessage\" "
+                            content.add(new HTML("<div id=\"map_canvas_2\"><p class=\"lead\" id=\"geoMessage\" "
                                     + "style=\"text-align: center;\">Please wait. Getting your location...</p></div>"));
                             module.changeContent(content);
 
@@ -196,7 +194,7 @@ public class BrowseVendorsContent extends Content {
                                         myOptions.setZoom(16.0);
                                         myOptions.setCenter(userLatLng);
                                         myOptions.setMapTypeId(MapTypeId.ROADMAP);
-                                        map = GoogleMap.create(Document.get().getElementById("map_canvas"), myOptions);
+                                        map = GoogleMap.create(Document.get().getElementById("map_canvas_2"), myOptions);
 
                                         // Add the user marker
                                         MarkerOptions newMarkerOpts = MarkerOptions.create();
@@ -207,27 +205,24 @@ public class BrowseVendorsContent extends Content {
                                         Marker.create(newMarkerOpts);
 
                                         // Plot POIs
-                                        for(int i = 0; i < result.size(); i++) {
-                                            final FoodVendor tmp = result.get(i);
-
+                                        for (final FoodVendor tmp : result) {
                                             MarkerOptions tempMarkerOpts = MarkerOptions.create();
                                             tempMarkerOpts.setPosition(LatLng.create(tmp.getLatitude(), tmp.getLongitude()));
                                             tempMarkerOpts.setMap(map);
-                                            
-                                            if(tmp.getName().equals("")){
-                                            	tempMarkerOpts.setTitle(tmp.getDescription());
+
+                                            if (tmp.getName().equals("")) {
+                                                tempMarkerOpts.setTitle(tmp.getDescription());
+                                            } else {
+                                                tempMarkerOpts.setTitle(tmp.getName());
                                             }
-                                            else{
-                                            	tempMarkerOpts.setTitle(tmp.getName());
-                                            }
-                                            
+
                                             final Marker marker = Marker.create(tempMarkerOpts);
 
                                             marker.addClickListener(new ClickHandler() {
-            	                    	    	public void handle(MouseEvent event) {
-            	                    	    		History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
-            	                    	    	}
-            	                    	    });
+                                                public void handle(MouseEvent event) {
+                                                    History.newItem(module.getVendorPage().getPageStub() + "?" + tmp.getVendorId());
+                                                }
+                                            });
                                         }
                                     }
 
