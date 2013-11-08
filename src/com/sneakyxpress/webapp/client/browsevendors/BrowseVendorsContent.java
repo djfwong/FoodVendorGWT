@@ -107,7 +107,9 @@ public class BrowseVendorsContent extends Content {
                             localView.removeStyleName("active");
 
                             // Add instructions
-                            content.add(new HTML("<p class=\"lead\">Hover over a pin for a description of the vendor. Click on the pin to view the vendor's profile page.</p>"));
+                            content.add(new HTML("<p class=\"lead pagination-centered\">"
+                                    + "Hover over a pin for a description of the vendor. "
+                                    + "Click on the pin to view the vendor's profile page.</p>"));
 
                             // Change the page content
                             content.add(new HTML("<div id=\"map_canvas\"></div>"));
@@ -171,7 +173,8 @@ public class BrowseVendorsContent extends Content {
                             mapView.removeStyleName("active");
 
                             // Add instructions
-                            content.add(new HTML("<p class=\"lead\">Hover over a pin for a description of the vendor. " +
+                            content.add(new HTML("<p class=\"lead pagination-centered\">"
+                                    + "Hover over a pin for a description of the vendor. " +
                                     "Click on the pin to view the vendor's profile page.</p>"));
 
                             // Change the page content
@@ -240,7 +243,8 @@ public class BrowseVendorsContent extends Content {
                             localView.removeStyleName("active");
 
                             // Add instructions
-                            content.add(new HTML("<p class=\"lead\">Click on a row in the table to view the vendor's profile page.</p>"));
+                            content.add(new HTML("<p class=\"lead pagination-centered\">"
+                                    + "Click on a row in the table to view the vendor's profile page.</p>"));
 
 							// Add data table under List view
 							Widget table = new FoodVendorDisplayTable(result, module.VENDOR_PAGE).getWidget();

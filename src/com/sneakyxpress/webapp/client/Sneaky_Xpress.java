@@ -3,6 +3,7 @@ package com.sneakyxpress.webapp.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.github.gwtbootstrap.client.ui.Modal;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -15,6 +16,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
 import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
@@ -22,6 +24,8 @@ import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.search.SearchContent;
+import com.sneakyxpress.webapp.client.updatedata.UpdateDataService;
+import com.sneakyxpress.webapp.client.updatedata.UpdateDataServiceAsync;
 import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
 
 /**
@@ -69,16 +73,31 @@ public class Sneaky_Xpress implements EntryPoint {
      * @param info      the information to be displayed in the message
      */
     public void addMessage(boolean error, String info) {
+        // Create & add the message
         String type = error ? "alert-danger" : "alert-info";
-
         HTML alert = new HTML("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
                 + "&times;</button>" + info);
-        alert.addStyleName("alert " + type + " fade in");
+        alert.addStyleName("alert " + type + " fade");
         messages.insert(alert, 0); // Add the message to the top
+        alert.addStyleName("in");
 
+        // Animations & logging
         loading.addStyleName("collapsed"); // Remove the loading bar if it exists
-
         logger.log(Level.INFO, "addMessage: " + info);
+    }
+
+
+    /**
+     * Creates a pop-up message in the centre of the page
+     *
+     * @param title     The title of the modal
+     * @param body      The content of the modal
+     */
+    public void addModal(String title, Widget body) {
+        Modal modal = new Modal(true, true);
+        modal.setTitle(title);
+        modal.add(body);
+        modal.show();
     }
 
 
@@ -157,7 +176,8 @@ public class Sneaky_Xpress implements EntryPoint {
                         addMessage(true, "Sorry, \"" + input + "\" contains invalid characters. "
                                 + "Only letters and spaces are allowed. Please remove them and try again.");
                     } else if (input.length() > 20) {
-                        addMessage(true, "Sorry, your search query is too long. Please limit your query to 20 characters.");
+                        addMessage(true, "Sorry, your search query is too long. " +
+                                "Please limit your query to 20 characters.");
                     } else if (input.length() == 0) {
                         addMessage(true, "Sorry your search query is empty. Please enter something.");
                     } else {
@@ -217,8 +237,23 @@ public class Sneaky_Xpress implements EntryPoint {
         link.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.open(GWT.getModuleBaseURL() + "updateData", "_blank", "enabled,height=40,width=200,menubar=no,"
-                        + "status=yes,toolbar=no,location=no");
+                loading.removeStyleName("collapsed");
+
+                UpdateDataServiceAsync updateDataService = GWT
+                        .create(UpdateDataService.class);
+                updateDataService.updateData(new AsyncCallback<String>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        loading.addStyleName("collapsed");
+                        addMessage(true, "Updating data failed. Reason: " + caught.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String response) {
+                        loading.addStyleName("collapsed");
+                        addModal("Data Updated", new HTML(response));
+                    }
+                });
             }
         });
 

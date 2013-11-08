@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.sneakyxpress.webapp.client.updatedata.UpdateDataService;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -24,17 +26,42 @@ import java.util.logging.Logger;
 /**
  * Updates the Food Vendor data from DataVancouver
  */
-public class UpdateDataServiceImpl extends RemoteServiceServlet {
+public class UpdateDataServiceImpl extends RemoteServiceServlet
+        implements UpdateDataService {
     private static final Logger logger = Logger.getLogger("");
     private static final String DATA_LOCATION
             = "http://www.ugrad.cs.ubc.ca/~k5r8/data/uploads/new_food_vendor_locations.xls";
+
+
+    @Override
+    public String updateData() {
+        logger.log(Level.INFO, "Attempting to retrieve new data from DataVancouver");
+
+        // Retrieve the remote data
+        String response = "";
+        try {
+            URL url = new URL(DATA_LOCATION);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            int changes[] = parseData(connection.getInputStream()); // Parse the data
+            response = "<p>Retrieved and parsed data successfully:<ul><li class=\"text-warning\">"
+                    + String.valueOf(changes[1]) + " vendors removed</li><li class=\"text-success\">"
+                    + String.valueOf(changes[0]) + " vendors added</li></ul></p>";
+        } catch (Exception e) {
+            response = "<p class=\"text-error\">Updating data failed. Reason:<br>"
+                        + e.getMessage() + "</p>";
+        }
+
+        return response;
+    }
+
 
     /**
      * Parse the new Food Vendor data
      * @param stream    The stream to parse
      * @return          The number of Food Vendors parsed (for debugging & logging purposes)
      */
-    public int[] parseData(InputStream stream) throws IOException {
+    private int[] parseData(InputStream stream) throws IOException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
         // Added is changes[0], removed is changes[1]
         int[] changes = {0, 0};
@@ -102,32 +129,5 @@ public class UpdateDataServiceImpl extends RemoteServiceServlet {
         pm.close();
         stream.close();
         return changes;
-    }
-
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        logger.log(Level.INFO, "Attempting to retrieve new data from DataVancouver");
-
-        // Retrieve the remote data
-        URL url = new URL(DATA_LOCATION);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        String response = "";
-        try {
-            int changes[] = parseData(connection.getInputStream()); // Parse the data
-            response = "Retrieved & parsed data successfully: " + String.valueOf(changes[1])
-                    + " vendors removed, " + String.valueOf(changes[0]) + " vendors added";
-            logger.log(Level.INFO, response);
-            resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
-            response = "Retrieving or parsing of data failed: " + e.toString();
-            logger.log(Level.SEVERE, response);
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-
-        // Add information to the body of the response
-        OutputStream bodyStream = resp.getOutputStream();
-        bodyStream.write(response.getBytes(Charset.forName("UTF-8")));
     }
 }
