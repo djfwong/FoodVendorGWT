@@ -25,6 +25,10 @@ public class User implements IsSerializable {
     @Id
     private String id;
 
+    // The id variable is encoded weird so this is the unencoded version
+    @Persistent
+    private String unencodedId;
+
 	// Unique identifier for object, email
 	@Persistent
 	private String email = "";
@@ -41,11 +45,12 @@ public class User implements IsSerializable {
 	}
 
 	public String getId() {
-		return id;
+		return unencodedId;
 	}
 
 	public void setId(String id) {
 		this.id = id;
+        this.unencodedId = id;
 	}
 
     public String getName() {

@@ -62,7 +62,10 @@ public class ProfileContent extends Content {
                         if (!facebook.isLoggedIn()) {
                             logger.log(Level.INFO, "User not logged in, showing public page");
                             createPublicPage(user, col1, col2);
-                        } else { // TODO: We really should have a security check here!
+                        } else if (!user.getId().equals(facebook.getUserId())) {
+                            logger.log(Level.SEVERE, "Mismatched user IDs, showing public page");
+                            createPublicPage(user, col1, col2);
+                        } else { // TODO: We really should have a better security check here!
                             logger.log(Level.INFO, "User logged in, showing private page");
                             createPrivatePage(user, col1, col2);
                         }
@@ -92,7 +95,12 @@ public class ProfileContent extends Content {
                         col1.add(getInfoWidget("User ID", user.getId()));
                         col1.add(getInfoWidget("User Email", user.getEmail()));
 
-                        HTMLPanel logout = new HTMLPanel("");
+                        col2.add(getInfoWidget("Bogus Info", "Lorem ipsum dolor sit amet, " +
+                                "consectetur adipiscing elit."));
+                        col2.add(getInfoWidget("More Bogus Info", "Lorem ipsum dolor sit amet, " +
+                                "consectetur adipiscing elit."));
+
+                        HTMLPanel logout = new HTMLPanel("<br>");
                         logout.addStyleName("pagination-centered");
                         logout.add(facebook.getLogoutButton());
 
