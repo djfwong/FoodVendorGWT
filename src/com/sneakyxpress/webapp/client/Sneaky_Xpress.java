@@ -15,12 +15,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
@@ -48,6 +43,9 @@ public class Sneaky_Xpress implements EntryPoint {
     // Register all pages here so they can be iterated over (used for History support)
     private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE };
 
+    // A panel to hold messages in
+    private FlowPanel messages = new FlowPanel();
+
 
     /**
      * Changes the contents of the page to the specified Content
@@ -67,6 +65,7 @@ public class Sneaky_Xpress implements EntryPoint {
     /**
      * Adds a message to the top of the page (user can close it)
      *
+     * @param error     is this message an error (red) or not (blue)?
      * @param info      the information to be displayed in the message
      */
     public void addMessage(boolean error, String info) {
@@ -75,7 +74,7 @@ public class Sneaky_Xpress implements EntryPoint {
         HTML alert = new HTML("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
                 + "&times;</button>" + info);
         alert.addStyleName("alert " + type + " fade in");
-        RootPanel.get("messages").add(alert);
+        messages.insert(alert, 0); // Add the message to the top
 
         loading.addStyleName("collapsed"); // Remove the loading bar if it exists
 
@@ -92,6 +91,8 @@ public class Sneaky_Xpress implements EntryPoint {
         addNavigationLinks(); // Add page & function links to the navigation bar
 
         addSearchForm(); // Add the search form to the navigation bar
+
+        RootPanel.get("messages").add(messages); // Add the messages panel
 
         initializeHistory(); // Add history support
 

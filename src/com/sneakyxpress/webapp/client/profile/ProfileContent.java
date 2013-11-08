@@ -15,8 +15,8 @@ import java.util.logging.Level;
  * Handles changing the page content to a user profile page.
  */
 public class ProfileContent extends Content {
-    private String pageName = "Profile Page";
-    private String pageStub = "profile";
+    private static final String pageName = "Profile Page";
+    private static final String pageStub = "profile";
 
     private final ProfileServiceAsync profileService = GWT.create(ProfileService.class);
 
@@ -62,10 +62,7 @@ public class ProfileContent extends Content {
                         if (!facebook.isLoggedIn()) {
                             logger.log(Level.INFO, "User not logged in, showing public page");
                             createPublicPage(user, col1, col2);
-                        } else if (!user.getId().equals(facebook.getUserId())) {
-                            logger.log(Level.SEVERE, "Mismatched IDs, showing public page");
-                            createPublicPage(user, col1, col2);
-                        } else {
+                        } else { // TODO: We really should have a security check here!
                             logger.log(Level.INFO, "User logged in, showing private page");
                             createPrivatePage(user, col1, col2);
                         }

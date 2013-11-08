@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * Updates the Food Vendor data from DataVancouver
  */
 public class UpdateDataServiceImpl extends RemoteServiceServlet {
-    private static Logger logger = Logger.getLogger("");
+    private static final Logger logger = Logger.getLogger("");
     private static final String DATA_LOCATION
             = "http://www.ugrad.cs.ubc.ca/~k5r8/data/uploads/new_food_vendor_locations.xls";
 

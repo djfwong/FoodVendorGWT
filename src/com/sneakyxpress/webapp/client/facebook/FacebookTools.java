@@ -31,7 +31,7 @@ public class FacebookTools {
 	private final PersistUserServiceAsync persistService = GWT.create(PersistUserService.class);
 	
 	private static final Logger logger = Logger.getLogger(""); // Our logger
-	public static Sneaky_Xpress module;
+	private static Sneaky_Xpress module;
 
 	// Use the implementation of Auth intended to be used in the GWT client app.
 	private static final Auth AUTH = Auth.get();
@@ -269,6 +269,7 @@ public class FacebookTools {
 
                         loggedIn = true;
                         convertLoginLink();
+                        History.fireCurrentHistoryState();
                     }
 				});
 	}
@@ -290,7 +291,7 @@ public class FacebookTools {
                 FacebookTools.token = "";
                 converProfileLink();
                 loggedIn = false;
-                History.newItem(module.PROFILE_PAGE.getPageStub() + "?" + userId);
+                History.fireCurrentHistoryState();
                 module.addMessage(false, "All tokens cleared. You are now logged out!");
             }
         });

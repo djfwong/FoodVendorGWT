@@ -8,8 +8,8 @@ import com.google.gwt.user.client.History;
  * Handles actions invoked by clicking links in the navigation bar
  */
 public class PageClickHandler implements ClickHandler {
-    Content page;
-    String input;
+    private Content page;
+    private String input;
 
     public PageClickHandler(Content page, String input) {
         super();

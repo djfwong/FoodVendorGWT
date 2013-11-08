@@ -109,7 +109,7 @@ public class FoodVendorDisplayTable {
 		return table;
 	}
 
-	public void clickTableRow(CellTable<FoodVendor> table) {
+	private void clickTableRow(CellTable<FoodVendor> table) {
 		// Add a selection model to handle user selection 
 		// Base implementation for opening vendor pages from Food Vendor table
 		final SingleSelectionModel<FoodVendor> selectionModel = new SingleSelectionModel<FoodVendor>();
