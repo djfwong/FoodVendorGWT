@@ -69,10 +69,12 @@ public class Sneaky_Xpress implements EntryPoint {
      *
      * @param info      the information to be displayed in the message
      */
-    public void addMessage(String info) {
+    public void addMessage(boolean error, String info) {
+        String type = error ? "alert-danger" : "alert-info";
+
         HTML alert = new HTML("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
-                + "&times;</button><i class=\"icon-exclamation-sign\"></i> <strong>Warning!</strong> " + info);
-        alert.addStyleName("alert alert-danger fade in");
+                + "&times;</button>" + info);
+        alert.addStyleName("alert " + type + " fade in");
         RootPanel.get("messages").add(alert);
 
         loading.addStyleName("collapsed"); // Remove the loading bar if it exists
@@ -129,12 +131,6 @@ public class Sneaky_Xpress implements EntryPoint {
         loginListElement.add(FACEBOOK_TOOLS.getLoginLink());
         navbarList.add(loginListElement);
         logger.log(Level.INFO, "addNavigationLinks: created the login link");
-        
-        // Add the logout link
-        HTMLPanel logoutListElement = new HTMLPanel("li", "");
-        logoutListElement.add(FACEBOOK_TOOLS.getLogoutLink());
-        navbarList.add(logoutListElement);
-        logger.log(Level.INFO, "addNavigationLinks: created the login link");
 
         // Add the update data link
         HTMLPanel dataListElement = new HTMLPanel("li", "");
@@ -157,12 +153,12 @@ public class Sneaky_Xpress implements EntryPoint {
                     String input = searchInput.getText().trim(); // Remove extra whitespace
 
                     if (!input.matches("(\\w| )*")) {
-                        addMessage("Sorry, \"" + input + "\" contains invalid characters. "
+                        addMessage(true, "Sorry, \"" + input + "\" contains invalid characters. "
                                 + "Only letters and spaces are allowed. Please remove them and try again.");
                     } else if (input.length() > 20) {
-                        addMessage("Sorry, your search query is too long. Please limit your query to 20 characters.");
+                        addMessage(true, "Sorry, your search query is too long. Please limit your query to 20 characters.");
                     } else if (input.length() == 0) {
-                        addMessage("Sorry your search query is empty. Please enter something.");
+                        addMessage(true, "Sorry your search query is empty. Please enter something.");
                     } else {
                         History.newItem(SEARCH_PAGE.getPageStub() + "?" + input);
                     }

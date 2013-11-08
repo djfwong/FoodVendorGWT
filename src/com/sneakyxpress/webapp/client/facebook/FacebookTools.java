@@ -10,16 +10,15 @@ import com.google.api.gwt.oauth2.client.AuthRequest;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.sneakyxpress.webapp.client.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.shared.User;
@@ -61,8 +60,8 @@ public class FacebookTools {
 
 	// Data retrieved from facebook, by default null
 	private List<String> userFriendsIds = new LinkedList<String>();
-	private String userId = "<em class=\"muted\">No ID Available</em>";
-	private String userName = "<em class=\"muted\">No Name Available</em>";
+	private String userId = "";
+	private String userName = "";
 
     private Anchor loginLink;
     private HandlerRegistration clickHandlerReg;
@@ -77,31 +76,29 @@ public class FacebookTools {
 	}
 
 
-	public String getUserId() throws NotLoggedInException {
-		if (!loggedIn) {
-            throw new NotLoggedInException();
-        } else {
-            return userId;
-        }
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+
+	public String getUserId() {
+		return userId;
 	}
 
 
-	public String getUserName() throws NotLoggedInException {
-		if (!loggedIn) {
-            throw new NotLoggedInException();
-        } else {
-            return userName;
-        }
+	public String getUserName() {
+		return userName;
 	}
 
 
-	public List<String> getUserFriendsIds() throws NotLoggedInException {
-		if (!loggedIn) {
-            throw new NotLoggedInException();
-        } else {
-            return userFriendsIds;
-        }
+	public List<String> getUserFriendsIds() {
+		return userFriendsIds;
 	}
+
+
+    public String getToken() {
+        return token;
+    }
 
 
 	/**
@@ -136,9 +133,25 @@ public class FacebookTools {
 
         // Change the text and action to be for the profile page
         loginLink.setText("My Profile");
-        loginLink.addClickHandler(new PageClickHandler(module.PROFILE_PAGE, userId));
+        clickHandlerReg = loginLink.addClickHandler(new PageClickHandler(module.PROFILE_PAGE, userId));
     }
 
+
+    /**
+     * Change the profile link back into a login link
+     */
+    private void converProfileLink() {
+        clickHandlerReg.removeHandler(); // Remove the login action from the link
+
+        // Change the text and action to be for the login link
+        loginLink.setText("Login");
+        clickHandlerReg = loginLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                loginAndUpdate();
+            }
+        });
+    }
 
 	/**
 	 * If the user is not logged in, displays a window so the user can log in.
@@ -161,7 +174,6 @@ public class FacebookTools {
 
 				// Update the user's information
 				retrieveUserInfo();
-				retrieveUserFriends();
 			}
 
 			@Override
@@ -169,7 +181,7 @@ public class FacebookTools {
 				String message = "Facebook login failed. Reason: "
 						+ caught.getMessage();
 				logger.log(Level.SEVERE, message);
-				module.addMessage(message);
+				module.addMessage(true, message);
 			}
 		});
 	}
@@ -196,17 +208,34 @@ public class FacebookTools {
 				User user = new User();
 
 				if (userInfo.containsKey("email")) {
-					user.setEmail(userInfo.get("email").toString());
-					logger.log(Level.INFO, "Parsed user email: " + userInfo.get("email").toString());
-				}
+					String userEmail = parseJSONString(userInfo.get("email").toString());
+                    user.setEmail(userEmail);
+					logger.log(Level.INFO, "Parsed user email: " + userEmail);
+				} else {
+                    user.setEmail("<em class=\"muted\">No Email Available</em>");
+                    logger.log(Level.SEVERE, "Could not parse user email: No data!");
+                }
 
 				if (userInfo.containsKey("id")) {
-					userId = userInfo.get("id").toString();
+					userId = parseJSONString(userInfo.get("id").toString());
 					user.setId(userId);
 					logger.log(Level.INFO, "Parsed user ID: " + userId);
-				}
+				} else {
+                    user.setId("<em class=\"muted\">No Id Available</em>");
+                    logger.log(Level.SEVERE, "Could not parse user ID: No data!");
+                }
+
+                if (userInfo.containsKey("name")) {
+                    userName = parseJSONString(userInfo.get("name").toString());
+                    user.setName(userName);
+                    logger.log(Level.INFO, "Parsed user name: " + userName);
+                } else {
+                    user.setName("<em class=\"muted\">No Name Available</em>");
+                    logger.log(Level.SEVERE, "Could not parse user name: No data!");
+                }
 
 				persistNewUser(user);
+                retrieveUserFriends();
 			}
 		});
 	}
@@ -225,42 +254,57 @@ public class FacebookTools {
 					@Override
 					public void onFailure(Throwable caught) {
 						logger.log(Level.SEVERE, caught.getMessage());
-                        module.addMessage("Could not log in. Reason: " + caught.getMessage());
+                        module.addMessage(true, "Could not log in. Reason: " + caught.getMessage());
 					}
 
 					@Override
-					public void onSuccess(Boolean result) {
-                        convertLoginLink();
-
-						logger.log(Level.INFO, "Persist user result: " + result);
-                        if (result) {
-                            module.addMessage("Welcome new member. Enjoy your stay!");
+					public void onSuccess(Boolean existingUser) {
+						logger.log(Level.INFO, "Persist user saved. Existing user? " + existingUser);
+                        if (existingUser) {
+                            module.addMessage(false, "Welcome back " + user.getName());
 					    } else {
-                            module.addMessage("Welcome back " + user.getEmail());
+                            module.addMessage(false, "Welcome " + user.getName()
+                                    + ". Enjoy your stay!");
                         }
 
-                        retrieveUserFriends(); // Get the user's friends
+                        loggedIn = true;
+                        convertLoginLink();
                     }
 				});
 	}
 
 
 	/**
-	 * Returns an anchor that, when clicked, retrieves an OAuth token from
-	 * Facebook and saves the token in this utility class.
+	 * Logs the user out
 	 * 
-	 * @return      The login anchor
+	 * @return      The logout button
 	 */
-	public Anchor getLogoutLink() {
+	public Button getLogoutButton() {
 		// Clear token
-		Anchor link = new Anchor("Logout");
-		link.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				Auth.get().clearAllTokens();
-		        Window.alert("All tokens cleared");
-			}
-		});
-		return link;
-	}
+		Button button = new Button("Logout");
+        button.addStyleName("btn btn-primary btn-large");
+		button.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Auth.get().clearAllTokens();
+                FacebookTools.token = "";
+                converProfileLink();
+                loggedIn = false;
+                History.newItem(module.PROFILE_PAGE.getPageStub() + "?" + userId);
+                module.addMessage(false, "All tokens cleared. You are now logged out!");
+            }
+        });
+		return button;
+    }
+
+
+    /**
+     * Removes extra quotation marks from a String
+     *
+     * @param input     The String to parse
+     * @return          The parsed String
+     */
+    private String parseJSONString(String input) {
+        return input.replaceAll("^\"|\"$", "");
+    }
 }

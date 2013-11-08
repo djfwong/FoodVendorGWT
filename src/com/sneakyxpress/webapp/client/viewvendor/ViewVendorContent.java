@@ -40,7 +40,7 @@ public class ViewVendorContent extends Content {
                 new AsyncCallback<FoodVendor>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        module.addMessage(GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
+                        module.addMessage(true, GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
                     }
 
                     @Override

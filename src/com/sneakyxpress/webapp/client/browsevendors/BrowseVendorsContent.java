@@ -62,7 +62,7 @@ public class BrowseVendorsContent extends Content {
 		browseVendorsService.browseVendorsServer(input,
 				new AsyncCallback<List<FoodVendor>>() {
 					public void onFailure(Throwable caught) {
-						module.addMessage(GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
+						module.addMessage(true, GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
 					}
 
 					public void onSuccess(final List<FoodVendor> result) {

@@ -7,8 +7,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Content;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.facebook.*;
-import com.sneakyxpress.webapp.client.facebook.IllegalAccessException;
 import com.sneakyxpress.webapp.shared.User;
+
+import java.util.logging.Level;
 
 /**
  * Handles changing the page content to a user profile page.
@@ -39,7 +40,7 @@ public class ProfileContent extends Content {
                 new AsyncCallback<User>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        module.addMessage(GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
+                        module.addMessage(true, GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
                     }
 
                     @Override
@@ -48,48 +49,80 @@ public class ProfileContent extends Content {
 
                         HTMLPanel content = new HTMLPanel(""); // The base panel to hold all content
 
-                        // Contains all the user's information
+                        // Create the structure of the page
                         HTMLPanel row = new HTMLPanel("");
                         row.addStyleName("row-fluid");
 
-                        // The first column of information
-                        try {
-                            String id = facebook.getUserId();
-                            if (!id.equals(user.getId())) {
-                                throw new IllegalAccessException();
-                            }
+                        HTMLPanel col1 = new HTMLPanel("");
+                        col1.addStyleName("span6");
+                        HTMLPanel col2 = new HTMLPanel("");
+                        col2.addStyleName("span6");
 
-                            String name = facebook.getUserName();
-
-                            HTMLPanel col1 = new HTMLPanel("<div class=\"page-header\"><h2>" + name + "</h2></div>");
-                            col1.addStyleName("span6");
-
-                            col1.add(getInfoWidget("User ID", user.getId()));
-                            col1.add(getInfoWidget("Bogus Info 2", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
-                            col1.add(getInfoWidget("Bogus Info 3", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
-
-                            // The second column of information
-                            HTMLPanel col2 = new HTMLPanel("");
-                            col2.addStyleName("span6");
-
-                            col2.add(getInfoWidget("Bogus Info 4", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
-                            col2.add(getInfoWidget("Bogus Info 5", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
-                            col2.add(getInfoWidget("Bogus Info 6", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
-
-                            // Add all the content together
-                            row.add(col1);
-                            row.add(col2);
-                            content.add(row);
-                        } catch (NotLoggedInException e) {
-                            content.add(new HTML("<p class=\"lead\" style=\"text-align: center;\">" +
-                                    "Sorry, you need to be logged in to view this page.</p></div>"));
-                        } catch (IllegalAccessException e) {
-                            content.add(new HTML("<p class=\"lead\" style=\"text-align: center;\">" +
-                                    "Sorry, you do not have permission to view this page.</p></div>"));
+                        // Either show the public or private page
+                        if (!facebook.isLoggedIn()) {
+                            logger.log(Level.INFO, "User not logged in, showing public page");
+                            createPublicPage(user, col1, col2);
+                        } else if (!user.getId().equals(facebook.getUserId())) {
+                            logger.log(Level.SEVERE, "Mismatched IDs, showing public page");
+                            createPublicPage(user, col1, col2);
+                        } else {
+                            logger.log(Level.INFO, "User logged in, showing private page");
+                            createPrivatePage(user, col1, col2);
                         }
+
+                        // Put it all together
+                        row.add(col1);
+                        row.add(col2);
+                        content.add(row);
 
                         module.changeContent(content); // Change the page content
                     }
+
+
+                    /**
+                     * Create a private user page (includes settings and private info etc.)
+                     *
+                     * @param user      The user who's page we're displaying
+                     * @param col1      The first column of the page
+                     * @param col2      The second column of the page
+                     */
+                    private void createPrivatePage(User user, HTMLPanel col1, HTMLPanel col2) {
+                        FacebookTools facebook = module.FACEBOOK_TOOLS;
+
+                        col1.add(new HTML("<div class=\"page-header\"><h2>" + facebook.getUserName()
+                                + " <small class=\"muted\"> Private Profile</small></h2></div>"));
+
+                        col1.add(getInfoWidget("User ID", user.getId()));
+                        col1.add(getInfoWidget("User Email", user.getEmail()));
+
+                        HTMLPanel logout = new HTMLPanel("");
+                        logout.addStyleName("pagination-centered");
+                        logout.add(facebook.getLogoutButton());
+
+                        col2.add(logout);
+                    }
+
+
+                    /**
+                     * Create a public user page (does not contain settings or sensitive information)
+                     *
+                     * @param user      The user who's page we're displaying
+                     * @param col1      The first column of the page
+                     * @param col2      The second column of the page
+                     */
+                    private void createPublicPage(User user, HTMLPanel col1, HTMLPanel col2) {
+                        FacebookTools facebook = module.FACEBOOK_TOOLS;
+
+                        col1.add(new HTML("<div class=\"page-header\"><h2>User ID: "
+                                + userId + " <small class=\"muted\"> Public Profile</small>"
+                                + "</h2></div>"));
+
+                        col2.add(getInfoWidget("Bogus Info", "Lorem ipsum dolor sit amet, " +
+                                "consectetur adipiscing elit."));
+                        col2.add(getInfoWidget("More Bogus Info", "Lorem ipsum dolor sit amet, " +
+                                "consectetur adipiscing elit."));
+                    }
+
 
                     private HTML getInfoWidget(String title, String info) {
                         if (info.isEmpty()) {

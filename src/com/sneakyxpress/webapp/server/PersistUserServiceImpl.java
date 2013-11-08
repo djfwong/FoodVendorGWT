@@ -14,60 +14,34 @@ import com.sneakyxpress.webapp.shared.User;
 /**
  * Updates the Food Vendor data from DataVancouver
  */
-public class PersistUserServiceImpl extends RemoteServiceServlet implements PersistUserService{
-	/**
-	 * 
-	 */
+public class PersistUserServiceImpl extends RemoteServiceServlet implements PersistUserService {
+
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = Logger.getLogger("");
 
 
 	@Override
-	public Boolean persistNewUserToDatastore(User user)
-			throws IllegalArgumentException {
-		try {
-			PersistenceManager pm = PMF.get().getPersistenceManager();
+	public boolean persistNewUserToDatastore(User user) throws IllegalArgumentException {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
 
-			// Add to datastore
-			if (!userInDatabase(user.getId())) {
-				pm.makePersistentAll(user);
-	
-				// Clean-up
-				pm.close();
-				
-				return true;
-			}
-			
-			else {
-				logger.log(Level.INFO, "User email already in datastore");
-			}
+        // Check if the user is in datastore
+        boolean existingMember = userInDatabase(user.getId());
 
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage());
-		}
-		return false;
+        if (!existingMember) {
+            pm.makePersistent(user);
+        }
+
+        pm.close();
+        return existingMember;
 	}
 
 
-	@Override
-	public boolean userInDatabase(String userId) {
-		try {
-			PersistenceManager pm = PMF.get().getPersistenceManager();
+	private boolean userInDatabase(String userId) {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        Query q = pm.newQuery("SELECT UNIQUE FROM " + User.class.getName()
+                + " WHERE id == \"" + userId + "\"");
+        User result = (User) q.execute();
 
-			// Add non-duplicate new user to app engine datastore
-			Query q = pm.newQuery(User.class, "id == idParam");
-			q.declareParameters("String idParam");
-			
-			// Search by id 
-			List<User> results = (List<User>) q.execute(userId);
-			
-			if(!results.isEmpty()){
-				return true;
-			}
-		}
-		catch(Exception e){
-			logger.log(Level.SEVERE, e.getMessage());
-		}
-		return false;
+        return result != null;
 	}
 }
