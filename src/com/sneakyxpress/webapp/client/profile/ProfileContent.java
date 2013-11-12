@@ -1,7 +1,10 @@
 package com.sneakyxpress.webapp.client.profile;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Content;
@@ -90,27 +93,69 @@ public class ProfileContent extends Content {
                      * @param col2      The second column of the page
                      */
                     private void createPrivatePage(User user, HTMLPanel col1, HTMLPanel col2) {
-                        FacebookTools facebook = module.FACEBOOK_TOOLS;
+                        final FacebookTools facebook = module.FACEBOOK_TOOLS;
 
                         col1.add(new HTML("<div class=\"page-header\"><h2>" + facebook.getUserName()
                                 + " <small class=\"muted\"> Private Profile</small></h2></div>"));
                         col1.add(getInfoWidget("User ID", user.getId()));
                         col1.add(getInfoWidget("User Email", user.getEmail()));
+                        col1.add(getInfoWidget("User Type", user.getTypeName()));
 
-                        HTMLPanel logout = new HTMLPanel("<br>");
-                        logout.addStyleName("pagination-centered");
-                        logout.add(facebook.getLogoutButton());
-                        col1.add(logout);
-
-                        // Add friends (currently not processed by the server
-                        Collection<String> friends = facebook.getUserFriends().values();
-                        String info = "";
-                        if (!friends.isEmpty()) {
-                            for (String f : friends) {
-                                info += f + "<br>";
+                        // Add friends (currently not processed by the server)
+                        Button viewFriends = new Button("View Friends");
+                        viewFriends.addStyleName("btn btn-large btn-info");
+                        viewFriends.addClickHandler(new ClickHandler() {
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                Collection<String> friends = facebook.getUserFriends().values();
+                                String info = "";
+                                if (!friends.isEmpty()) {
+                                    for (String f : friends) {
+                                        info += f + "<br>";
+                                    }
+                                } else {
+                                    info = "You have no friends :(<br>";
+                                }
+                                module.addModal(facebook.getUserName() + "\'s Friends",
+                                        new HTMLPanel("p", info));
                             }
+                        });
+                        col2.add(getButtonWidget(viewFriends));
+
+                        // Add specific content for different user types
+                        if (user.getType() == User.ADMINISTRATOR) {
+                            addAdministratorContent(user, col1, col2);
+                        } else if (user.getType() == User.OWNER) {
+                            addOwnerContent(user, col1, col2);
                         }
-                        col2.add(getInfoWidget("User Friends", info));
+
+                        // Add the logout button last
+                        col2.add(getButtonWidget(facebook.getLogoutButton()));
+                    }
+
+
+                    /**
+                     * Add administrator content and options to the page
+                     *
+                     * @param user      The user who's page we're displaying
+                     * @param col1      The first column of the page
+                     * @param col2      The second column of the page
+                     */
+                    private void addAdministratorContent(User user, HTMLPanel col1, HTMLPanel col2) {
+                        // Add the update data button
+                        col1.add(getButtonWidget(module.getUpdateDataButton()));
+                    }
+
+
+                    /**
+                     * Add food vendor owner content and options to the page
+                     *
+                     * @param user      The user who's page we're displaying
+                     * @param col1      The first column of the page
+                     * @param col2      The second column of the page
+                     */
+                    private void addOwnerContent(User user, HTMLPanel col1, HTMLPanel col2) {
+
                     }
 
 
@@ -141,6 +186,14 @@ public class ProfileContent extends Content {
                         }
 
                         return new HTML("<h3>" + title + "</h3>" + "<p>" + info + "</p>");
+                    }
+
+
+                    private HTMLPanel getButtonWidget(Button button) {
+                        HTMLPanel div = new HTMLPanel("<br>");
+                        div.addStyleName("pagination-centered");
+                        div.add(button);
+                        return div;
                     }
                 });
     }

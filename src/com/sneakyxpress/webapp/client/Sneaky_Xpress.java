@@ -228,7 +228,9 @@ public class Sneaky_Xpress implements EntryPoint {
 
 
     /**
-     * Creates the link used to update food vendor data
+     * Creates the link used to update food vendor data. This is
+     * used for debugging (the release has a button specifically for
+     * administrators).
      *
      * @return      the link
      */
@@ -258,5 +260,38 @@ public class Sneaky_Xpress implements EntryPoint {
         });
 
         return link;
+    }
+
+    /**
+     * Creates the button used to update food vendor data
+     *
+     * @return      the button
+     */
+    public Button getUpdateDataButton() {
+        Button button = new Button("Update Data");
+        button.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                loading.removeStyleName("collapsed");
+
+                UpdateDataServiceAsync updateDataService = GWT
+                        .create(UpdateDataService.class);
+                updateDataService.updateData(new AsyncCallback<String>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        loading.addStyleName("collapsed");
+                        addMessage(true, "Updating data failed. Reason: " + caught.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(String response) {
+                        loading.addStyleName("collapsed");
+                        addModal("Data Updated", new HTML(response));
+                    }
+                });
+            }
+        });
+
+        return button;
     }
 }

@@ -6,17 +6,15 @@ import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import javax.jdo.annotations.Extension;
-
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 @Entity
 @PersistenceCapable
 public class User implements IsSerializable {
 
-	/**
-	 * User domain object
-	 */
+    public static final int ADMINISTRATOR = 1;
+    public static final int OWNER = 2;
+    public static final int USER = 3;
 
     // Facebook Id of User
     @PrimaryKey
@@ -24,9 +22,8 @@ public class User implements IsSerializable {
     @Id
     private String id;
 
-    // The id variable is encoded weird so this is the unencoded version
     @Persistent
-    private String unencodedId;
+    private int type = USER;
 
 	// Unique identifier for object, email
 	@Persistent
@@ -35,26 +32,72 @@ public class User implements IsSerializable {
     @Persistent
     private String name = "";
 
+
+    /**
+     * Retrieves the type of the user.
+     *
+     * @return      Possible types are User.ADMINISTRATOR,
+     *              User.OWNER, or User.USER
+     */
+    public int getType() {
+        return type;
+    }
+
+
+    /**
+     * Sets the type of the user
+     *
+     * @param type  Possible types are User.ADMINISTRATOR,
+     *              User.OWNER, or User.USER
+     */
+    public void setType(int type) {
+        this.type = type;
+    }
+
+
+    /**
+     * Retrieves the type of the user in a human-readable String
+     *
+     * @return      The type description of the user
+     */
+    public String getTypeName() {
+        switch (type) {
+            case ADMINISTRATOR:
+                return "Administrator";
+            case OWNER:
+                return "Owner";
+            case USER:
+                return "User";
+            default:
+                return "Unknown (" + type + ")";
+        }
+    }
+
+
 	public String getEmail() {
 		return email;
 	}
+
 
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
+
 	public String getId() {
-		return unencodedId;
+		return id;
 	}
+
 
 	public void setId(String id) {
 		this.id = id;
-        this.unencodedId = id;
 	}
+
 
     public String getName() {
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;

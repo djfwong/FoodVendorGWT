@@ -313,7 +313,7 @@ public class FacebookTools {
 	public Button getLogoutButton() {
 		// Clear token
 		Button button = new Button("Logout");
-		button.addStyleName("btn btn-info btn-large");
+		button.addStyleName("btn btn-warning btn-large");
 		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
