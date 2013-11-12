@@ -291,16 +291,16 @@ public class FacebookTools {
 										+ existingUser);
 						if (existingUser) {
 							module.addMessage(false,
-									"Welcome back " + user.getName());
+									"Welcome back " + userName);
 						} else {
 							module.addMessage(false,
-									"Welcome " + user.getName()
+									"Welcome " + userName
 											+ ". Enjoy your stay!");
 						}
 
 						loggedIn = true;
 						convertLoginLink();
-						History.fireCurrentHistoryState();
+                        History.fireCurrentHistoryState();
 					}
 				});
 	}
@@ -317,10 +317,19 @@ public class FacebookTools {
 		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+                // Clear tokens
 				Auth.get().clearAllTokens();
 				FacebookTools.token = "";
+
+                // Clear saved data
+                loggedIn = false;
+                userFriends.clear();
+                userId = "";
+                userName = "";
+
+                // Change the My Profile like into a Login link
+                // and "refresh" the page
 				convertProfileLink();
-				loggedIn = false;
 				History.fireCurrentHistoryState();
 				module.addMessage(false,
 						"All tokens cleared. You are now logged out!");

@@ -16,18 +16,22 @@ import com.sneakyxpress.webapp.shared.User;
  */
 public class PersistUserServiceImpl extends RemoteServiceServlet implements PersistUserService {
 
-	private static final long serialVersionUID = 1L;
-	private static Logger logger = Logger.getLogger("");
-
 
 	@Override
 	public boolean persistNewUserToDatastore(User user) throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        // Check if the user is in datastore
-        boolean existingMember = userInDatabase(user.getId());
+        Query q = pm.newQuery("SELECT UNIQUE FROM " + User.class.getName()
+                + " WHERE id == \"" + user.getId() + "\"");
+        User result = (User) q.execute();
 
-        if (!existingMember) {
+        boolean existingMember = result != null;
+        if (existingMember) {
+            // Update the existing user's information
+            result.setName(user.getName());
+            result.setEmail(user.getEmail());
+        } else {
+            // Create the new user
             pm.makePersistent(user);
         }
 
