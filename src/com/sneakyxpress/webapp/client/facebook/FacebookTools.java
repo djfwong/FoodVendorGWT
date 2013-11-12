@@ -59,7 +59,7 @@ public class FacebookTools {
 	private boolean loggedIn = false;
 
 	// Data retrieved from facebook, by default null
-	HashMap<String, String> userFriendsIds = new HashMap<String, String>();
+	HashMap<String, String> userFriends = new HashMap<String, String>();
 	private String userId = "";
 	private String userName = "";
 
@@ -87,6 +87,10 @@ public class FacebookTools {
 	public String getUserName() {
 		return userName;
 	}
+
+    public HashMap<String, String> getUserFriends() {
+        return userFriends;
+    }
 
 	public String getToken() {
 		return token;
@@ -131,7 +135,7 @@ public class FacebookTools {
 	/**
 	 * Change the profile link back into a login link
 	 */
-	private void converProfileLink() {
+	private void convertProfileLink() {
 		clickHandlerReg.removeHandler(); // Remove the login action from the
 		// link
 
@@ -159,23 +163,23 @@ public class FacebookTools {
 				FACEBOOK_BIRTHDAY_SCOPE).withScopeDelimiter(",");
 
 		AUTH.login(req, new Callback<String, Throwable>() {
-			@Override
-			public void onSuccess(String token) {
-				logger.log(Level.INFO, "Got facebook oauth login token");
-				FacebookTools.token = token;
+            @Override
+            public void onSuccess(String token) {
+                logger.log(Level.INFO, "Got facebook oauth login token");
+                FacebookTools.token = token;
 
-				// Update the user's information
-				retrieveUserInfo();
-			}
+                // Update the user's information
+                retrieveUserInfo();
+            }
 
-			@Override
-			public void onFailure(Throwable caught) {
-				String message = "Facebook login failed. Reason: "
-						+ caught.getMessage();
-				logger.log(Level.SEVERE, message);
-				module.addMessage(true, message);
-			}
-		});
+            @Override
+            public void onFailure(Throwable caught) {
+                String message = "Facebook login failed. Reason: "
+                        + caught.getMessage();
+                logger.log(Level.SEVERE, message);
+                module.addMessage(true, message);
+            }
+        });
 	}
 
 	private void retrieveUserInfo() {
@@ -183,61 +187,60 @@ public class FacebookTools {
 
 		JsonpRequestBuilder builder = new JsonpRequestBuilder();
 		builder.requestObject(url, new AsyncCallback<JavaScriptObject>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				logger.log(Level.SEVERE,
-						"Retrieving user data from facebook failed. Reason: "
-								+ caught.getMessage());
-			}
+            @Override
+            public void onFailure(Throwable caught) {
+                logger.log(Level.SEVERE,
+                        "Retrieving user data from facebook failed. Reason: "
+                                + caught.getMessage());
+            }
 
-			@Override
-			public void onSuccess(JavaScriptObject jsObj) {
-				logger.log(Level.INFO,
-						"Successfully retrieved user data from facebook");
-				JSONObject userInfo = new JSONObject(jsObj);
+            @Override
+            public void onSuccess(JavaScriptObject jsObj) {
+                logger.log(Level.INFO,
+                        "Successfully retrieved user data from facebook");
+                JSONObject userInfo = new JSONObject(jsObj);
 
-				// Grab user details and make new user object from JSON object
-				User user = new User();
+                // Grab user details and make new user object from JSON object
+                User user = new User();
 
-				if (userInfo.containsKey("email")) {
-					String userEmail = parseJSONString(userInfo.get("email")
-							.toString());
-					user.setEmail(userEmail);
-					logger.log(Level.INFO, "Parsed user email: " + userEmail);
-				} else {
-					user.setEmail("<em class=\"muted\">No Email Available</em>");
-					logger.log(Level.SEVERE,
-							"Could not parse user email: No data!");
-				}
+                if (userInfo.containsKey("email")) {
+                    String userEmail = parseString(userInfo.get("email")
+                            .toString());
+                    user.setEmail(userEmail);
+                    logger.log(Level.INFO, "Parsed user email: " + userEmail);
+                } else {
+                    user.setEmail("<em class=\"muted\">No Email Available</em>");
+                    logger.log(Level.SEVERE,
+                            "Could not parse user email: No data!");
+                }
 
-				if (userInfo.containsKey("id")) {
-					userId = parseJSONString(userInfo.get("id").toString());
-					user.setId(userId);
-					logger.log(Level.INFO, "Parsed user ID: " + userId);
-				} else {
-					user.setId("<em class=\"muted\">No Id Available</em>");
-					logger.log(Level.SEVERE,
-							"Could not parse user ID: No data!");
-				}
+                if (userInfo.containsKey("id")) {
+                    userId = parseString(userInfo.get("id").toString());
+                    user.setId(userId);
+                    logger.log(Level.INFO, "Parsed user ID: " + userId);
+                } else {
+                    user.setId("<em class=\"muted\">No Id Available</em>");
+                    logger.log(Level.SEVERE,
+                            "Could not parse user ID: No data!");
+                }
 
-				if (userInfo.containsKey("name")) {
-					userName = parseJSONString(userInfo.get("name").toString());
-					user.setName(userName);
-					logger.log(Level.INFO, "Parsed user name: " + userName);
-				} else {
-					user.setName("<em class=\"muted\">No Name Available</em>");
-					logger.log(Level.SEVERE,
-							"Could not parse user name: No data!");
-				}
+                if (userInfo.containsKey("name")) {
+                    userName = parseString(userInfo.get("name").toString());
+                    user.setName(userName);
+                    logger.log(Level.INFO, "Parsed user name: " + userName);
+                } else {
+                    user.setName("<em class=\"muted\">No Name Available</em>");
+                    logger.log(Level.SEVERE,
+                            "Could not parse user name: No data!");
+                }
 
-				persistNewUser(user);
-				retrieveUserFriends(userFriendsIds);			
-			}
-		});
+                persistNewUser(user);
+                retrieveUserFriends();
+            }
+        });
 	}
 
-	private HashMap<String, String> retrieveUserFriends(final HashMap<String, String> map) {
-
+	private void retrieveUserFriends() {
 		// Url to retrieve Facebook Friend list using access token
 		String url = FACEBOOK_GRAPH_URL + "/me/friends?fields=id,name"
 				+ "&access_token=" + token;
@@ -255,11 +258,11 @@ public class FacebookTools {
 
 			@Override
 			public void onSuccess(FBFeed result) {
-
 				if (result.getData() != null) {
 					for (int count = 0; count < result.getData().length(); count++) {
 						FBEntry entry = result.getData().get(count);
-						map.put(entry.getId(), entry.getName());
+						userFriends.put(parseString(entry.getId()),
+                                parseString(entry.getName()));
 					}
 				}
 				
@@ -267,7 +270,6 @@ public class FacebookTools {
 						"Successfully made call to retrieve friend data from facebook");
 			}
 		});
-		 return userFriendsIds;
 	}
 
 	// Method to add user to data store
@@ -317,7 +319,7 @@ public class FacebookTools {
 			public void onClick(ClickEvent event) {
 				Auth.get().clearAllTokens();
 				FacebookTools.token = "";
-				converProfileLink();
+				convertProfileLink();
 				loggedIn = false;
 				History.fireCurrentHistoryState();
 				module.addMessage(false,
@@ -334,7 +336,7 @@ public class FacebookTools {
 	 *            The String to parse
 	 * @return The parsed String
 	 */
-	private String parseJSONString(String input) {
+	private String parseString(String input) {
 		return input.replaceAll("^\"|\"$", "");
 	}
 }

@@ -9,6 +9,9 @@ import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.facebook.*;
 import com.sneakyxpress.webapp.shared.User;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 
 /**
@@ -91,20 +94,23 @@ public class ProfileContent extends Content {
 
                         col1.add(new HTML("<div class=\"page-header\"><h2>" + facebook.getUserName()
                                 + " <small class=\"muted\"> Private Profile</small></h2></div>"));
-
                         col1.add(getInfoWidget("User ID", user.getId()));
                         col1.add(getInfoWidget("User Email", user.getEmail()));
-
-                        col2.add(getInfoWidget("Bogus Info", "Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit."));
-                        col2.add(getInfoWidget("More Bogus Info", "Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit."));
 
                         HTMLPanel logout = new HTMLPanel("<br>");
                         logout.addStyleName("pagination-centered");
                         logout.add(facebook.getLogoutButton());
+                        col1.add(logout);
 
-                        col2.add(logout);
+                        // Add friends (currently not processed by the server
+                        Collection<String> friends = facebook.getUserFriends().values();
+                        String info = "";
+                        if (!friends.isEmpty()) {
+                            for (String f : friends) {
+                                info += f + "<br>";
+                            }
+                        }
+                        col2.add(getInfoWidget("User Friends", info));
                     }
 
 
