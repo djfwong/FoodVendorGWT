@@ -20,7 +20,7 @@ public class VendorFeedbackTable {
 		
 		// Create new cell table object
 		CellTable<VendorFeedback> table = new CellTable<VendorFeedback>();
-		
+
 		// Configure table to display all results onto one page
 		table.setPageSize(vendorFeedbackList.size());
 		
