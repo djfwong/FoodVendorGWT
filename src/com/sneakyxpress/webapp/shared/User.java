@@ -21,7 +21,6 @@ public class User implements IsSerializable {
     // Facebook Id of User
     @PrimaryKey
     @Persistent
-    @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
     @Id
     private String id;
 
