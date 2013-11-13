@@ -8,13 +8,12 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Content;
+import com.sneakyxpress.webapp.client.SimpleTable;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.facebook.*;
 import com.sneakyxpress.webapp.shared.User;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.logging.Level;
 
 /**
@@ -108,16 +107,12 @@ public class ProfileContent extends Content {
                             @Override
                             public void onClick(ClickEvent event) {
                                 Collection<String> friends = facebook.getUserFriends().values();
-                                String info = "";
-                                if (!friends.isEmpty()) {
-                                    for (String f : friends) {
-                                        info += f + "<br>";
-                                    }
-                                } else {
-                                    info = "You have no friends :(<br>";
+                                SimpleTable friendsTable = new SimpleTable("table-striped", "Friend Name");
+                                for (String f : friends) {
+                                    friendsTable.addRow(f);
                                 }
-                                module.addModal(facebook.getUserName() + "\'s Friends",
-                                        new HTMLPanel("p", info));
+                                friendsTable.sortRows(0);
+                                module.addModal(facebook.getUserName() + "\'s Friends", friendsTable);
                             }
                         });
                         col2.add(getButtonWidget(viewFriends));

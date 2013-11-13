@@ -8,9 +8,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.sneakyxpress.webapp.client.Content;
-import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
-import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.*;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**
@@ -47,7 +45,14 @@ public class SearchContent extends Content {
                 	HTMLPanel content = new HTMLPanel("");
                 	
                 	if (!search_results.isEmpty()){
-                		Widget table = new FoodVendorDisplayTable(search_results, module.VENDOR_PAGE).getWidget();
+                        SimpleTable table = new SimpleTable("table-hover table-bordered table-striped",
+                                "Key", "Name", "Description", "Location");
+                        for (FoodVendor v : search_results) {
+                            table.addRow(new PageClickHandler(module.VENDOR_PAGE, v.getVendorId()),
+                                    v.getVendorId(), v.getName(), v.getDescription(), v.getLocation());
+                        }
+                        table.sortRows(0);
+
                 		content.add(table);
                         module.changeContent(content);
                 	} else {
