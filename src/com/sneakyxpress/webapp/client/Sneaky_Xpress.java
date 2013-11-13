@@ -78,9 +78,8 @@ public class Sneaky_Xpress implements EntryPoint {
         String type = error ? "alert-danger" : "alert-info";
         HTML alert = new HTML("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
                 + "&times;</button>" + info);
-        alert.addStyleName("alert " + type + " fade");
+        alert.addStyleName(type + " alert fade in");
         messages.insert(alert, 0); // Add the message to the top
-        alert.addStyleName("in");
 
         // Animations & logging
         loading.addStyleName("collapsed"); // Remove the loading bar if it exists
