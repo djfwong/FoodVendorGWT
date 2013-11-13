@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Content;
-import com.sneakyxpress.webapp.client.SimpleTable;
+import com.sneakyxpress.webapp.client.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.facebook.*;
 import com.sneakyxpress.webapp.shared.User;

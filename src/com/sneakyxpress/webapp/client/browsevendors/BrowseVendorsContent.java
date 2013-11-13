@@ -25,7 +25,7 @@ import com.google.maps.gwt.client.MarkerImage;
 import com.google.maps.gwt.client.MarkerOptions;
 import com.google.maps.gwt.client.MouseEvent;
 import com.sneakyxpress.webapp.client.*;
-import com.sneakyxpress.webapp.client.SimpleTable;
+import com.sneakyxpress.webapp.client.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**

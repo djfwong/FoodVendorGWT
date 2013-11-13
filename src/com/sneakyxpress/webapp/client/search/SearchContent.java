@@ -6,9 +6,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 import com.sneakyxpress.webapp.client.*;
+import com.sneakyxpress.webapp.client.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**
