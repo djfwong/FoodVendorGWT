@@ -2,7 +2,6 @@ package com.sneakyxpress.webapp.client.truckclaim;
 
 import java.util.logging.Level;
 
-import com.github.gwtbootstrap.client.ui.Label;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -10,7 +9,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sneakyxpress.webapp.client.Content;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.WatermarkedTextBox;
@@ -45,14 +44,26 @@ public class TruckClaimContent extends Content {
 		// Truck verification form
 		FormPanel form = new FormPanel("");
 		form.addStyleName("span6");
-		
+
 		// Add name text box
-		form.add(businessNameForm());
+		WatermarkedTextBox nameBox = textInputTextBox("Name On Business License");
+		WatermarkedTextBox emailBox = textInputTextBox("Contact Email");
+		WatermarkedTextBox phoneBox = numberTextBox("Contact Number");
+
+		// Widget to set as form since can only add one widget to a form.
+		VerticalPanel vertPanel = new VerticalPanel();
+
+		// Add text boxes
+		vertPanel.add(nameBox);
+		vertPanel.add(emailBox);
+		vertPanel.add(phoneBox);
+
+		form.setWidget(vertPanel);
 
 		content.add(form);
 
 		// Change the content
-		module.changeContent(content);
+		module.changeContent(form);
 	}
 
 	public void addMessage(boolean error, String info) {
@@ -68,17 +79,53 @@ public class TruckClaimContent extends Content {
 		logger.log(Level.INFO, "addMessage: " + info);
 	}
 
-	public TextBox businessNameForm() {
-		final WatermarkedTextBox nameInput = new WatermarkedTextBox();
-		nameInput.setWatermark("Name on License");
-		
-		nameInput.setWidth("230px");
+	// Returns a text box with the specified watermark for phone number input
+	public WatermarkedTextBox numberTextBox(String watermark) {
+		final WatermarkedTextBox numberInput = new WatermarkedTextBox();
+		numberInput.setWatermark(watermark);
 
-		nameInput.addKeyUpHandler(new KeyUpHandler() {
+		numberInput.setWidth("400px");
+
+		numberInput.addKeyUpHandler(new KeyUpHandler() {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					String input = nameInput.getText().trim(); // Remove extra
+					String input = numberInput.getText().trim(); // Remove extra
+					// whitespace
+
+					if (!input.matches("^[0-9]*$")) {
+						addMessage(
+								true,
+								"Sorry, \""
+										+ input
+										+ "\" contains invalid characters. "
+										+ "Only numbers are allowed. Please remove them and try again.");
+					} else if (input.length() > 10) {
+						addMessage(true, "Sorry, your input is too long. "
+								+ "Please limit your input to 10 numbers.");
+					} else if (input.length() == 0) {
+						addMessage(true,
+								"Sorry your input is empty. Please enter something.");
+					}
+				}
+			}
+		});
+		return numberInput;
+	}
+
+	// Returns a text box with the specified watermark for text input
+	public WatermarkedTextBox textInputTextBox(String watermark) {
+		final WatermarkedTextBox textInputBox = new WatermarkedTextBox();
+		textInputBox.setWatermark(watermark);
+
+		textInputBox.setWidth("400px");
+
+		textInputBox.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					String input = textInputBox.getText().trim(); // Remove
+					// extra
 					// whitespace
 
 					if (!input.matches("(\\w| )*")) {
@@ -98,6 +145,6 @@ public class TruckClaimContent extends Content {
 				}
 			}
 		});
-		return nameInput;
+		return textInputBox;
 	}
 }
