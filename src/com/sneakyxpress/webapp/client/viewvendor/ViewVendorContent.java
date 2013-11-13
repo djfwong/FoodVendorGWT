@@ -3,108 +3,141 @@ package com.sneakyxpress.webapp.client.viewvendor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.maps.gwt.client.*;
+import com.google.maps.gwt.client.GoogleMap;
+import com.google.maps.gwt.client.LatLng;
+import com.google.maps.gwt.client.MapOptions;
+import com.google.maps.gwt.client.MapTypeId;
+import com.google.maps.gwt.client.Marker;
+import com.google.maps.gwt.client.MarkerOptions;
 import com.sneakyxpress.webapp.client.Content;
+import com.sneakyxpress.webapp.client.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.truckclaim.TruckClaimContent;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**
  * The UI of the Food Vendor pages.
  */
 public class ViewVendorContent extends Content {
-    private static final String pageName = "View Vendor";
-    private static final String pageStub = "view";
+	private static final String pageName = "View Vendor";
+	private static final String pageStub = "view";
 
-    private final ViewVendorServiceAsync viewVendorService = GWT.create(ViewVendorService.class);
+	public String vendorId = "";
 
-    public ViewVendorContent(Sneaky_Xpress module) {
-        super(module);
-    }
+	private final ViewVendorServiceAsync viewVendorService = GWT
+			.create(ViewVendorService.class);
 
-    @Override
-    public String getPageName() {
-        return pageName;
-    }
+	public ViewVendorContent(Sneaky_Xpress module) {
+		super(module);
+	}
 
-    @Override
-    public String getPageStub() {
-        return pageStub;
-    }
+	@Override
+	public String getPageName() {
+		return pageName;
+	}
 
-    @Override
-    public void getAndChangeContent(String input) {
-        viewVendorService.viewVendorServer(input,
-                new AsyncCallback<FoodVendor>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        module.addMessage(true, GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
-                    }
+	@Override
+	public String getPageStub() {
+		return pageStub;
+	}
 
-                    @Override
-                    public void onSuccess(FoodVendor vendor) {
-                        HTMLPanel content = new HTMLPanel(""); // The base panel to hold all content
+	@Override
+	public void getAndChangeContent(String input) {
+		viewVendorService.viewVendorServer(input,
+				new AsyncCallback<FoodVendor>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				module.addMessage(true, GENERIC_ERROR_MESSAGE
+						+ " Reason: " + caught.getMessage());
+			}
 
-                        // Contains the basic information of the Food Vendor
-                        HTMLPanel info = new HTMLPanel("");
-                        info.addStyleName("row-fluid");
+			@Override
+			public void onSuccess(FoodVendor vendor) {
+				HTMLPanel content = new HTMLPanel(""); // The base panel
+				// to hold all
+				// content
 
-                        // The basic text information
-                        String name = vendor.getName();
-                        if (name.isEmpty()) {
-                            name = "<em class=\"muted\">No Name Available</em>";
-                        }
+				// Contains the basic information of the Food Vendor
+				HTMLPanel info = new HTMLPanel("");
+				info.addStyleName("row-fluid");
 
-                        HTMLPanel textInfo = new HTMLPanel("<div class=\"page-header\"><h2>" + name + "</h2></div>");
-                        textInfo.addStyleName("span6");
+				vendorId = vendor.getVendorId();
 
-                        textInfo.add(getInfoWidget("Description", vendor.getDescription()));
-                        textInfo.add(getInfoWidget("Location", vendor.getLocation()));
-                        textInfo.add(new HTML("<br>")); // Some padding
+				// The basic text information
+				String name = vendor.getName();
+				if (name.isEmpty()) {
+					name = "<em class=\"muted\">No Name Available</em>";
+				}
 
-                        // Group all the information together
-                        HTMLPanel mapInfo = new HTMLPanel("");
-                        mapInfo.setStyleName("span6 map_canvas");
-                        mapInfo.getElement().setId("small_map_canvas");
+				HTMLPanel textInfo = new HTMLPanel(
+						"<div class=\"page-header\"><h2>" + name
+						+ "</h2></div>");
+				textInfo.addStyleName("span6");
 
-                        info.add(textInfo);
-                        info.add(mapInfo);
+				textInfo.add(getInfoWidget("Description",
+						vendor.getDescription()));
+				textInfo.add(getInfoWidget("Location",
+						vendor.getLocation()));
+				textInfo.add(new HTML("<br>")); // Some padding
 
-                        content.add(info);
+				// Group all the information together
+				HTMLPanel mapInfo = new HTMLPanel("");
+				mapInfo.setStyleName("span6 map_canvas");
+				mapInfo.getElement().setId("small_map_canvas");
 
-                        // TODO: Reviews will go here
+				info.add(textInfo);
+				info.add(mapInfo);
 
-                        // Change the content
-                        module.changeContent(content);
+				content.add(info);
+				content.add(getClaimButton());
 
-                        // A simple map (it must be last or else it doesn't really work)
-                        MapOptions options = MapOptions.create();
-                        options.setZoom(14.0);
-                        options.setCenter(LatLng.create(vendor.getLatitude(), vendor.getLongitude()));
-                        options.setMapTypeId(MapTypeId.ROADMAP);
-                        options.setDraggable(true);
-                        options.setMapTypeControl(true);
-                        options.setScaleControl(true);
-                        options.setScrollwheel(false);
+				// TODO: Reviews will go here
 
-                        GoogleMap map = GoogleMap.create(Document.get().getElementById("small_map_canvas"), options);
+				// Change the content
+				module.changeContent(content);
 
-                        MarkerOptions markerOptions = MarkerOptions.create();
-                        markerOptions.setPosition(LatLng.create(vendor.getLatitude(), vendor.getLongitude()));
-                        markerOptions.setMap(map);
-                        markerOptions.setTitle(vendor.getName());
-                        Marker.create(markerOptions);
-                    }
+				// A simple map (it must be last or else it doesn't
+				// really work)
+				MapOptions options = MapOptions.create();
+				options.setZoom(14.0);
+				options.setCenter(LatLng.create(vendor.getLatitude(),
+						vendor.getLongitude()));
+				options.setMapTypeId(MapTypeId.ROADMAP);
+				options.setDraggable(true);
+				options.setMapTypeControl(true);
+				options.setScaleControl(true);
+				options.setScrollwheel(false);
 
-                    private HTML getInfoWidget(String title, String info) {
-                        if (info.isEmpty()) {
-                            info = "<em class=\"muted\">Information currently not available</em>";
-                        }
+				GoogleMap map = GoogleMap.create(Document.get()
+						.getElementById("small_map_canvas"), options);
 
-                        return new HTML("<p><strong>" + title + "</strong><br>" + info + "</p>");
-                    }
-                });
-    }
+				MarkerOptions markerOptions = MarkerOptions.create();
+				markerOptions.setPosition(LatLng.create(
+						vendor.getLatitude(), vendor.getLongitude()));
+				markerOptions.setMap(map);
+				markerOptions.setTitle(vendor.getName());
+				Marker.create(markerOptions);
+			}
+
+			private HTML getInfoWidget(String title, String info) {
+				if (info.isEmpty()) {
+					info = "<em class=\"muted\">Information currently not available</em>";
+				}
+
+				return new HTML("<p><strong>" + title + "</strong><br>"
+						+ info + "</p>");
+			}
+		});
+	}
+
+	public Button getClaimButton() {
+		// Truck owner claim button
+		Button button = new Button("Claim Truck");
+		button.addStyleName("btn btn-primary btn-sm");
+		button.addClickHandler(new PageClickHandler(new TruckClaimContent(module), vendorId));		
+		return button;
+	}
 }
