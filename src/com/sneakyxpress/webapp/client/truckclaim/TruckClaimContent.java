@@ -2,9 +2,13 @@ package com.sneakyxpress.webapp.client.truckclaim;
 
 import java.util.logging.Level;
 
+import com.github.gwtbootstrap.client.ui.Button;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -41,14 +45,25 @@ public class TruckClaimContent extends Content {
 		HTMLPanel content = new HTMLPanel(""); // The base panel to hold all
 		// content
 
-		// Truck verification form
-		FormPanel form = new FormPanel("");
+		// Create a FormPanel and point it at a service.
+		final FormPanel form = new FormPanel("");
+		form.setAction("/claimFormHandler");
 		form.addStyleName("span6");
 
-		// Add name text box
+		// Because we're going to add a FileUpload widget, we'll need to set the
+		// form to use the POST method, and multipart MIME encoding.
+		form.setEncoding(FormPanel.ENCODING_MULTIPART);
+		form.setMethod(FormPanel.METHOD_POST);
+
+		// Create TextBoxes, giving it a name so that it will be submitted.
 		WatermarkedTextBox nameBox = textInputTextBox("Name On Business License");
+		nameBox.setName("nameBoxInput");
+
 		WatermarkedTextBox emailBox = textInputTextBox("Contact Email");
+		emailBox.setName("emailBoxInput");
+
 		WatermarkedTextBox phoneBox = numberTextBox("Contact Number");
+		phoneBox.setName("phoneBoxInput");
 
 		// Widget to set as form since can only add one widget to a form.
 		VerticalPanel vertPanel = new VerticalPanel();
@@ -58,8 +73,26 @@ public class TruckClaimContent extends Content {
 		vertPanel.add(emailBox);
 		vertPanel.add(phoneBox);
 
-		form.setWidget(vertPanel);
+		// Create a FileUpload widget.
+		FileUpload upload = new FileUpload();
+		upload.setName("uploadClaimFormElement");
+		upload.setWidth("400px");
+		vertPanel.add(upload);
 
+		// Add a 'submit' button.
+	    Button submitButton = new Button("DONE");
+	    submitButton.addStyleName("btn btn-primary btn-lg");
+	    submitButton.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				form.submit();			
+			}
+	    });
+
+	    vertPanel.add(submitButton);
+
+		form.setWidget(vertPanel);
 		content.add(form);
 
 		// Change the content
