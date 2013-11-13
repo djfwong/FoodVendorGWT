@@ -15,7 +15,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
@@ -25,10 +24,8 @@ import com.google.maps.gwt.client.Marker.ClickHandler;
 import com.google.maps.gwt.client.MarkerImage;
 import com.google.maps.gwt.client.MarkerOptions;
 import com.google.maps.gwt.client.MouseEvent;
-import com.sneakyxpress.webapp.client.Content;
-import com.sneakyxpress.webapp.client.FoodVendorDisplayTable;
-import com.sneakyxpress.webapp.client.PageClickHandler;
-import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.*;
+import com.sneakyxpress.webapp.client.SimpleTable;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**
@@ -247,7 +244,14 @@ public class BrowseVendorsContent extends Content {
                                     + "Click on a row in the table to view the vendor's profile page.</p>"));
 
 							// Add data table under List view
-							Widget table = new FoodVendorDisplayTable(result, module.VENDOR_PAGE).getWidget();
+                            SimpleTable table = new SimpleTable("table-hover table-bordered table-striped",
+                                    "Key", "Name", "Description", "Location");
+                            for (FoodVendor v : result) {
+                                table.addRow(new PageClickHandler(module.VENDOR_PAGE, v.getVendorId()),
+                                        v.getVendorId(), v.getName(), v.getDescription(), v.getLocation());
+                            }
+                            table.sortRows(0); // Sort the rows
+
 							content.add(table);
 
                             module.changeContent(content); // Change the page content
