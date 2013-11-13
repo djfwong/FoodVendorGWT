@@ -18,12 +18,12 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-
 import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.search.SearchContent;
+import com.sneakyxpress.webapp.client.truckclaim.TruckClaimContent;
 import com.sneakyxpress.webapp.client.updatedata.UpdateDataService;
 import com.sneakyxpress.webapp.client.updatedata.UpdateDataServiceAsync;
 import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
@@ -43,9 +43,10 @@ public class Sneaky_Xpress implements EntryPoint {
     public final Content VENDOR_PAGE = new ViewVendorContent(this);
     public final Content BROWSE_PAGE = new BrowseVendorsContent(this);
     public final Content PROFILE_PAGE = new ProfileContent(this);
+    public final Content TRUCK_CLAIM_PAGE = new TruckClaimContent(this);
 
     // Register all pages here so they can be iterated over (used for History support)
-    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE };
+    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE, TRUCK_CLAIM_PAGE };
 
     // A panel to hold messages in
     private FlowPanel messages = new FlowPanel();
