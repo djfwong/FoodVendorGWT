@@ -8,7 +8,7 @@
 	<!-- Home page -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.GreetingServiceImpl</servlet-class>
+		<servlet-class>com.sneakyxpress.webapp.server.pages.GreetingServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress GreetingService</servlet-name>
@@ -19,7 +19,7 @@
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
 			BrowseVendorsService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl</servlet-class>
+		<servlet-class>com.sneakyxpress.webapp.server.pages.BrowseVendorsServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
@@ -31,7 +31,7 @@
 	<!-- Login -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress PersistUserService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.PersistUserServiceImpl</servlet-class>
+		<servlet-class>com.sneakyxpress.webapp.server.services.PersistUserServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress PersistUserService</servlet-name>
@@ -42,7 +42,7 @@
 	<!-- Search Results page -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress SearchService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.SearchServiceImpl</servlet-class>
+		<servlet-class>com.sneakyxpress.webapp.server.pages.SearchServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress SearchService</servlet-name>
@@ -52,7 +52,7 @@
 	<!-- View vendor page -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ViewVendorService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.ViewVendorServiceImpl</servlet-class>
+		<servlet-class>com.sneakyxpress.webapp.server.pages.ViewVendorServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ViewVendorService</servlet-name>
@@ -62,7 +62,7 @@
 	<!-- Profile page -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ProfileService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.ProfileServiceImpl</servlet-class>
+		<servlet-class>com.sneakyxpress.webapp.server.pages.ProfileServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress ProfileService</servlet-name>
@@ -72,7 +72,7 @@
 	<!-- Update Data cron job -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.UpdateDataServiceImpl</servlet-class>
+		<servlet-class>com.sneakyxpress.webapp.server.services.UpdateDataServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>

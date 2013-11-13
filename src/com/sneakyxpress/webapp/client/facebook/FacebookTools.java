@@ -18,8 +18,10 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.sneakyxpress.webapp.client.PageClickHandler;
+import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
+import com.sneakyxpress.webapp.client.services.persistuser.PersistUserServiceAsync;
 import com.sneakyxpress.webapp.shared.User;
 
 /**

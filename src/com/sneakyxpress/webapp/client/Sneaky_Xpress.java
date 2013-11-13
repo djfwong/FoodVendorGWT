@@ -18,15 +18,17 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.sneakyxpress.webapp.client.browsevendors.BrowseVendorsContent;
+import com.sneakyxpress.webapp.client.pages.Content;
+import com.sneakyxpress.webapp.client.pages.PageClickHandler;
+import com.sneakyxpress.webapp.client.pages.browsevendors.BrowseVendorsContent;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
-import com.sneakyxpress.webapp.client.greeting.GreetingContent;
-import com.sneakyxpress.webapp.client.profile.ProfileContent;
-import com.sneakyxpress.webapp.client.search.SearchContent;
-import com.sneakyxpress.webapp.client.truckclaim.TruckClaimContent;
-import com.sneakyxpress.webapp.client.updatedata.UpdateDataService;
-import com.sneakyxpress.webapp.client.updatedata.UpdateDataServiceAsync;
-import com.sneakyxpress.webapp.client.viewvendor.ViewVendorContent;
+import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
+import com.sneakyxpress.webapp.client.pages.profile.ProfileContent;
+import com.sneakyxpress.webapp.client.pages.search.SearchContent;
+import com.sneakyxpress.webapp.client.pages.truckclaim.TruckClaimContent;
+import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataService;
+import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataServiceAsync;
+import com.sneakyxpress.webapp.client.pages.viewvendor.ViewVendorContent;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -269,6 +271,7 @@ public class Sneaky_Xpress implements EntryPoint {
      */
     public Button getUpdateDataButton() {
         Button button = new Button("Update Data");
+        button.addStyleName("btn btn-large btn-info");
         button.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {

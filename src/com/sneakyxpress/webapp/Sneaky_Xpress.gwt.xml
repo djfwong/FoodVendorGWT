@@ -28,11 +28,11 @@
 
 	<!-- Specify other servlets -->
 	<servlet path="/browseVendors"
-		class="com.sneakyxpress.webapp.server.BrowseVendorsServiceImpl" />
+		class="com.sneakyxpress.webapp.server.pages.BrowseVendorsServiceImpl" />
 	<servlet path="/updateData"
-		class="com.sneakyxpress.webapp.server.UpdateDataServiceImpl" />
+		class="com.sneakyxpress.webapp.server.services.UpdateDataServiceImpl" />
 	<servlet path="/addUser"
-		class="com.sneakyxpress.webapp.server.PersistUserServiceImpl" />
+		class="com.sneakyxpress.webapp.server.services.PersistUserServiceImpl" />
 
 	<!-- Specify the paths for translatable code -->
 	<source path="client" />
