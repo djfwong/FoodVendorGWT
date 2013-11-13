@@ -70,4 +70,23 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 			setText("");
 		}
 	}
+
+	// To detect empty inputs
+	@Override
+	public String getText() {
+		String t = super.getText();
+		if (t.equals(watermark))
+			return "";
+
+		return t;
+	}
+
+	// To detect empty inputs
+	@Override
+	public void setText(String text) {
+		if (text == null)
+			return;
+		if (text.length() != 0)
+			super.setText(text);
+	}
 }
