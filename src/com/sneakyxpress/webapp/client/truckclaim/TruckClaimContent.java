@@ -120,7 +120,7 @@ public class TruckClaimContent extends Content {
 					String errorMsg = "Sorry, \""
 							+ number
 							+ "\" contains invalid characters. "
-							+ "Only numbers are allowed. Please remove them and try again.";
+							+ "Only numbers are allowed. Please check your phone number input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
 					event.cancel();
@@ -130,7 +130,7 @@ public class TruckClaimContent extends Content {
 				else if (number.length() > STANDARD_PHONE_NUMBER_LENGTH
 						|| number.length() < STANDARD_PHONE_NUMBER_LENGTH)
 				{
-					String errorMsg = "Please limit " + number + " to "
+					String errorMsg = "Please limit phone number input " + number + " to "
 							+ STANDARD_PHONE_NUMBER_LENGTH + " numbers.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
@@ -141,7 +141,7 @@ public class TruckClaimContent extends Content {
 				else if (name.length() > STANDARD_MAX_FULL_NAME_LENGTH)
 				{
 					String errorMsg = "Sorry, " + name + " is too long. "
-							+ "Please limit your input to "
+							+ "Please limit your full name input to "
 							+ STANDARD_MAX_FULL_NAME_LENGTH + " characters";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
@@ -153,7 +153,7 @@ public class TruckClaimContent extends Content {
 					String errorMsg = "Sorry, \""
 							+ name
 							+ "\" contains invalid characters. "
-							+ "Only letters and spaces are allowed. Please remove them and try again.";
+							+ "Only letters and spaces are allowed. Please check your name input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
 					event.cancel();
@@ -163,7 +163,7 @@ public class TruckClaimContent extends Content {
 				else if (email.length() > STANDARD_MAX_EMAIL_LENGTH)
 				{
 					String errorMsg = "Sorry, " + email + " is too long. "
-							+ "Please limit your input to "
+							+ "Please limit your email input to "
 							+ STANDARD_MAX_EMAIL_LENGTH + " characters";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
@@ -174,7 +174,7 @@ public class TruckClaimContent extends Content {
 				{
 					String errorMsg = "Sorry, \"" + email
 							+ "\" contains invalid characters. "
-							+ "Please remove them and try again.";
+							+ "Please check your email input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
 					event.cancel();
