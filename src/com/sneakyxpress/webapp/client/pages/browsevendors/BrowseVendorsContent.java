@@ -252,7 +252,7 @@ public class BrowseVendorsContent extends Content {
                                 table.addRow(new PageClickHandler(module.VENDOR_PAGE, v.getVendorId()),
                                         v.getVendorId(), v.getName(), v.getDescription(), v.getLocation());
                             }
-                            table.sortRows(0); // Sort the rows
+                            table.sortRows(0, false); // Sort the rows
 
 							content.add(table);
 

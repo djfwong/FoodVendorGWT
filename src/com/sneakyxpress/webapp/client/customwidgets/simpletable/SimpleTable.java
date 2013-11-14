@@ -74,33 +74,13 @@ public class SimpleTable extends Composite {
 
 
     /**
-     * Sort the rows according to the give column, in alphabetical order.
-     *
-     * @param column    The column to use to compare the rows
-     */
-    public void sortRows(int column) {
-        // Sort the rows
-        Collections.sort(rows, new RowComparator(column));
-
-        // Clear & add the rows back to the widget
-        tbody.clear();
-        for (Row r : rows) {
-            tbody.add(r.getWidget());
-        }
-
-        // Set the column to sort in reverse next time
-        resetSortFlags(column, false);
-    }
-
-
-    /**
      * Sorts the rows then clears the table widget and re-adds the rows in the
      * correct order.
      *
      * @param column    The column to use to compare the rows
      * @param reverse   Should it be sorted in reverse?
      */
-    void sortRows(int column, boolean reverse) {
+    public void sortRows(int column, boolean reverse) {
         // Sort the rows
         Collections.sort(rows, new RowComparator(column));
         if (reverse) {

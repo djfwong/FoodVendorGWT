@@ -52,7 +52,7 @@ public class SearchContent extends Content {
                             table.addRow(new PageClickHandler(module.VENDOR_PAGE, v.getVendorId()),
                                     v.getVendorId(), v.getName(), v.getDescription(), v.getLocation());
                         }
-                        table.sortRows(0);
+                        table.sortRows(0, false);
 
                 		content.add(table);
                         module.changeContent(content);

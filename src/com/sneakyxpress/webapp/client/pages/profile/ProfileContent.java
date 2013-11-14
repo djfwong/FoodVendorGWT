@@ -111,7 +111,7 @@ public class ProfileContent extends Content {
                                 for (String f : friends) {
                                     friendsTable.addRow(f);
                                 }
-                                friendsTable.sortRows(0);
+                                friendsTable.sortRows(0, false);
                                 module.addModal(facebook.getUserName() + "\'s Friends", friendsTable);
                             }
                         });
