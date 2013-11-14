@@ -1,5 +1,11 @@
 /** Add css rules here for your application. */
 /** This provides the collapse transition */
+body{
+    min-width:400px;
+    width: auto !important;
+    width: 400px;
+}
+
 .stretchy {
 	height: 20px;
 	padding: 0px 20px 20px 20px;
