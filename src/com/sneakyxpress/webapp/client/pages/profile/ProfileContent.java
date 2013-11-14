@@ -4,9 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
@@ -43,6 +41,13 @@ public class ProfileContent extends Content {
     public void getAndChangeContent(final String userId) {
         profileService.getUserInfo(userId,
                 new AsyncCallback<User>() {
+                    private int tabCounter = 1;
+                    private final HTMLPanel content = new HTMLPanel("");
+                    private final HTMLPanel navTabs = new HTMLPanel("ul", "");
+                    private final HTMLPanel tabContent = new HTMLPanel("");
+                    private final FacebookTools facebook = module.FACEBOOK_TOOLS;
+                    private User user;
+
                     @Override
                     public void onFailure(Throwable caught) {
                         module.addMessage(true, GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
@@ -50,35 +55,28 @@ public class ProfileContent extends Content {
 
                     @Override
                     public void onSuccess(User user) {
-                        FacebookTools facebook = module.FACEBOOK_TOOLS;
+                        this.user = user; // Save the user for use in other methods
 
-                        HTMLPanel content = new HTMLPanel(""); // The base panel to hold all content
-
-                        // Create the structure of the page
-                        HTMLPanel row = new HTMLPanel("");
-                        row.addStyleName("row-fluid");
-
-                        HTMLPanel col1 = new HTMLPanel("");
-                        col1.addStyleName("span6");
-                        HTMLPanel col2 = new HTMLPanel("");
-                        col2.addStyleName("span6");
+                        // Add bootstrap styles to the navigation divs
+                        content.addStyleName("tabbable tabs-left");
+                        navTabs.addStyleName("nav nav-tabs");
+                        tabContent.addStyleName("tab-content");
 
                         // Either show the public or private page
                         if (!facebook.isLoggedIn()) {
                             logger.log(Level.INFO, "User not logged in, showing public page");
-                            createPublicPage(user, col1, col2);
+                            createPublicPage();
                         } else if (!user.getId().equals(facebook.getUserId())) {
                             logger.log(Level.SEVERE, "Mismatched user IDs, showing public page");
-                            createPublicPage(user, col1, col2);
+                            createPublicPage();
                         } else { // TODO: We really should have a better security check here!
                             logger.log(Level.INFO, "User logged in, showing private page");
-                            createPrivatePage(user, col1, col2);
+                            createPrivatePage();
                         }
 
-                        // Put it all together
-                        row.add(col1);
-                        row.add(col2);
-                        content.add(row);
+                        // Combine everything
+                        content.add(navTabs);
+                        content.add(tabContent);
 
                         module.changeContent(content); // Change the page content
                     }
@@ -86,92 +84,103 @@ public class ProfileContent extends Content {
 
                     /**
                      * Create a private user page (includes settings and private info etc.)
-                     *
-                     * @param user      The user who's page we're displaying
-                     * @param col1      The first column of the page
-                     * @param col2      The second column of the page
                      */
-                    private void createPrivatePage(User user, HTMLPanel col1, HTMLPanel col2) {
-                        final FacebookTools facebook = module.FACEBOOK_TOOLS;
+                    private void createPrivatePage() {
+                        // Add a title with the user's name to the page
+                        content.add(new HTML("<div class=\"page-header\"><h2>" + facebook.getUserName()
+                                + "<span class=\"pull-right\"><small class=\"muted\"> "
+                                + "Private Profile</small></span></h2></div>"));
 
-                        col1.add(new HTML("<div class=\"page-header\"><h2>" + facebook.getUserName()
-                                + " <small class=\"muted\"> Private Profile</small></h2></div>"));
-                        col1.add(getInfoWidget("User ID", user.getId()));
-                        col1.add(getInfoWidget("User Email", user.getEmail()));
-                        col1.add(getInfoWidget("User Type", user.getTypeName()));
+                        FlowPanel personalInfo = new FlowPanel();
+                        personalInfo.add(getInfoWidget("User ID", user.getId()));
+                        personalInfo.add(getInfoWidget("User Email", user.getEmail()));
+                        personalInfo.add(getInfoWidget("User Type", user.getTypeName()));
+                        createNewTab("Profile Information", personalInfo);
 
                         // Add friends (currently not processed by the server)
-                        Button viewFriends = new Button("View Friends");
-                        viewFriends.addStyleName("btn btn-large btn-info");
-                        viewFriends.addClickHandler(new ClickHandler() {
-                            @Override
-                            public void onClick(ClickEvent event) {
-                                Collection<String> friends = facebook.getUserFriends().values();
-                                SimpleTable friendsTable = new SimpleTable("table-striped", "Friend Name");
-                                for (String f : friends) {
-                                    friendsTable.addRow(f);
-                                }
-                                friendsTable.sortRows(0, false);
-                                module.addModal(facebook.getUserName() + "\'s Friends", friendsTable);
-                            }
-                        });
-                        col2.add(getButtonWidget(viewFriends));
+                        FlowPanel friends = new FlowPanel();
+                        SimpleTable friendsTable = new SimpleTable("table-bordered", "Friend Name");
+                        for (String f : facebook.getUserFriends().values()) {
+                            friendsTable.addRow(f);
+                        }
+                        friendsTable.sortRows(0, false);
+                        friends.add(friendsTable);
+                        createNewTab("Friends", friends);
 
                         // Add specific content for different user types
                         if (user.getType() == User.ADMINISTRATOR) {
-                            addAdministratorContent(user, col1, col2);
+                            addAdministratorContent();
                         } else if (user.getType() == User.OWNER) {
-                            addOwnerContent(user, col1, col2);
+                            addOwnerContent();
                         }
 
                         // Add the logout button last
-                        col2.add(getButtonWidget(facebook.getLogoutButton()));
+                        FlowPanel logout = new FlowPanel();
+                        logout.add(getButtonWidget(facebook.getLogoutButton()));
+                        createNewTab("Logout", logout);
                     }
 
 
                     /**
                      * Add administrator content and options to the page
-                     *
-                     * @param user      The user who's page we're displaying
-                     * @param col1      The first column of the page
-                     * @param col2      The second column of the page
                      */
-                    private void addAdministratorContent(User user, HTMLPanel col1, HTMLPanel col2) {
+                    private void addAdministratorContent() {
                         // Add the update data button
-                        col1.add(getButtonWidget(module.getUpdateDataButton()));
+                        FlowPanel admin = new FlowPanel();
+                        admin.add(getButtonWidget(module.getUpdateDataButton()));
+                        createNewTab("Administration", admin);
                     }
 
 
                     /**
                      * Add food vendor owner content and options to the page
-                     *
-                     * @param user      The user who's page we're displaying
-                     * @param col1      The first column of the page
-                     * @param col2      The second column of the page
                      */
-                    private void addOwnerContent(User user, HTMLPanel col1, HTMLPanel col2) {
+                    private void addOwnerContent() {
 
                     }
 
 
                     /**
                      * Create a public user page (does not contain settings or sensitive information)
-                     *
-                     * @param user      The user who's page we're displaying
-                     * @param col1      The first column of the page
-                     * @param col2      The second column of the page
                      */
-                    private void createPublicPage(User user, HTMLPanel col1, HTMLPanel col2) {
-                        FacebookTools facebook = module.FACEBOOK_TOOLS;
+                    private void createPublicPage() {
+                        content.add(new HTML("<div class=\"page-header\"><h2>User ID: "
+                                + userId + "<span class=\"pull-right\"><small class=\"muted\"> "
+                                + "Public Profile</small></span></h2></div>"));
 
-                        col1.add(new HTML("<div class=\"page-header\"><h2>User ID: "
-                                + userId + " <small class=\"muted\"> Public Profile</small>"
-                                + "</h2></div>"));
+                        FlowPanel bogus = new FlowPanel();
+                        bogus.add(getInfoWidget("Bogus Info", "Lorem ipsum dolor sit amet, " +
+                                "consectetur adipiscing elit."));
+                        bogus.add(getInfoWidget("More Bogus Info", "Lorem ipsum dolor sit amet, " +
+                                "consectetur adipiscing elit."));
+                        createNewTab("Bogus Stub", bogus);
+                    }
 
-                        col2.add(getInfoWidget("Bogus Info", "Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit."));
-                        col2.add(getInfoWidget("More Bogus Info", "Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit."));
+
+                    /**
+                     * Adds a tab to the profile page with the given contents
+                     *
+                     * @param title     The title of the tab
+                     * @param tabPane   The contents to display within the tab
+                     */
+                    private void createNewTab(String title, FlowPanel tabPane) {
+                        // Create the tab entry
+                        HTMLPanel li = new HTMLPanel("li", "<a href=\"#tab" + tabCounter
+                                + "\" data-toggle=\"tab\">" + title + "</a>");
+                        navTabs.add(li);
+
+                        // Create the tab contents
+                        tabPane.addStyleName("tab-pane");
+                        tabPane.getElement().setId("tab" + tabCounter);
+                        tabContent.add(tabPane); // Add the contents to the tab contents div
+
+                        // Make the first tab active
+                        if (tabCounter == 1) {
+                            li.addStyleName("active");
+                            tabPane.addStyleName("active");
+                        }
+
+                        tabCounter++;
                     }
 
 
@@ -180,7 +189,7 @@ public class ProfileContent extends Content {
                             info = "<em class=\"muted\">Information currently not available</em>";
                         }
 
-                        return new HTML("<h3>" + title + "</h3>" + "<p>" + info + "</p>");
+                        return new HTML("<h4>" + title + "</h4>" + "<p>" + info + "</p>");
                     }
 
 
