@@ -20,7 +20,7 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 
 	public WatermarkedTextBox(String defaultValue) {
 		this();
-		setText(defaultValue);
+		super.setText(defaultValue);
 	}
 
 	public WatermarkedTextBox(String defaultValue, String watermark) {
@@ -56,7 +56,7 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 		String text = getText();
 		if ((text.length() == 0) || (text.equalsIgnoreCase(watermark))) {
 			// Show watermark
-			setText(watermark);
+			super.setText(watermark);
 			addStyleDependentName("watermark");
 		}
 	}
@@ -65,9 +65,9 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 	public void onFocus(FocusEvent event) {
 		removeStyleDependentName("watermark");
 
-		if (getText().equalsIgnoreCase(watermark)) {
+		if (super.getText().equalsIgnoreCase(watermark)) {
 			// Hide watermark
-			setText("");
+			super.setText("");
 		}
 	}
 
