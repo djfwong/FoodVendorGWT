@@ -1,17 +1,20 @@
 package com.sneakyxpress.webapp.client.pages.profile;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.facebook.*;
+import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
+import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
 import com.sneakyxpress.webapp.shared.User;
+import com.sneakyxpress.webapp.shared.VendorFeedback;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -95,6 +98,7 @@ public class ProfileContent extends Content {
                         personalInfo.add(getInfoWidget("User ID", user.getId()));
                         personalInfo.add(getInfoWidget("User Email", user.getEmail()));
                         personalInfo.add(getInfoWidget("User Type", user.getTypeName()));
+                        personalInfo.addStyleName("well");
                         createNewTab("Profile Information", personalInfo);
 
                         // Add friends (currently not processed by the server)
@@ -136,7 +140,56 @@ public class ProfileContent extends Content {
                      * Add food vendor owner content and options to the page
                      */
                     private void addOwnerContent() {
+                        final FlowPanel reviews = new FlowPanel();
+                        reviews.addStyleName("well");
+                        createNewTab("My Truck's Feedback", reviews);
 
+                        VendorFeedbackServiceAsync vendorFeedbackService = GWT
+                                .create(VendorFeedbackService.class);
+                        vendorFeedbackService.getVendorFeedback(user.getId(),
+                                new AsyncCallback<List<VendorFeedback>>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                module.addMessage(true, "Loading reviews failed! Reason: " +
+                                        caught.getMessage());
+                            }
+
+                            @Override
+                            public void onSuccess(List<VendorFeedback> result) {
+                                if (result == null) {
+                                    HTMLPanel response = new HTMLPanel("p", "No reviews could be found :(");
+                                    response.addStyleName("lead pagination-centered");
+                                    reviews.add(response);
+                                } else {
+                                    Collections.sort(result, new FeedbackComparator());
+                                    for (VendorFeedback f : result) {
+                                        reviews.add(getReviewWidget(f));
+                                    }
+                                }
+                            }
+
+                            private HTMLPanel getReviewWidget(VendorFeedback f) {
+                                String stars = " ";
+                                for (int i = 0; i < f.getRating(); i++) {
+                                    stars = "<i class=\"icon-star\"></i>" + stars;
+                                }
+
+                                HTMLPanel quote = new HTMLPanel("blockquote", "<p>" + stars
+                                        + f.getReview() + "</p>");
+                                quote.add(new HTMLPanel("small", "User " + userId + " reviewing truck "
+                                        + f.getvendorId()));
+
+                                return quote;
+                            }
+
+                            class FeedbackComparator implements Comparator<VendorFeedback> {
+
+                                @Override
+                                public int compare(VendorFeedback f1, VendorFeedback f2) {
+                                    return (int) (f1.getCreationTime() - f2.getCreationTime());
+                                }
+                            }
+                        });
                     }
 
 
@@ -149,6 +202,7 @@ public class ProfileContent extends Content {
                                 + "Public Profile</small></span></h2></div>"));
 
                         FlowPanel bogus = new FlowPanel();
+                        bogus.addStyleName("well");
                         bogus.add(getInfoWidget("Bogus Info", "Lorem ipsum dolor sit amet, " +
                                 "consectetur adipiscing elit."));
                         bogus.add(getInfoWidget("More Bogus Info", "Lorem ipsum dolor sit amet, " +
@@ -184,12 +238,15 @@ public class ProfileContent extends Content {
                     }
 
 
-                    private HTML getInfoWidget(String title, String info) {
+                    private HTMLPanel getInfoWidget(String title, String info) {
                         if (info.isEmpty()) {
                             info = "<em class=\"muted\">Information currently not available</em>";
                         }
 
-                        return new HTML("<h4>" + title + "</h4>" + "<p>" + info + "</p>");
+                        HTMLPanel infoWidget = new HTMLPanel("dl", "<dt>" + title + "</dt>"
+                                + "<dd>" + info + "</dd>");
+                        infoWidget.addStyleName("dl-horizontal");
+                        return infoWidget;
                     }
 
 

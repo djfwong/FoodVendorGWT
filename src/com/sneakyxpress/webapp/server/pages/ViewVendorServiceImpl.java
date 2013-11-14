@@ -21,6 +21,8 @@ public class ViewVendorServiceImpl extends RemoteServiceServlet implements
                 + " WHERE vendorId == \"" + id + "\"");
         FoodVendor result = (FoodVendor) q.execute();
 
+        pm.close();
+
         if (result == null) { // Not sure if this works
             throw new IllegalArgumentException("No vendor with an ID of " + id + " could be found!");
         } else {

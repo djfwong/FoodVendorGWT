@@ -21,6 +21,8 @@ public class ProfileServiceImpl extends RemoteServiceServlet implements ProfileS
                 + " WHERE id == \"" + userId + "\"");
         User result = (User) q.execute();
 
+        pm.close();
+
         if (result == null) { // Not sure if this works
             throw new IllegalArgumentException("No user with an ID of " + userId + " could be found!");
         } else {

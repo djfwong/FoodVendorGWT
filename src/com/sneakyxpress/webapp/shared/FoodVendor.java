@@ -23,27 +23,22 @@ public class FoodVendor implements IsSerializable {
 	private String vendorId;
 
 	// Business name
-	@Column(name = "name")
     @Persistent
 	private String name = "";
 
 	// Location
-	@Column(name = "location")
     @Persistent
 	private String location = "";
 
 	// Description
-	@Column(name = "description")
     @Persistent
 	private String description = "";
 
 	// Longitude coordinate
-	@Column(name = "longitude")
     @Persistent
 	private double longitude = 0;
 
 	// Latitude coordinate
-	@Column(name = "latitude")
     @Persistent
 	private double latitude = 0;
 

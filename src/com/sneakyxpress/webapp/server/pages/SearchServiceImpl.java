@@ -33,6 +33,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
     			search_results.add(f);
     		}
     	}
+
+        pm.close();
     	
 		return search_results;
     	
