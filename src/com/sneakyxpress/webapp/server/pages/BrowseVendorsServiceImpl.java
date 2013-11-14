@@ -23,6 +23,9 @@ public class BrowseVendorsServiceImpl extends RemoteServiceServlet implements
         q.setClass(FoodVendor.class);
 
         List<FoodVendor> results = (List<FoodVendor>) q.execute();
+
+        pm.close();
+
         return new ArrayList<FoodVendor>(results);
     }
 }
