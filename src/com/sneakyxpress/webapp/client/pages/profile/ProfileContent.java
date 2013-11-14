@@ -1,8 +1,6 @@
 package com.sneakyxpress.webapp.client.pages.profile;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.pages.Content;
@@ -11,7 +9,6 @@ import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.facebook.*;
 import com.sneakyxpress.webapp.shared.User;
 
-import java.util.Collection;
 import java.util.logging.Level;
 
 /**
@@ -95,6 +92,7 @@ public class ProfileContent extends Content {
                         personalInfo.add(getInfoWidget("User ID", user.getId()));
                         personalInfo.add(getInfoWidget("User Email", user.getEmail()));
                         personalInfo.add(getInfoWidget("User Type", user.getTypeName()));
+                        personalInfo.addStyleName("well");
                         createNewTab("Profile Information", personalInfo);
 
                         // Add friends (currently not processed by the server)
@@ -184,12 +182,15 @@ public class ProfileContent extends Content {
                     }
 
 
-                    private HTML getInfoWidget(String title, String info) {
+                    private HTMLPanel getInfoWidget(String title, String info) {
                         if (info.isEmpty()) {
                             info = "<em class=\"muted\">Information currently not available</em>";
                         }
 
-                        return new HTML("<h4>" + title + "</h4>" + "<p>" + info + "</p>");
+                        HTMLPanel infoWidget = new HTMLPanel("dl", "<dt>" + title + "</dt>"
+                                + "<dd>" + info + "</dd>");
+                        infoWidget.addStyleName("dl-horizontal");
+                        return infoWidget;
                     }
 
 

@@ -270,6 +270,7 @@ public class FacebookTools {
 				
 				logger.log(Level.INFO,
 						"Successfully made call to retrieve friend data from facebook");
+                History.fireCurrentHistoryState(); // Refresh the page
 			}
 		});
 	}
