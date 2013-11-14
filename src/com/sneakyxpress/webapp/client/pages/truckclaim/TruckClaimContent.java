@@ -111,9 +111,10 @@ public class TruckClaimContent extends Content {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				form.submit();
 				// Disable button to disallow users to resubmit same form twice
 				submitButton.setEnabled(false);
+				
+				form.submit();
 			}
 		});
 		
@@ -134,6 +135,9 @@ public class TruckClaimContent extends Content {
 					String errorMsg = "Sorry some of your inputs are empty. Please enter something.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 				
@@ -145,6 +149,9 @@ public class TruckClaimContent extends Content {
 							+ STANDARD_MAX_FULL_NAME_LENGTH + " characters";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 
@@ -156,6 +163,9 @@ public class TruckClaimContent extends Content {
 							+ "Only letters and spaces are allowed. Please check your name input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 				
@@ -167,6 +177,9 @@ public class TruckClaimContent extends Content {
 							+ STANDARD_MAX_EMAIL_LENGTH + " characters";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 
@@ -177,6 +190,9 @@ public class TruckClaimContent extends Content {
 							+ "Please check your email input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 
@@ -189,6 +205,9 @@ public class TruckClaimContent extends Content {
 							+ "Only numbers are allowed. Please check your phone number input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 
@@ -200,6 +219,9 @@ public class TruckClaimContent extends Content {
 							+ STANDARD_PHONE_NUMBER_LENGTH + " numbers.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 				
@@ -207,6 +229,9 @@ public class TruckClaimContent extends Content {
 					String errorMsg = "Sorry, please check off terms and agreement box and retry submitting your request again";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 				
@@ -214,6 +239,9 @@ public class TruckClaimContent extends Content {
 					String errorMsg = "Sorry, you must select a picture of your business license from your local file system.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+					
+					// Re-enable button to allow user to resubmit form with changes
+					submitButton.setEnabled(true);
 					event.cancel();
 				}
 
