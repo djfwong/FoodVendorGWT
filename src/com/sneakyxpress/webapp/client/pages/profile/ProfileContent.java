@@ -116,6 +116,9 @@ public class ProfileContent extends Content {
                             addAdministratorContent();
                         } else if (user.getType() == User.OWNER) {
                             addOwnerContent();
+                        } else if (user.getType() == User.ADMIN_AND_OWNER) {
+                            addOwnerContent();
+                            addAdministratorContent();
                         }
 
                         // Add the logout button last

@@ -15,6 +15,7 @@ public class User implements IsSerializable {
     public static final int ADMINISTRATOR = 1;
     public static final int OWNER = 2;
     public static final int USER = 3;
+    public static final int ADMIN_AND_OWNER = 4;
 
     // Facebook Id of User
     @PrimaryKey
@@ -68,6 +69,8 @@ public class User implements IsSerializable {
                 return "Owner";
             case USER:
                 return "User";
+            case ADMIN_AND_OWNER:
+                return "Administrator / Owner";
             default:
                 return "Unknown (" + type + ")";
         }
