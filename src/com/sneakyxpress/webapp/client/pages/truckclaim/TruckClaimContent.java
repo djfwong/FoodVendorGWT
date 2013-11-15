@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CheckBox;
 import com.github.gwtbootstrap.client.ui.Label;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.WatermarkedTextBox;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.Content;
 
 public class TruckClaimContent extends Content {
@@ -29,7 +31,6 @@ public class TruckClaimContent extends Content {
 
 	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	
 
 	private static final String NAME_PATTERN = "(\\w| )*";
 	private static final String PHONE_PATTERN = "^[0-9]*$";
@@ -59,8 +60,7 @@ public class TruckClaimContent extends Content {
 
 		// Create a FormPanel and point it at a service.
 		final FormPanel form = new FormPanel("");
-		form.setAction("/claimFormHandler");
-		//form.addStyleName("span6");
+		form.setAction(GWT.getHostPageBaseURL() + "claimFormReq");
 
 		// Because we're going to add a FileUpload widget, we'll need to set the
 		// form to use the POST method, and multipart MIME encoding.
@@ -68,21 +68,22 @@ public class TruckClaimContent extends Content {
 		form.setMethod(FormPanel.METHOD_POST);
 
 		// Create TextBoxes, giving it a name so that it will be submitted.
-		
-		//Name textbox
+
+		// Name textbox
 		final WatermarkedTextBox nameBox = createTextBox("Name On Business License");
 		nameBox.setName("nameBoxInput");
 
-		//Email textbox
+		// Email textbox
 		final WatermarkedTextBox emailBox = createTextBox("Contact Email");
 		emailBox.setName("emailBoxInput");
 
-		//Phone textbox
+		// Phone textbox
 		final WatermarkedTextBox phoneBox = createTextBox("Contact Number");
 		phoneBox.setName("phoneBoxInput");
-		
-		//Terms and agreement checkbox
-		final CheckBox checkTerms = new CheckBox("I have read and agree to the Terms of Service.");
+
+		// Terms and agreement checkbox
+		final CheckBox checkTerms = new CheckBox(
+				"I have read and agree to the Terms of Service.");
 		checkTerms.setValue(false);
 		checkTerms.setWidth("400px");
 
@@ -94,8 +95,9 @@ public class TruckClaimContent extends Content {
 		componentPanel.add(emailBox);
 		componentPanel.add(phoneBox);
 		componentPanel.add(checkTerms);
-		
-		componentPanel.add((makeLabelWidget("Select photo of business license")));
+
+		componentPanel
+				.add((makeLabelWidget("Select photo of business license")));
 
 		// Create a FileUpload widget.
 		final FileUpload upload = new FileUpload();
@@ -113,11 +115,10 @@ public class TruckClaimContent extends Content {
 			public void onClick(ClickEvent event) {
 				// Disable button to disallow users to resubmit same form twice
 				submitButton.setEnabled(false);
-				
+
 				form.submit();
 			}
 		});
-		
 
 		// Add an event handler to the form. Form validation checks
 		form.addSubmitHandler(new FormPanel.SubmitHandler() {
@@ -127,20 +128,35 @@ public class TruckClaimContent extends Content {
 				String email = emailBox.getText().trim();
 				String number = phoneBox.getText().trim();
 				String fileName = upload.getFilename();
+				String facebookId = "";
+
+				// Check to make sure logged in user is making request
+				if (!FacebookTools.isLoggedIn())
+				{
+					String errorMsg = "Sorry you're not logged in. Login or register a new account. ";
+					module.addMessage(true, errorMsg);
+					addMessage(true, errorMsg);
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
+					submitButton.setEnabled(true);
+					event.cancel();
+				}
 
 				// Check for empty strings
-				if (name.length() == 0 || email.length() == 0
+				else if (name.length() == 0 || email.length() == 0
 						|| number.length() == 0)
 				{
 					String errorMsg = "Sorry some of your inputs are empty. Please enter something.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
-				
+
 				// Check name length does not exceed 70
 				else if (name.length() > STANDARD_MAX_FULL_NAME_LENGTH)
 				{
@@ -149,8 +165,9 @@ public class TruckClaimContent extends Content {
 							+ STANDARD_MAX_FULL_NAME_LENGTH + " characters";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
@@ -163,12 +180,13 @@ public class TruckClaimContent extends Content {
 							+ "Only letters and spaces are allowed. Please check your name input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
-				
+
 				// Check email length does not exceed 255
 				else if (email.length() > STANDARD_MAX_EMAIL_LENGTH)
 				{
@@ -177,8 +195,9 @@ public class TruckClaimContent extends Content {
 							+ STANDARD_MAX_EMAIL_LENGTH + " characters";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
@@ -190,8 +209,9 @@ public class TruckClaimContent extends Content {
 							+ "Please check your email input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
@@ -205,8 +225,9 @@ public class TruckClaimContent extends Content {
 							+ "Only numbers are allowed. Please check your phone number input and try again.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
@@ -215,34 +236,44 @@ public class TruckClaimContent extends Content {
 				else if (number.length() > STANDARD_PHONE_NUMBER_LENGTH
 						|| number.length() < STANDARD_PHONE_NUMBER_LENGTH)
 				{
-					String errorMsg = "Please ensure your phone number input " + number + " contains "
+					String errorMsg = "Please ensure your phone number input "
+							+ number + " contains "
 							+ STANDARD_PHONE_NUMBER_LENGTH + " numbers.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
-				
-				else if(!checkTerms.getValue()){
+
+				else if (!checkTerms.getValue())
+				{
 					String errorMsg = "Sorry, please check off terms and agreement box and retry submitting your request again";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
-				
-				else if(fileName.length() == 0){
+
+				else if (fileName.length() == 0)
+				{
 					String errorMsg = "Sorry, you must select a picture of your business license from your local file system.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
-					
-					// Re-enable button to allow user to resubmit form with changes
+
+					// Re-enable button to allow user to resubmit form with
+					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
+				} else
+				{
+					// All checks passed, grab user's ID
+					facebookId = FacebookTools.getUserId();
 				}
 
 			}
@@ -256,7 +287,8 @@ public class TruckClaimContent extends Content {
 				// we can get the result text here (see the FormPanel
 				// documentation for
 				// further explanation).
-				module.addMessage(true, "Request submitted, if approved you will be contacted shortly");
+				module.addMessage(true,
+						"Request submitted, if approved you will be contacted shortly");
 				addMessage(true, event.getResults());
 			}
 		});
@@ -276,12 +308,12 @@ public class TruckClaimContent extends Content {
 		final WatermarkedTextBox input = new WatermarkedTextBox();
 
 		input.setWatermark(watermark);
-		
+
 		input.setWidth("400px");
 
 		return input;
 	}
-	
+
 	public void addMessage(boolean error, String info) {
 		// Create & add the message
 		String type = error ? "alert-danger" : "alert-info";
@@ -294,18 +326,18 @@ public class TruckClaimContent extends Content {
 
 		logger.log(Level.INFO, "addMessage: " + info);
 	}
-	
+
 	private HTMLPanel getButtonWidget(Button button) {
-        HTMLPanel div = new HTMLPanel("<br>");
-        div.add(button);
-        return div;
-    }
-	
+		HTMLPanel div = new HTMLPanel("<br>");
+		div.add(button);
+		return div;
+	}
+
 	private HTMLPanel makeLabelWidget(String text) {
-        HTMLPanel div = new HTMLPanel("<br>");
-        Label label = new Label(text);
-        label.setStyleName("label label-info");
-        div.add(label);
-        return div;
-    }
+		HTMLPanel div = new HTMLPanel("<br>");
+		Label label = new Label(text);
+		label.setStyleName("label label-info");
+		div.add(label);
+		return div;
+	}
 }

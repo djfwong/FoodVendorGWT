@@ -18,8 +18,8 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserServiceAsync;
 import com.sneakyxpress.webapp.shared.User;
@@ -58,11 +58,11 @@ public class FacebookTools {
 	private static String token = "";
 
 	// Keeps track of whether or not we are logged in
-	private boolean loggedIn = false;
+	private static boolean loggedIn = false;
 
 	// Data retrieved from facebook, by default null
 	HashMap<String, String> userFriends = new HashMap<String, String>();
-	private String userId = "";
+	private static String userId = "";
 	private String userName = "";
 
 	private Anchor loginLink;
@@ -78,11 +78,11 @@ public class FacebookTools {
 		this.module = module;
 	}
 
-	public boolean isLoggedIn() {
+	public static boolean isLoggedIn() {
 		return loggedIn;
 	}
 
-	public String getUserId() {
+	public static String getUserId() {
 		return userId;
 	}
 
