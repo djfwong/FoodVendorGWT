@@ -4,12 +4,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-@Entity
 @PersistenceCapable
 public class TruckClaim implements IsSerializable {
 
@@ -17,8 +14,7 @@ public class TruckClaim implements IsSerializable {
 	// truck can be submitted, will use auto-generated PK instead
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	@Id
-	private String id;
+	private Long id;
 
 	@Persistent
 	private String facebookId = "";
@@ -38,7 +34,7 @@ public class TruckClaim implements IsSerializable {
 	@Persistent
 	private String filePath = "";
 
-	public String getId()
+	public Long getId()
 	{
 		return id;
 	}

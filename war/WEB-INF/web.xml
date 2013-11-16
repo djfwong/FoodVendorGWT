@@ -99,7 +99,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>processFormServlet</servlet-name>
-		<url-pattern>/claimFormReq</url-pattern>
+		<url-pattern>/sneaky_xpress/claimFormReq</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->

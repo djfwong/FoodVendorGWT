@@ -88,6 +88,8 @@ public class ClaimFormServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 
+		persistClaimData(truckClaim);
+		
 		response.getWriter().write("Submitted");
 		response.getWriter().close();
 	}

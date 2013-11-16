@@ -68,7 +68,7 @@ public class TruckClaimContent extends Content {
 		
 		// Main page re-direct after submitting data
 		form.getElement().<FormElement>cast().setTarget(GWT.getHostPageBaseURL());
-		form.setAction(GWT.getHostPageBaseURL() + "claimFormReq");
+		form.setAction(GWT.getModuleBaseURL() + "claimFormReq");
 
 		// Because we're going to add a FileUpload widget, we'll need to set the
 		// form to use the POST method, and multipart MIME encoding.
@@ -76,7 +76,6 @@ public class TruckClaimContent extends Content {
 		form.setMethod(FormPanel.METHOD_POST);
 
 		// Create TextBoxes, giving it a name so that it will be submitted.
-
 		// Vendor Id textbox - used to add to form
 		final WatermarkedTextBox vendorIdBox = createTextBox("Vendor Key");
 		vendorIdBox.setName("vendorId");
@@ -136,10 +135,10 @@ public class TruckClaimContent extends Content {
 			@Override
 			public void onClick(ClickEvent event)
 			{
+				form.submit();
+				
 				// Disable button to disallow users to resubmit same form twice
 				submitButton.setEnabled(false);
-
-				form.submit();
 			}
 		});
 
