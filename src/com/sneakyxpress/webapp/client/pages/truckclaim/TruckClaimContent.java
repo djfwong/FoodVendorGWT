@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -65,10 +66,11 @@ public class TruckClaimContent extends Content {
 
 		// Create a FormPanel and point it at a service.
 		final FormPanel form = new FormPanel();
-		
+
 		// Main page re-direct after submitting data
-		form.getElement().<FormElement>cast().setTarget(GWT.getHostPageBaseURL());
 		form.setAction(GWT.getModuleBaseURL() + "claimFormReq");
+		//form.getElement().<FormElement> cast()
+		//.setTarget(GWT.getHostPageBaseURL());
 
 		// Because we're going to add a FileUpload widget, we'll need to set the
 		// form to use the POST method, and multipart MIME encoding.
@@ -118,7 +120,7 @@ public class TruckClaimContent extends Content {
 		componentPanel.add(checkTerms);
 
 		componentPanel
-		.add((makeLabelWidget("Select photo of business license")));
+				.add((makeLabelWidget("Select photo of business license")));
 
 		// Create a FileUpload widget.
 		final FileUpload upload = new FileUpload();
@@ -136,9 +138,6 @@ public class TruckClaimContent extends Content {
 			public void onClick(ClickEvent event)
 			{
 				form.submit();
-				
-				// Disable button to disallow users to resubmit same form twice
-				submitButton.setEnabled(false);
 			}
 		});
 
@@ -298,29 +297,33 @@ public class TruckClaimContent extends Content {
 					// All checks passed, grab user's ID
 					facebookId = FacebookTools.getUserId();
 					fbIdBox.setText(facebookId);
+					
+					// Disable button to disallow users to resubmit same form twice
+					submitButton.setEnabled(false);
 				}
 			}
 		});
 
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-		      public void onSubmitComplete(SubmitCompleteEvent event) {
-		        // When the form submission is successfully completed, this event is
-		        // fired. Assuming the service returned a response of type text/html,
-		        // we can get the result text here (see the FormPanel documentation for
-		        // further explanation).
-		    	 
-		    	System.out.println("test");  
-		    	  
-		    	form.reset();
-		        //Window.Location.assign(GWT.getModuleBaseURL());
-		      }
-		    });
-		
+			public void onSubmitComplete(SubmitCompleteEvent event)
+			{
+				// When the form submission is successfully completed, this
+				// event is
+				// fired. Assuming the service returned a response of type
+				// text/html,
+				// we can get the result text here (see the FormPanel
+				// documentation for
+				// further explanation).
+
+				Window.alert(event.getResults());
+
+				form.reset();
+				Window.Location.assign(GWT.getModuleBaseURL() + "");
+			}
+		});
+
 		componentPanel.add(getButtonWidget(submitButton));
 
-		//Redirect
-		form.getElement().<FormElement>cast().setTarget(GWT.getModuleBaseURL());
-		
 		form.setWidget(componentPanel);
 		content.add(form);
 

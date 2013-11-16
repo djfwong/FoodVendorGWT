@@ -28,6 +28,7 @@ public class ClaimFormServlet extends HttpServlet {
 
 		ServletFileUpload upload = new ServletFileUpload();
 		TruckClaim truckClaim = new TruckClaim();
+		
 
 		try
 		{
@@ -79,6 +80,7 @@ public class ClaimFormServlet extends HttpServlet {
 				}
 				else
 				{
+					// Uploading image
 					System.out.println("Not a form field");
 				}
 			}
@@ -89,7 +91,7 @@ public class ClaimFormServlet extends HttpServlet {
 		}
 
 		persistClaimData(truckClaim);
-		
+
 		response.getWriter().write("Submitted");
 		response.getWriter().close();
 	}
