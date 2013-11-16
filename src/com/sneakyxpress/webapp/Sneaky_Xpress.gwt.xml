@@ -33,6 +33,8 @@
 		class="com.sneakyxpress.webapp.server.services.UpdateDataServiceImpl" />
 	<servlet path="/addUser"
 		class="com.sneakyxpress.webapp.server.services.PersistUserServiceImpl" />
+	<servlet path="/claimFormReq"
+		class="com.sneakyxpress.webapp.server.ClaimFormServlet" />
 
 	<!-- Specify the paths for translatable code -->
 	<source path="client" />

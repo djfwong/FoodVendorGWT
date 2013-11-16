@@ -14,6 +14,11 @@ import com.sneakyxpress.webapp.shared.User;
 public class PersistUserServiceImpl extends RemoteServiceServlet implements PersistUserService {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public boolean persistNewUserToDatastore(User user) throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -34,15 +39,5 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements Pers
 
         pm.close();
         return existingMember;
-	}
-
-
-	private boolean userInDatabase(String userId) {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        Query q = pm.newQuery("SELECT UNIQUE FROM " + User.class.getName()
-                + " WHERE id == \"" + userId + "\"");
-        User result = (User) q.execute();
-
-        return result != null;
 	}
 }

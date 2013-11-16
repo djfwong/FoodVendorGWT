@@ -18,12 +18,14 @@
 	<!-- Browse Vendors page -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
-			BrowseVendorsService</servlet-name>
+			BrowseVendorsService
+		</servlet-name>
 		<servlet-class>com.sneakyxpress.webapp.server.pages.BrowseVendorsServiceImpl</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
-			BrowseVendorsService</servlet-name>
+			BrowseVendorsService
+		</servlet-name>
 		<url-pattern>/sneaky_xpress/browseVendors</url-pattern>
 	</servlet-mapping>
 
@@ -67,27 +69,40 @@
 		<url-pattern>/sneaky_xpress/profile</url-pattern>
 	</servlet-mapping>
 
-    <!-- Vendor Feedback retrieval service -->
-    <servlet>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress VendorFeedbackService</servlet-name>
-        <servlet-class>com.sneakyxpress.webapp.server.services.VendorFeedbackServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress VendorFeedbackService</servlet-name>
-        <url-pattern>/sneaky_xpress/getVendorFeedback</url-pattern>
-    </servlet-mapping>
+	<!-- Vendor Feedback retrieval service -->
+	<servlet>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+			VendorFeedbackService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.services.VendorFeedbackServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+			VendorFeedbackService</servlet-name>
+		<url-pattern>/sneaky_xpress/getVendorFeedback</url-pattern>
+	</servlet-mapping>
 
 	<!-- Update Data cron job -->
 	<servlet>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>
 		<servlet-class>com.sneakyxpress.webapp.server.services.UpdateDataServiceImpl</servlet-class>
 	</servlet>
-    <servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress UpdateDataService</servlet-name>
 		<url-pattern>/sneaky_xpress/updateData</url-pattern>
 	</servlet-mapping>
 
-    <!-- Default page to serve -->
+
+	<!-- Process claim form data servlet -->
+	<servlet>
+		<servlet-name>processFormServlet</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.ClaimFormServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>processFormServlet</servlet-name>
+		<url-pattern>/claimFormReq</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>Sneaky_Xpress.html</welcome-file>
 	</welcome-file-list>

@@ -44,17 +44,21 @@ public class TruckClaimContent extends Content {
 	}
 
 	@Override
-	public String getPageName() {
+	public String getPageName()
+	{
 		return pageName;
 	}
 
 	@Override
-	public String getPageStub() {
+	public String getPageStub()
+	{
 		return pageStub;
 	}
 
 	@Override
-	public void getAndChangeContent(String input) {
+	public void getAndChangeContent(final String input)
+	{
+
 		HTMLPanel content = new HTMLPanel(""); // The base panel to hold all
 		// content
 
@@ -68,6 +72,17 @@ public class TruckClaimContent extends Content {
 		form.setMethod(FormPanel.METHOD_POST);
 
 		// Create TextBoxes, giving it a name so that it will be submitted.
+
+		// Vendor Id textbox - used to add to form
+		final WatermarkedTextBox vendorIdBox = createTextBox("Vendor Key");
+		vendorIdBox.setName("vendorId");
+		vendorIdBox.setVisible(false);
+		vendorIdBox.setText(input);
+
+		// Vendor Id textbox - used to add to form
+		final WatermarkedTextBox fbIdBox = createTextBox("Vendor Key");
+		fbIdBox.setName("fbId");
+		fbIdBox.setVisible(false);
 
 		// Name textbox
 		final WatermarkedTextBox nameBox = createTextBox("Name On Business License");
@@ -84,6 +99,7 @@ public class TruckClaimContent extends Content {
 		// Terms and agreement checkbox
 		final CheckBox checkTerms = new CheckBox(
 				"I have read and agree to the Terms of Service.");
+		checkTerms.setName("checkTerms");
 		checkTerms.setValue(false);
 		checkTerms.setWidth("400px");
 
@@ -91,13 +107,15 @@ public class TruckClaimContent extends Content {
 		VerticalPanel componentPanel = new VerticalPanel();
 
 		// Add text boxes and checkbox
+		componentPanel.add(fbIdBox);
+		componentPanel.add(vendorIdBox);
 		componentPanel.add(nameBox);
 		componentPanel.add(emailBox);
 		componentPanel.add(phoneBox);
 		componentPanel.add(checkTerms);
 
 		componentPanel
-				.add((makeLabelWidget("Select photo of business license")));
+		.add((makeLabelWidget("Select photo of business license")));
 
 		// Create a FileUpload widget.
 		final FileUpload upload = new FileUpload();
@@ -112,7 +130,8 @@ public class TruckClaimContent extends Content {
 		submitButton.addClickHandler(new ClickHandler() {
 
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onClick(ClickEvent event)
+			{
 				// Disable button to disallow users to resubmit same form twice
 				submitButton.setEnabled(false);
 
@@ -122,8 +141,8 @@ public class TruckClaimContent extends Content {
 
 		// Add an event handler to the form. Form validation checks
 		form.addSubmitHandler(new FormPanel.SubmitHandler() {
-			public void onSubmit(SubmitEvent event) {
-
+			public void onSubmit(SubmitEvent event)
+			{
 				String name = nameBox.getText().trim();
 				String email = emailBox.getText().trim();
 				String number = phoneBox.getText().trim();
@@ -274,12 +293,14 @@ public class TruckClaimContent extends Content {
 				{
 					// All checks passed, grab user's ID
 					facebookId = FacebookTools.getUserId();
+					fbIdBox.setText(facebookId);
 				}
 
 			}
 		});
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-			public void onSubmitComplete(SubmitCompleteEvent event) {
+			public void onSubmitComplete(SubmitCompleteEvent event)
+			{
 				// When the form submission is successfully completed, this
 				// event is
 				// fired. Assuming the service returned a response of type
@@ -287,9 +308,7 @@ public class TruckClaimContent extends Content {
 				// we can get the result text here (see the FormPanel
 				// documentation for
 				// further explanation).
-				module.addMessage(true,
-						"Request submitted, if approved you will be contacted shortly");
-				addMessage(true, event.getResults());
+				// TODO user feedback after form submit
 			}
 		});
 
@@ -303,7 +322,8 @@ public class TruckClaimContent extends Content {
 	}
 
 	// Returns a text box with the specified watermark for phone number input
-	public WatermarkedTextBox createTextBox(String watermark) {
+	public WatermarkedTextBox createTextBox(String watermark)
+	{
 
 		final WatermarkedTextBox input = new WatermarkedTextBox();
 
@@ -314,7 +334,8 @@ public class TruckClaimContent extends Content {
 		return input;
 	}
 
-	public void addMessage(boolean error, String info) {
+	public void addMessage(boolean error, String info)
+	{
 		// Create & add the message
 		String type = error ? "alert-danger" : "alert-info";
 		HTML alert = new HTML(
@@ -327,13 +348,15 @@ public class TruckClaimContent extends Content {
 		logger.log(Level.INFO, "addMessage: " + info);
 	}
 
-	private HTMLPanel getButtonWidget(Button button) {
+	private HTMLPanel getButtonWidget(Button button)
+	{
 		HTMLPanel div = new HTMLPanel("<br>");
 		div.add(button);
 		return div;
 	}
 
-	private HTMLPanel makeLabelWidget(String text) {
+	private HTMLPanel makeLabelWidget(String text)
+	{
 		HTMLPanel div = new HTMLPanel("<br>");
 		Label label = new Label(text);
 		label.setStyleName("label label-info");
