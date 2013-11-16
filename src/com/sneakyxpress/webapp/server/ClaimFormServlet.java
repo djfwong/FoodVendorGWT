@@ -41,33 +41,40 @@ public class ClaimFormServlet extends HttpServlet {
 					{
 						truckClaim.setFacebookId(Streams.asString(item
 								.openStream()));
-					} else if (item.getFieldName().equals("vendorId"))
+					}
+					else if (item.getFieldName().equals("vendorId"))
 					{
 						truckClaim.setTruckId(Streams.asString(item
 								.openStream()));
-					} else if (item.getFieldName().equals("nameBoxInput"))
+					}
+					else if (item.getFieldName().equals("nameBoxInput"))
 					{
 						truckClaim.setName(Streams.asString(item.openStream()));
-					} else if (item.getFieldName().equals("emailBoxInput"))
+					}
+					else if (item.getFieldName().equals("emailBoxInput"))
 					{
 						truckClaim
 								.setEmail(Streams.asString(item.openStream()));
-					} else if (item.getFieldName().equals("phoneBoxInput"))
+					}
+					else if (item.getFieldName().equals("phoneBoxInput"))
 					{
 						truckClaim.setPhoneNumber(Streams.asString(item
 								.openStream()));
-					} else if (item.getFieldName().equals("phoneBoxInput"))
+					}
+					else if (item.getFieldName().equals("phoneBoxInput"))
 					{
 						truckClaim.setPhoneNumber(Streams.asString(item
 								.openStream()));
 					}
 
-				} else
+				}
+				else
 				{
 					System.out.println("Not a form field");
 				}
 			}
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}

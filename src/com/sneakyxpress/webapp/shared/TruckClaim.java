@@ -37,7 +37,12 @@ public class TruckClaim implements IsSerializable {
 
 	@Persistent
 	private String filePath = "";
-	
+
+	public String getId()
+	{
+		return id;
+	}
+
 	public String getFacebookId()
 	{
 		return facebookId;
@@ -98,8 +103,4 @@ public class TruckClaim implements IsSerializable {
 		this.filePath = filePath;
 	}
 
-	public String getId()
-	{
-		return id;
-	}
 }

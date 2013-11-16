@@ -6,6 +6,7 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CheckBox;
 import com.github.gwtbootstrap.client.ui.Label;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -63,7 +64,10 @@ public class TruckClaimContent extends Content {
 		// content
 
 		// Create a FormPanel and point it at a service.
-		final FormPanel form = new FormPanel("");
+		final FormPanel form = new FormPanel();
+		
+		// Main page re-direct after submitting data
+		form.getElement().<FormElement>cast().setTarget(GWT.getHostPageBaseURL());
 		form.setAction(GWT.getHostPageBaseURL() + "claimFormReq");
 
 		// Because we're going to add a FileUpload widget, we'll need to set the
@@ -115,7 +119,7 @@ public class TruckClaimContent extends Content {
 		componentPanel.add(checkTerms);
 
 		componentPanel
-				.add((makeLabelWidget("Select photo of business license")));
+		.add((makeLabelWidget("Select photo of business license")));
 
 		// Create a FileUpload widget.
 		final FileUpload upload = new FileUpload();
@@ -289,28 +293,27 @@ public class TruckClaimContent extends Content {
 					// changes
 					submitButton.setEnabled(true);
 					event.cancel();
-				} else
+				}
+				else
 				{
 					// All checks passed, grab user's ID
 					facebookId = FacebookTools.getUserId();
 					fbIdBox.setText(facebookId);
 				}
-
 			}
 		});
+	
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-			public void onSubmitComplete(SubmitCompleteEvent event)
-			{
-				// When the form submission is successfully completed, this
-				// event is
-				// fired. Assuming the service returned a response of type
-				// text/html,
-				// we can get the result text here (see the FormPanel
-				// documentation for
-				// further explanation).
-				// TODO user feedback after form submit
-			}
-		});
+		      public void onSubmitComplete(SubmitCompleteEvent event) {
+		        // When the form submission is successfully completed, this event is
+		        // fired. Assuming the service returned a response of type text/html,
+		        // we can get the result text here (see the FormPanel documentation for
+		        // further explanation).
+		    	  
+		    	//Re-direct after submit //TODO 
+		    	
+		      }
+		    });
 
 		componentPanel.add(getButtonWidget(submitButton));
 
@@ -334,6 +337,7 @@ public class TruckClaimContent extends Content {
 		return input;
 	}
 
+	// Logs error messages
 	public void addMessage(boolean error, String info)
 	{
 		// Create & add the message
