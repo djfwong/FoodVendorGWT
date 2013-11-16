@@ -79,7 +79,7 @@ public class TruckClaimContent extends Content {
 		vendorIdBox.setVisible(false);
 		vendorIdBox.setText(input);
 
-		// Vendor Id textbox - used to add to form
+		// Facebook Id textbox - used to add to form
 		final WatermarkedTextBox fbIdBox = createTextBox("Vendor Key");
 		fbIdBox.setName("fbId");
 		fbIdBox.setVisible(false);
@@ -115,7 +115,7 @@ public class TruckClaimContent extends Content {
 		componentPanel.add(checkTerms);
 
 		componentPanel
-		.add((makeLabelWidget("Select photo of business license")));
+				.add((makeLabelWidget("Select photo of business license")));
 
 		// Create a FileUpload widget.
 		final FileUpload upload = new FileUpload();

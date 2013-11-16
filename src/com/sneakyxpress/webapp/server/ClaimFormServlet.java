@@ -15,7 +15,6 @@ import org.apache.commons.fileupload.util.Streams;
 
 import com.sneakyxpress.webapp.shared.TruckClaim;
 
-
 public class ClaimFormServlet extends HttpServlet {
 	/**
 	 * 
@@ -80,7 +79,7 @@ public class ClaimFormServlet extends HttpServlet {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		pm.makePersistent(claim);
-		
+
 		pm.close();
 	}
 }
