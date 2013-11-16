@@ -302,21 +302,26 @@ public class TruckClaimContent extends Content {
 				}
 			}
 		});
-	
+
 		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 		      public void onSubmitComplete(SubmitCompleteEvent event) {
 		        // When the form submission is successfully completed, this event is
 		        // fired. Assuming the service returned a response of type text/html,
 		        // we can get the result text here (see the FormPanel documentation for
 		        // further explanation).
+		    	 
+		    	System.out.println("test");  
 		    	  
-		    	//Re-direct after submit //TODO 
-		    	
+		    	form.reset();
+		        //Window.Location.assign(GWT.getModuleBaseURL());
 		      }
 		    });
-
+		
 		componentPanel.add(getButtonWidget(submitButton));
 
+		//Redirect
+		form.getElement().<FormElement>cast().setTarget(GWT.getModuleBaseURL());
+		
 		form.setWidget(componentPanel);
 		content.add(form);
 

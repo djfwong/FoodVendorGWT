@@ -24,12 +24,21 @@ public class ClaimFormServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
+		response.setContentType("text/html");
+
 		ServletFileUpload upload = new ServletFileUpload();
 		TruckClaim truckClaim = new TruckClaim();
 
 		try
 		{
 			FileItemIterator iter = upload.getItemIterator(request);
+
+			if (!iter.hasNext())
+			{
+				response.getWriter().write("Empty form submitted");
+				return;
+			}
+
 			while (iter.hasNext())
 			{
 
@@ -78,6 +87,9 @@ public class ClaimFormServlet extends HttpServlet {
 		{
 			throw new RuntimeException(e);
 		}
+
+		response.getWriter().write("Submitted");
+		response.getWriter().close();
 	}
 
 	public void persistClaimData(TruckClaim claim)
