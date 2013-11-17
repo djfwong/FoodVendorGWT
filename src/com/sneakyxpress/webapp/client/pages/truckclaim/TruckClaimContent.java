@@ -6,10 +6,9 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CheckBox;
 import com.github.gwtbootstrap.client.ui.Label;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -22,6 +21,7 @@ import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.WatermarkedTextBox;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.Content;
+import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 
 public class TruckClaimContent extends Content {
 
@@ -69,8 +69,8 @@ public class TruckClaimContent extends Content {
 
 		// Main page re-direct after submitting data
 		form.setAction(GWT.getModuleBaseURL() + "claimFormReq");
-		//form.getElement().<FormElement> cast()
-		//.setTarget(GWT.getHostPageBaseURL());
+		// form.getElement().<FormElement> cast()
+		// .setTarget(GWT.getHostPageBaseURL());
 
 		// Because we're going to add a FileUpload widget, we'll need to set the
 		// form to use the POST method, and multipart MIME encoding.
@@ -297,8 +297,9 @@ public class TruckClaimContent extends Content {
 					// All checks passed, grab user's ID
 					facebookId = FacebookTools.getUserId();
 					fbIdBox.setText(facebookId);
-					
-					// Disable button to disallow users to resubmit same form twice
+
+					// Disable button to disallow users to resubmit same form
+					// twice
 					submitButton.setEnabled(false);
 				}
 			}
@@ -315,10 +316,19 @@ public class TruckClaimContent extends Content {
 				// documentation for
 				// further explanation).
 
-				Window.alert(event.getResults());
+				logger.log(Level.INFO, event.getResults());
 
+				// Display message to user
+				module.addMessage(false,
+						"Your request has been submitted to our administrators.");
+
+				// Clear form
 				form.reset();
-				Window.Location.assign(GWT.getModuleBaseURL() + "");
+
+				// Re-direct to home page since it's faster than re-directing to
+				// user profile page
+				History.newItem(new GreetingContent(module).getPageStub());
+
 			}
 		});
 
