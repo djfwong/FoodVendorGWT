@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.WatermarkedTextBox;
@@ -126,7 +128,7 @@ public class TruckClaimContent extends Content {
 		componentPanel.add(checkTerms);
 
 		componentPanel
-				.add((makeLabelWidget("Select photo of business license")));
+				.add((makeLabelWidget("Select photo of business license. Please note only .png, .jpg, and .jpeg files will be processed.")));
 
 		// Create a FileUpload widget.
 		final FileUpload upload = new FileUpload();
@@ -336,6 +338,19 @@ public class TruckClaimContent extends Content {
 					submitButton.setEnabled(true);
 					event.cancel();
 				}
+				
+				else if (!(fileName.trim().contains(".png") || fileName.trim().contains(".jpg") || fileName.trim().contains(".jpeg")))
+				{
+					String errorMsg = "Sorry, we only accept .png, .jpg, and .jpeg files, please select another.";
+					module.addMessage(true, errorMsg);
+					addMessage(true, errorMsg);
+					System.out.println(fileName);
+					// Re-enable button to allow user to resubmit form with
+					// changes
+					submitButton.setEnabled(true);
+					event.cancel();
+				}
+				
 				else
 				{
 					// All checks passed, grab user's ID
@@ -373,8 +388,7 @@ public class TruckClaimContent extends Content {
 
 				// Re-direct to home page since it's faster than re-directing to
 				// user profile page
-				History.newItem(new GreetingContent(module).getPageStub());
-
+				History.newItem(new GreetingContent(module).getPageStub());		
 			}
 		});
 
@@ -447,7 +461,7 @@ public class TruckClaimContent extends Content {
 			public void onSuccess(String result)
 			{
 				form.setAction(result);
-
+				logger.log(Level.INFO, "Form action: " + result);
 			}
 
 		});

@@ -33,14 +33,18 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 	 * 
 	 * @param watermark
 	 */
-	public void setWatermark(final String watermark) {
+	public void setWatermark(final String watermark)
+	{
 		this.watermark = watermark;
 
-		if ((watermark != null) && (watermark != "")) {
+		if ((watermark != null) && (watermark != ""))
+		{
 			blurHandler = addBlurHandler(this);
 			focusHandler = addFocusHandler(this);
 			EnableWatermark();
-		} else {
+		}
+		else
+		{
 			// Remove handlers
 			blurHandler.removeHandler();
 			focusHandler.removeHandler();
@@ -48,13 +52,16 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 	}
 
 	@Override
-	public void onBlur(BlurEvent event) {
+	public void onBlur(BlurEvent event)
+	{
 		EnableWatermark();
 	}
 
-	void EnableWatermark() {
+	void EnableWatermark()
+	{
 		String text = getText();
-		if ((text.length() == 0) || (text.equalsIgnoreCase(watermark))) {
+		if ((text.length() == 0) || (text.equalsIgnoreCase(watermark)))
+		{
 			// Show watermark
 			super.setText(watermark);
 			addStyleDependentName("watermark");
@@ -62,10 +69,12 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 	}
 
 	@Override
-	public void onFocus(FocusEvent event) {
+	public void onFocus(FocusEvent event)
+	{
 		removeStyleDependentName("watermark");
 
-		if (super.getText().equalsIgnoreCase(watermark)) {
+		if (super.getText().equalsIgnoreCase(watermark))
+		{
 			// Hide watermark
 			super.setText("");
 		}
@@ -73,20 +82,30 @@ public class WatermarkedTextBox extends TextBox implements BlurHandler,
 
 	// To detect empty inputs
 	@Override
-	public String getText() {
+	public String getText()
+	{
 		String t = super.getText();
-		if (t.equals(watermark))
+		
+		if (t.equals(watermark)){
 			return "";
-
+		}
+			
 		return t;
 	}
 
 	// To detect empty inputs
 	@Override
-	public void setText(String text) {
+	public void setText(String text)
+	{
 		if (text == null)
+		{
 			return;
-		if (text.length() != 0)
+		}
+
+		else if (text.length() != 0)
+		{
 			super.setText(text);
+		}
+
 	}
 }
