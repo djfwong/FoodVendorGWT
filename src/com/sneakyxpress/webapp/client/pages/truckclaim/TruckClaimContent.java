@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -41,8 +42,18 @@ public class TruckClaimContent extends Content {
 	private static final int STANDARD_MAX_EMAIL_LENGTH = 70;
 	private static final int STANDARD_PHONE_NUMBER_LENGTH = 10;
 
+	// Get Blobstore URL service
+	ClaimImageServiceAsync claimImageService = GWT
+			.create(ClaimImageService.class);
+
+	// Declare form
+	final FormPanel form;
+
 	public TruckClaimContent(Sneaky_Xpress module) {
 		super(module);
+
+		// Create a FormPanel
+		form = new FormPanel();
 	}
 
 	@Override
@@ -64,13 +75,8 @@ public class TruckClaimContent extends Content {
 		HTMLPanel content = new HTMLPanel(""); // The base panel to hold all
 		// content
 
-		// Create a FormPanel and point it at a service.
-		final FormPanel form = new FormPanel();
-
-		// Main page re-direct after submitting data
-		form.setAction(GWT.getModuleBaseURL() + "claimFormReq");
-		// form.getElement().<FormElement> cast()
-		// .setTarget(GWT.getHostPageBaseURL());
+		// Get upload URL
+		startNewBlobstoreSession();
 
 		// Because we're going to add a FileUpload widget, we'll need to set the
 		// form to use the POST method, and multipart MIME encoding.
@@ -129,6 +135,12 @@ public class TruckClaimContent extends Content {
 		upload.setWidth("300px");
 		componentPanel.add(upload);
 
+		// File name textbox - used to add to form
+		final WatermarkedTextBox fileNameBox = createTextBox("fileName");
+		fileNameBox.setName("fileNameInput");
+		fileNameBox.setVisible(false);
+		componentPanel.add(fileNameBox);
+
 		// Add a 'submit' button.
 		final Button submitButton = new Button("Submit Request");
 		submitButton.addStyleName("btn btn-primary");
@@ -171,6 +183,38 @@ public class TruckClaimContent extends Content {
 					String errorMsg = "Sorry some of your inputs are empty. Please enter something.";
 					module.addMessage(true, errorMsg);
 					addMessage(true, errorMsg);
+
+					// if/else to detect and find a bug (can't submit multiple forms)
+					if (name.length() == 0)
+					{
+						logger.log(
+								Level.INFO,
+								"Name Empty. Contents of TextBox: "
+										+ nameBox.getText());
+						nameBox.setFocus(true);
+					}
+
+					else if (email.length() == 0)
+					{
+						logger.log(
+								Level.INFO,
+								"Email Empty. Contents of TextBox: "
+										+ emailBox.getText());
+						emailBox.setFocus(true);
+					}
+
+					else if (number.length() == 0)
+					{
+						logger.log(Level.INFO,
+								"Number Empty. Contents of TextBox: "
+										+ phoneBox.getText());
+						phoneBox.setFocus(true);
+					}
+
+					else
+					{
+						logger.log(Level.SEVERE, "Unfound bug");
+					}
 
 					// Re-enable button to allow user to resubmit form with
 					// changes
@@ -298,6 +342,8 @@ public class TruckClaimContent extends Content {
 					facebookId = FacebookTools.getUserId();
 					fbIdBox.setText(facebookId);
 
+					fileNameBox.setText(upload.getFilename());
+
 					// Disable button to disallow users to resubmit same form
 					// twice
 					submitButton.setEnabled(false);
@@ -369,6 +415,7 @@ public class TruckClaimContent extends Content {
 		logger.log(Level.INFO, "addMessage: " + info);
 	}
 
+	// Creates button with space in between panels
 	private HTMLPanel getButtonWidget(Button button)
 	{
 		HTMLPanel div = new HTMLPanel("<br>");
@@ -376,6 +423,7 @@ public class TruckClaimContent extends Content {
 		return div;
 	}
 
+	// Creates label with specified text
 	private HTMLPanel makeLabelWidget(String text)
 	{
 		HTMLPanel div = new HTMLPanel("<br>");
@@ -383,5 +431,25 @@ public class TruckClaimContent extends Content {
 		label.setStyleName("label label-info");
 		div.add(label);
 		return div;
+	}
+
+	private void startNewBlobstoreSession()
+	{
+		claimImageService.getBlobstoreUploadUrl(new AsyncCallback<String>() {
+
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				logger.log(Level.SEVERE, "Exception: " + caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(String result)
+			{
+				form.setAction(result);
+
+			}
+
+		});
 	}
 }

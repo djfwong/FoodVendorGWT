@@ -13,6 +13,11 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
 import com.sneakyxpress.webapp.shared.TruckClaim;
 
 public class ClaimFormServlet extends HttpServlet {
@@ -24,14 +29,18 @@ public class ClaimFormServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
-		response.setContentType("text/html");
 
 		ServletFileUpload upload = new ServletFileUpload();
 		TruckClaim truckClaim = new TruckClaim();
-		
+
+		BlobstoreService blobstoreService = BlobstoreServiceFactory
+				.getBlobstoreService();
+
+		String fileName = "";
 
 		try
 		{
+			response.setContentType("text/html");
 			FileItemIterator iter = upload.getItemIterator(request);
 
 			if (!iter.hasNext())
@@ -76,12 +85,32 @@ public class ClaimFormServlet extends HttpServlet {
 						truckClaim.setPhoneNumber(Streams.asString(item
 								.openStream()));
 					}
+					else if (item.getFieldName().equals("fileNameInput"))
+					{
+						fileName = Streams.asString(item.openStream());
+					}
 
 				}
 				else
 				{
-					// Uploading image
-					System.out.println("Not a form field");
+
+					String bucket = "sneaky-xpress";
+
+					// Create a BlobKey for a Google Storage File.
+					String gs_blob_key = "/gs/" + bucket + "/" + fileName;
+
+					// filename The Google Storage filename. The filename must
+					// be in the
+					// * format "/gs/bucket_name/object_name".
+					BlobKey blob_key = BlobstoreServiceFactory
+							.getBlobstoreService().createGsBlobKey(gs_blob_key);
+
+					ServingUrlOptions serving_options = ServingUrlOptions.Builder
+							.withBlobKey(blob_key);
+					String serving_url = ImagesServiceFactory
+							.getImagesService().getServingUrl(serving_options);
+					System.out.println("Serving URL: " + serving_url);
+					response.getWriter().println(serving_url);
 				}
 			}
 		}

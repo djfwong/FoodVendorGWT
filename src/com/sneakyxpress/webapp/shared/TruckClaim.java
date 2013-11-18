@@ -5,6 +5,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.datastore.Blob;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 @PersistenceCapable
@@ -33,6 +34,9 @@ public class TruckClaim implements IsSerializable {
 
 	@Persistent
 	private String filePath = "";
+
+	@Persistent
+	private Blob image;
 
 	public Long getId()
 	{
@@ -97,6 +101,16 @@ public class TruckClaim implements IsSerializable {
 	public void setFilePath(String filePath)
 	{
 		this.filePath = filePath;
+	}
+
+	public Blob getImage()
+	{
+		return image;
+	}
+
+	public void setImage(Blob image)
+	{
+		this.image = image;
 	}
 
 }

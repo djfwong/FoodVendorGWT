@@ -102,6 +102,17 @@
 		<url-pattern>/sneaky_xpress/claimFormReq</url-pattern>
 	</servlet-mapping>
 
+		<!-- Login -->
+	<servlet>
+		<servlet-name>claimImageService</servlet-name>
+		<servlet-class>com.sneakyxpress.webapp.server.services.ClaimImageServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>claimImageService</servlet-name>
+		<url-pattern>/sneaky_xpress/images</url-pattern>
+	</servlet-mapping>
+	
+	
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>Sneaky_Xpress.html</welcome-file>
