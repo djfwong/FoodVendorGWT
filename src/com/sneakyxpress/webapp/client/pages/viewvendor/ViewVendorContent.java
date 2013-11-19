@@ -1,6 +1,5 @@
 package com.sneakyxpress.webapp.client.pages.viewvendor;
 
-import com.github.gwtbootstrap.client.ui.Label;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.rpc.AsyncCallback;
