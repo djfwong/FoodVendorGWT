@@ -73,7 +73,12 @@ public class FavouritesTab extends AbstractNavbarTab {
     }
 
     private HTMLPanel getFavouriteWidget(Favourite f) {
-        HTMLPanel vendor = new HTMLPanel("p", f.getVendorName() + " ");
+        String name = f.getVendorName();
+        if (name.isEmpty()) {
+            name = "<em>No Name Available</em>";
+        }
+
+        HTMLPanel vendor = new HTMLPanel("p", name + " ");
 
         Anchor vendorLink = new Anchor("View");
         vendorLink.addClickHandler(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()));

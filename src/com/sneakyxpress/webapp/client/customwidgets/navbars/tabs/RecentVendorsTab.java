@@ -45,7 +45,12 @@ public class RecentVendorsTab extends AbstractNavbarTab {
     }
 
     private HTMLPanel getVendorWidget(FoodVendor v) {
-        HTMLPanel vendor = new HTMLPanel("p", v.getName() + " ");
+        String name = v.getName();
+        if (name.isEmpty()) {
+            name = "<em>No Name Available</em>";
+        }
+
+        HTMLPanel vendor = new HTMLPanel("p", name + " ");
         vendor.addStyleName("lead");
 
         Anchor vendorLink = new Anchor("View");
