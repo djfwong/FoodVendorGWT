@@ -18,6 +18,7 @@ import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.truckclaim.TruckClaimContent;
 import com.sneakyxpress.webapp.shared.FoodVendor;
+import com.sneakyxpress.webapp.shared.VendorFeedback;
 
 /**
  * The UI of the Food Vendor pages.
@@ -84,9 +85,10 @@ public class ViewVendorContent extends Content {
 						vendor.getDescription()));
 				textInfo.add(getInfoWidget("Location",
 						vendor.getLocation()));
-				textInfo.add(getInfoWidget("Reviews",
-						"reviews"));
-				//textInfo.add(displayReviews());
+				if (vendor.getVendorFeedback().size() == 0) {
+					textInfo.add(getInfoWidget("Reviews", "No reviews are currently available"));
+				} else { textInfo.add(displayReviews(vendor)); }
+				
 				textInfo.add(new HTML("<br>")); // Some padding
 
 				// Group all the information together
@@ -136,17 +138,16 @@ public class ViewVendorContent extends Content {
 						+ info + "</p>");
 			}
 			
-			/*
-			 * 
-			private SimpleTable displayReviews() {
-				SimpleTable review_table = new SimpleTable("table-hover table-bordered table-striped",
-                        "Key", "Name");
-				
-				
-				return new SimpleTable("table-hover table-bordered table-striped",
-                        "Key", "Name");
-			};
-			*/
+			private SimpleTable displayReviews(FoodVendor vendor) {
+				SimpleTable reviewTable = new SimpleTable("table-hover table-bordered table-striped",
+                        "User", "Review", "Rating", "Date");
+					
+				for (VendorFeedback vf : vendor.getVendorFeedback()) {
+					reviewTable.addRow(vf.getAuthorUserId(), vf.getReview(), 
+							Integer.toString(vf.getRating()), Long.toString(vf.getCreationTime()));
+				}
+				return reviewTable;
+			}
 			
 		});
 	}

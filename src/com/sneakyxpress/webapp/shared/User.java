@@ -1,5 +1,7 @@
 package com.sneakyxpress.webapp.shared;
 
+import java.util.ArrayList;
+
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -32,6 +34,10 @@ public class User implements IsSerializable {
 
     @Persistent
     private String name = "";
+    
+    // Ratings and reviews submitted by the user
+    @Persistent
+    private ArrayList<VendorFeedback> submittedVendorFeedback = new ArrayList<VendorFeedback>();
 
 
     /**
@@ -104,5 +110,13 @@ public class User implements IsSerializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public ArrayList<VendorFeedback> getSubmittedVendorFeedback() {
+    	return submittedVendorFeedback;
+    }
+    
+    public void setSubmittedVendorFeedback(ArrayList<VendorFeedback> submittedVendorFeedback) {
+    	this.submittedVendorFeedback = submittedVendorFeedback;
     }
 }

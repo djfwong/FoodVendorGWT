@@ -23,7 +23,7 @@ public class VendorFeedback implements IsSerializable {
 	private int id;
 
 	@Persistent
-	private String userId;
+	private String authorUserId;
 
 	@Persistent
 	private String ownerVendorId;
@@ -47,8 +47,8 @@ public class VendorFeedback implements IsSerializable {
 	}
 
 
-	public void setUserId(String userId){
-		this.userId = userId;
+	public void setAuthorUserId(String authorUserId){
+		this.authorUserId = authorUserId;
 	}
 
 
@@ -72,8 +72,8 @@ public class VendorFeedback implements IsSerializable {
 	}
 
 
-	public String getUserId(){
-		return userId;
+	public String getAuthorUserId(){
+		return authorUserId;
 	}
 
 
