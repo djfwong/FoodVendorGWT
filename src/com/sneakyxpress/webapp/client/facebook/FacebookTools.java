@@ -1,6 +1,9 @@
 package com.sneakyxpress.webapp.client.facebook;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +25,7 @@ import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserServiceAsync;
+import com.sneakyxpress.webapp.shared.FoodVendor;
 import com.sneakyxpress.webapp.shared.User;
 
 /**
@@ -67,6 +71,8 @@ public class FacebookTools {
 
 	private Anchor loginLink;
 	private HandlerRegistration clickHandlerReg;
+
+    private List<FoodVendor> recentlyViewed = new LinkedList<FoodVendor>();
 
 	/**
 	 * Constructor for FacebookTools
@@ -351,4 +357,27 @@ public class FacebookTools {
 	private String parseString(String input) {
 		return input.replaceAll("^\"|\"$", "");
 	}
+
+    public void addViewedVendor(FoodVendor v) {
+        boolean alreadyHere = false;
+        for (FoodVendor temp : recentlyViewed) {
+            if (v.getVendorId().equals(temp.getVendorId())) {
+                alreadyHere = true;
+                break;
+            }
+        }
+
+        if (!alreadyHere) {
+            if (recentlyViewed.size() <= 10) {
+                recentlyViewed.add(v);
+            } else {
+                recentlyViewed.remove(0);
+                recentlyViewed.add(v);
+            }
+        }
+    }
+
+    public List<FoodVendor> getRecentlyViewed() {
+        return recentlyViewed;
+    }
 }

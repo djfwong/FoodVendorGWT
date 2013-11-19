@@ -60,6 +60,9 @@ public class ViewVendorContent extends Content {
 
 			@Override
 			public void onSuccess(FoodVendor vendor) {
+                // Mark this vendor as recently viewed
+                module.FACEBOOK_TOOLS.addViewedVendor(vendor);
+
 				HTMLPanel content = new HTMLPanel(""); // The base panel
 				// to hold all
 				// content

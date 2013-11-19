@@ -83,6 +83,7 @@ public class ProfileContent extends Content {
                         // Add private profile tabs
                         sideNavbar.addTab(new PersonalInfoTab(user));
                         sideNavbar.addTab(new FavouritesTab(module, user));
+                        sideNavbar.addTab(new RecentVendorsTab(module));
                         sideNavbar.addTab(new FriendsTab(module, user));
                         sideNavbar.addTab(new UserReviewsTab(module, user));
 
