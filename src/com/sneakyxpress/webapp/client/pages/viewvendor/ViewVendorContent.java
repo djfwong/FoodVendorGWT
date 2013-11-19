@@ -77,10 +77,14 @@ public class ViewVendorContent extends Content {
 						+ "</h2></div>");
 				textInfo.addStyleName("span6");
 
+				textInfo.add(getInfoWidget("Rating",
+						Integer.toString(vendor.getRating())));
 				textInfo.add(getInfoWidget("Description",
 						vendor.getDescription()));
 				textInfo.add(getInfoWidget("Location",
 						vendor.getLocation()));
+				textInfo.add(getInfoWidget("Reviews",
+						vendor.getReviews()));
 				textInfo.add(new HTML("<br>")); // Some padding
 
 				// Group all the information together

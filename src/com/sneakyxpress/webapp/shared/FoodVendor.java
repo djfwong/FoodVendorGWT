@@ -41,6 +41,14 @@ public class FoodVendor implements IsSerializable {
 	// Latitude coordinate
     @Persistent
 	private double latitude = 0;
+    
+    // Rating
+    @Persistent
+    private int rating = 5;
+    
+    // Reviews
+    @Persistent
+    private String reviews = "";
 
 	public void setVendorId(String vendorId) {
 		this.vendorId = vendorId;
@@ -65,6 +73,14 @@ public class FoodVendor implements IsSerializable {
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
+	
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+	
+	public void setReviews(String reviews) {
+		this.reviews = reviews;
+	}
 
 	public String getVendorId() {
 		return vendorId;
@@ -88,5 +104,13 @@ public class FoodVendor implements IsSerializable {
 
 	public double getLatitude() {
 		return latitude;
+	}
+	
+	public int getRating() {
+		return rating;
+	}
+	
+	public String getReviews() {
+		return reviews;
 	}
 }
