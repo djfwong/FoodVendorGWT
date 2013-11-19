@@ -2,6 +2,7 @@ package com.sneakyxpress.webapp.client.pages.viewvendor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
@@ -13,6 +14,7 @@ import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.MarkerOptions;
 import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
+import com.sneakyxpress.webapp.client.facebook.Share;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
@@ -78,6 +80,9 @@ public class ViewVendorContent extends Content {
 						"<div class=\"page-header\"><h2>" + name
 						+ "</h2></div>");
 				textInfo.addStyleName("span6");
+				
+				// Facebook Like and Share
+				textInfo.add(new Share(Window.Location.getHref()));
 				
 				textInfo.add(getInfoWidget("Rating",
 						Integer.toString(vendor.getAverageRating())));
