@@ -4,21 +4,16 @@ import java.util.logging.Level;
 
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CheckBox;
-import com.github.gwtbootstrap.client.ui.Label;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.WatermarkedTextBox;
@@ -44,12 +39,17 @@ public class TruckClaimContent extends Content {
 	private static final int STANDARD_MAX_EMAIL_LENGTH = 70;
 	private static final int STANDARD_PHONE_NUMBER_LENGTH = 10;
 
-	// Get Blobstore URL service
-	ClaimImageServiceAsync claimImageService = GWT
-			.create(ClaimImageService.class);
-
+	WatermarkedTextBox vendorIdBox;
+	WatermarkedTextBox fbIdBox;
+	WatermarkedTextBox nameBox;
+	WatermarkedTextBox emailBox;
+	WatermarkedTextBox phoneBox;
+	CheckBox checkTerms;
+	
+	Button submitButton;
+	
 	// Declare form
-	final FormPanel form;
+	FormPanel form;
 
 	public TruckClaimContent(Sneaky_Xpress module) {
 		super(module);
@@ -77,40 +77,39 @@ public class TruckClaimContent extends Content {
 		HTMLPanel content = new HTMLPanel(""); // The base panel to hold all
 		// content
 
-		// Get upload URL
-		startNewBlobstoreSession();
-
 		// Because we're going to add a FileUpload widget, we'll need to set the
 		// form to use the POST method, and multipart MIME encoding.
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
+		System.out.println(GWT.getModuleBaseURL());
+		form.setAction(GWT.getModuleBaseURL() + "claimFormReq");
 
 		// Create TextBoxes, giving it a name so that it will be submitted.
 		// Vendor Id textbox - used to add to form
-		final WatermarkedTextBox vendorIdBox = createTextBox("Vendor Key");
+		vendorIdBox = createTextBox("Vendor Key");
 		vendorIdBox.setName("vendorId");
 		vendorIdBox.setVisible(false);
 		vendorIdBox.setText(input);
 
 		// Facebook Id textbox - used to add to form
-		final WatermarkedTextBox fbIdBox = createTextBox("Vendor Key");
+		fbIdBox = createTextBox("Vendor Key");
 		fbIdBox.setName("fbId");
 		fbIdBox.setVisible(false);
 
 		// Name textbox
-		final WatermarkedTextBox nameBox = createTextBox("Name On Business License");
+		nameBox = createTextBox("Name On Business License");
 		nameBox.setName("nameBoxInput");
 
 		// Email textbox
-		final WatermarkedTextBox emailBox = createTextBox("Contact Email");
+		emailBox = createTextBox("Contact Email");
 		emailBox.setName("emailBoxInput");
 
 		// Phone textbox
-		final WatermarkedTextBox phoneBox = createTextBox("Contact Number");
+		phoneBox = createTextBox("Contact Number");
 		phoneBox.setName("phoneBoxInput");
 
 		// Terms and agreement checkbox
-		final CheckBox checkTerms = new CheckBox(
+		checkTerms = new CheckBox(
 				"I have read and agree to the Terms of Service.");
 		checkTerms.setName("checkTerms");
 		checkTerms.setValue(false);
@@ -127,24 +126,8 @@ public class TruckClaimContent extends Content {
 		componentPanel.add(phoneBox);
 		componentPanel.add(checkTerms);
 
-		componentPanel
-				.add((makeLabelWidget("Select photo of business license. Please note only .png, .jpg, and .jpeg files will be processed.")));
-
-		// Create a FileUpload widget.
-		final FileUpload upload = new FileUpload();
-		upload.setName("uploadClaimFormElement");
-		upload.setStyleName("btn btn-info");
-		upload.setWidth("300px");
-		componentPanel.add(upload);
-
-		// File name textbox - used to add to form
-		final WatermarkedTextBox fileNameBox = createTextBox("fileName");
-		fileNameBox.setName("fileNameInput");
-		fileNameBox.setVisible(false);
-		componentPanel.add(fileNameBox);
-
 		// Add a 'submit' button.
-		final Button submitButton = new Button("Submit Request");
+		submitButton = new Button("Submit Request");
 		submitButton.addStyleName("btn btn-primary");
 		submitButton.addClickHandler(new ClickHandler() {
 
@@ -162,7 +145,6 @@ public class TruckClaimContent extends Content {
 				String name = nameBox.getText().trim();
 				String email = emailBox.getText().trim();
 				String number = phoneBox.getText().trim();
-				String fileName = upload.getFilename();
 				String facebookId = "";
 
 				// Check to make sure logged in user is making request
@@ -327,37 +309,11 @@ public class TruckClaimContent extends Content {
 					event.cancel();
 				}
 
-				else if (fileName.length() == 0)
-				{
-					String errorMsg = "Sorry, you must select a picture of your business license from your local file system.";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
-
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
-				
-				else if (!(fileName.trim().contains(".png") || fileName.trim().contains(".jpg") || fileName.trim().contains(".jpeg")))
-				{
-					String errorMsg = "Sorry, we only accept .png, .jpg, and .jpeg files, please select another.";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
-					System.out.println(fileName);
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
-				
 				else
 				{
 					// All checks passed, grab user's ID
 					facebookId = FacebookTools.getUserId();
 					fbIdBox.setText(facebookId);
-
-					fileNameBox.setText(upload.getFilename());
 
 					// Disable button to disallow users to resubmit same form
 					// twice
@@ -435,35 +391,5 @@ public class TruckClaimContent extends Content {
 		HTMLPanel div = new HTMLPanel("<br>");
 		div.add(button);
 		return div;
-	}
-
-	// Creates label with specified text
-	private HTMLPanel makeLabelWidget(String text)
-	{
-		HTMLPanel div = new HTMLPanel("<br>");
-		Label label = new Label(text);
-		label.setStyleName("label label-info");
-		div.add(label);
-		return div;
-	}
-
-	private void startNewBlobstoreSession()
-	{
-		claimImageService.getBlobstoreUploadUrl(new AsyncCallback<String>() {
-
-			@Override
-			public void onFailure(Throwable caught)
-			{
-				logger.log(Level.SEVERE, "Exception: " + caught.getMessage());
-			}
-
-			@Override
-			public void onSuccess(String result)
-			{
-				form.setAction(result);
-				logger.log(Level.INFO, "Form action: " + result);
-			}
-
-		});
 	}
 }
