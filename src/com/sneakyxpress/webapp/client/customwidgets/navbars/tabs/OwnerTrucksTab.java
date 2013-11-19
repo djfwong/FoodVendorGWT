@@ -36,6 +36,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         final FlowPanel trucks = new FlowPanel();
+        trucks.addStyleName("well");
 
         VerifiedVendorServiceAsync verifiedVendorService = GWT.
                 create(VerifiedVendorService.class);
@@ -49,7 +50,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
             @Override
             public void onSuccess(List<VerifiedVendor> result) {
                 if (result == null) {
-                    HTMLPanel response = new HTMLPanel("p", "No recently viewed vendors could be found :(");
+                    HTMLPanel response = new HTMLPanel("p", "No trucks could be found :(");
                     response.addStyleName("lead pagination-centered");
                     trucks.add(response);
                 } else {
