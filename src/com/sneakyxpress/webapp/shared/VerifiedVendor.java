@@ -14,13 +14,16 @@ public class VerifiedVendor implements IsSerializable {
 	@Id
     @Persistent
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String id;
 
     @Persistent
 	private String userId;
 
     @Persistent
 	private String vendorId;
+
+    @Persistent
+    private String vendorName;
 
     @Persistent
 	private String deals;
@@ -31,11 +34,11 @@ public class VerifiedVendor implements IsSerializable {
     @Persistent
 	private String phoneNumber;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -77,5 +80,13 @@ public class VerifiedVendor implements IsSerializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getVendorName() {
+        return vendorName;
+    }
+
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
     }
 }

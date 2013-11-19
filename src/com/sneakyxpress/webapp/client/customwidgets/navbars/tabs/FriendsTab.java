@@ -43,13 +43,13 @@ public class FriendsTab extends AbstractNavbarTab {
                 new AsyncCallback<List<User>>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        module.addMessage(true, "Loading friends! Reason: " +
+                        module.addMessage(true, "Loading friends failed! Reason: " +
                                 caught.getMessage());
                     }
 
                     @Override
                     public void onSuccess(List<User> result) {
-                        if (result.isEmpty()) {
+                        if (result == null) {
                             HTMLPanel response = new HTMLPanel("p", "No friends could be found :(");
                             response.addStyleName("lead pagination-centered");
                             friends.add(response);

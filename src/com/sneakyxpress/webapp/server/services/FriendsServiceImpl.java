@@ -37,6 +37,11 @@ public class FriendsServiceImpl extends RemoteServiceServlet
 
         // Clean up
         pm.close();
-        return friends;
+
+        if (friends.isEmpty()) {
+            return null;
+        } else {
+            return friends;
+        }
     }
 }

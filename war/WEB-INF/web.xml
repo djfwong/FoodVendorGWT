@@ -114,7 +114,7 @@
         <url-pattern>/sneaky_xpress/claimFormReq</url-pattern>
     </servlet-mapping>
 
-    <!-- User statistics service -->
+    <!-- User friends service -->
     <servlet>
         <servlet-name>friendsService</servlet-name>
         <servlet-class>com.sneakyxpress.webapp.server.services.FriendsServiceImpl</servlet-class>
@@ -122,6 +122,16 @@
     <servlet-mapping>
         <servlet-name>friendsService</servlet-name>
         <url-pattern>/sneaky_xpress/getUserFriends</url-pattern>
+    </servlet-mapping>
+
+    <!-- Owner verified vendor services -->
+    <servlet>
+        <servlet-name>verifiedVendor</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.services.VerifiedVendorServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>verifiedVendor</servlet-name>
+        <url-pattern>/sneaky_xpress/verifiedVendor</url-pattern>
     </servlet-mapping>
 
 	<!-- Login -->

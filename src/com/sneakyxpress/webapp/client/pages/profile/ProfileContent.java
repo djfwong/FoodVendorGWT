@@ -91,6 +91,7 @@ public class ProfileContent extends Content {
                         int type = user.getType();
                         if (type == User.OWNER || type == User.ADMIN_AND_OWNER) {
                             sideNavbar.addTab(new OwnerReviewsTab(module, user));
+                            sideNavbar.addTab(new OwnerTrucksTab(module, user));
                         }
                         if (type == User.ADMINISTRATOR || type == User.ADMIN_AND_OWNER) {
                             sideNavbar.addTab(new AdministrationTab(module));
