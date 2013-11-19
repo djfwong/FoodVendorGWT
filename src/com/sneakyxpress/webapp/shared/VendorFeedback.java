@@ -77,7 +77,7 @@ public class VendorFeedback implements IsSerializable {
 	}
 
 
-	public String getownerVendorId(){
+	public String getOwnerVendorId(){
 		return ownerVendorId;
 	}
 

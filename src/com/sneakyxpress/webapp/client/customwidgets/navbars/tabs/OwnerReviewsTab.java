@@ -72,8 +72,8 @@ public class OwnerReviewsTab extends AbstractNavbarTab {
 
         HTMLPanel quote = new HTMLPanel("blockquote", "<p>" + stars
                 + f.getReview() + "</p>");
-        quote.add(new HTMLPanel("small", "User " + f.getUserId() + " reviewing truck "
-                + f.getvendorId()));
+        quote.add(new HTMLPanel("small", "User " + f.getAuthorUserId() + " reviewing truck "
+                + f.getOwnerVendorId()));
 
         return quote;
     }
