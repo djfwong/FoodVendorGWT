@@ -36,8 +36,8 @@ public class RecentVendorsTab extends AbstractNavbarTab {
             response.addStyleName("lead pagination-centered");
             recent.add(response);
         } else {
-            for (FoodVendor v : recentlyViewed) {
-                recent.add(getVendorWidget(v));
+            for (int i = recentlyViewed.size() - 1; i >= 0; i--) {
+                recent.add(getVendorWidget(recentlyViewed.get(i)));
             }
         }
 
@@ -47,7 +47,7 @@ public class RecentVendorsTab extends AbstractNavbarTab {
     private HTMLPanel getVendorWidget(FoodVendor v) {
         String name = v.getName();
         if (name.isEmpty()) {
-            name = "<em>No Name Available</em>";
+            name = "<em class=\"muted\">No Name Available</em>";
         }
 
         HTMLPanel vendor = new HTMLPanel("p", name + " ");

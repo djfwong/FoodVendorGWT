@@ -359,21 +359,19 @@ public class FacebookTools {
 	}
 
     public void addViewedVendor(FoodVendor v) {
-        boolean alreadyHere = false;
         for (FoodVendor temp : recentlyViewed) {
             if (v.getVendorId().equals(temp.getVendorId())) {
-                alreadyHere = true;
-                break;
+                recentlyViewed.remove(temp);
+                recentlyViewed.add(v);
+                return;
             }
         }
 
-        if (!alreadyHere) {
-            if (recentlyViewed.size() <= 10) {
-                recentlyViewed.add(v);
-            } else {
-                recentlyViewed.remove(0);
-                recentlyViewed.add(v);
-            }
+        if (recentlyViewed.size() <= 10) {
+            recentlyViewed.add(v);
+        } else {
+            recentlyViewed.remove(0);
+            recentlyViewed.add(v);
         }
     }
 
