@@ -9,14 +9,9 @@ import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
-import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
-import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
 import com.sneakyxpress.webapp.shared.Favourite;
 import com.sneakyxpress.webapp.shared.User;
-import com.sneakyxpress.webapp.shared.VendorFeedback;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,7 +38,7 @@ public class FavouritesTab extends AbstractNavbarTab {
 
         FavouritesServiceAsync favouritesService = GWT
                 .create(FavouritesService.class);
-        favouritesService.getFavourites(user.getId(),
+        favouritesService.getUserFavourites(user.getId(),
                 new AsyncCallback<List<Favourite>>() {
                     @Override
                     public void onFailure(Throwable caught) {

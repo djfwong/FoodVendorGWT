@@ -7,11 +7,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
+import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
+import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
+import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
+import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
 import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorService;
 import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorServiceAsync;
 import com.sneakyxpress.webapp.shared.User;
+import com.sneakyxpress.webapp.shared.VendorFeedback;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
 
 import java.util.List;
@@ -64,7 +70,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
         return trucks;
     }
 
-    private HTMLPanel getVendorWidget(VerifiedVendor v) {
+    private HTMLPanel getVendorWidget(final VerifiedVendor v) {
         String name = v.getVendorName();
         if (name.isEmpty()) {
             name = "<em class=\"muted\">No Name Available</em>";
@@ -72,6 +78,50 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 
         HTMLPanel vendor = new HTMLPanel("p", name + " ");
         vendor.addStyleName("lead");
+
+        HTMLPanel statsDiv = new HTMLPanel("small", "");
+        vendor.add(statsDiv);
+        final Label stats = new Label();
+        statsDiv.add(stats);
+
+        // Get the ratings for this truck
+        VendorFeedbackServiceAsync vendorFeedbackService = GWT.
+                create(VendorFeedbackService.class);
+        vendorFeedbackService.getVendorReviews(v.getVendorId(), new AsyncCallback<List<VendorFeedback>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                module.addMessage(true, "Could not load reviews for vendor " + v.getVendorName()
+                        + ". Reason: " + caught.getMessage());
+            }
+
+            @Override
+            public void onSuccess(List<VendorFeedback> result) {
+                if (result != null) {
+                    double mean = 0.0;
+                    for (VendorFeedback f : result) {
+                        mean += f.getRating();
+                    }
+                    mean /= result.size();
+                    stats.setText(result.size() + " reviews, " + mean + " average rating");
+                }
+            }
+        });
+
+        // Get the number of favourites for this truck
+        FavouritesServiceAsync favouritesService = GWT.
+                create(FavouritesService.class);
+        favouritesService.getNumVendorFavourites(v.getVendorId(), new AsyncCallback<Integer>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                module.addMessage(true, "Failed to load favourites for vendor " + v.getVendorName()
+                        + ". Reason: " + caught.getMessage());
+            }
+
+            @Override
+            public void onSuccess(Integer result) {
+                stats.setText(stats.getText() + ", " + result + " favourites");
+            }
+        });
 
         HTMLPanel buttonGroup = new HTMLPanel("span", "");
         buttonGroup.addStyleName("pull-right btn-group");

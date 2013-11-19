@@ -17,8 +17,33 @@ import java.util.List;
 public class VendorFeedbackServiceImpl extends RemoteServiceServlet
         implements VendorFeedbackService {
 
+
     @Override
-    public List<VendorFeedback> getVendorFeedback(String userId)
+    public List<VendorFeedback> getVendorReviews(String vendorId) throws IllegalArgumentException {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        Query q = pm.newQuery("SELECT FROM " + VendorFeedback.class.getName()
+                + " WHERE ownerVendorId == \"" + vendorId + "\"");
+        List<VendorFeedback> result = (List<VendorFeedback>) q.execute();
+
+        pm.close();
+
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result;
+        }
+    }
+
+    /**
+     * Gets the reviews written about a particular vendor owner's trucks
+     *
+     * @param userId        The vendor owner
+     * @return              All the reviews about the vendor owner's trucks
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public List<VendorFeedback> getVendorOwnerFeedback(String userId)
             throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -47,6 +72,13 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
         }
     }
 
+    /**
+     * Get the reviews a particular user wrote
+     *
+     * @param userId        The user who wrote the review
+     * @return              All reviews the user wrote
+     * @throws IllegalArgumentException
+     */
     @Override
     public List<VendorFeedback> getUserReviews(String userId)
             throws IllegalArgumentException {

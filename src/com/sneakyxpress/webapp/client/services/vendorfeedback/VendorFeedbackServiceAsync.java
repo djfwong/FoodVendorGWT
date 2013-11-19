@@ -10,8 +10,10 @@ import java.util.List;
  * Created by michael on 11/14/2013.
  */
 public interface VendorFeedbackServiceAsync {
-    void getVendorFeedback(String userId, AsyncCallback<List<VendorFeedback>> callback)
+    void getVendorOwnerFeedback(String userId, AsyncCallback<List<VendorFeedback>> callback)
             throws IllegalArgumentException;
     void getUserReviews(String userId, AsyncCallback<List<VendorFeedback>> callback)
             throws IllegalArgumentException;
+
+    void getVendorReviews(String vendorId, AsyncCallback<List<VendorFeedback>> async);
 }

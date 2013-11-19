@@ -11,6 +11,8 @@ import java.util.List;
  * Created by michael on 11/14/2013.
  */
 public interface FavouritesServiceAsync {
-    void getFavourites(String userId, AsyncCallback<List<Favourite>> callback)
+    void getUserFavourites(String userId, AsyncCallback<List<Favourite>> callback)
             throws IllegalArgumentException;
+
+    void getNumVendorFavourites(String vendorId, AsyncCallback<Integer> async);
 }

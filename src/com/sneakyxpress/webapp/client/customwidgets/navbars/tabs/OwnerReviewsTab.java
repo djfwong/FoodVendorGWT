@@ -37,7 +37,7 @@ public class OwnerReviewsTab extends AbstractNavbarTab {
 
         VendorFeedbackServiceAsync vendorFeedbackService = GWT.
                 create(VendorFeedbackService.class);
-        vendorFeedbackService.getVendorFeedback(user.getId(), new AsyncCallback<List<VendorFeedback>>() {
+        vendorFeedbackService.getVendorOwnerFeedback(user.getId(), new AsyncCallback<List<VendorFeedback>>() {
             @Override
             public void onFailure(Throwable caught) {
                 module.addMessage(true, "Loading vendor feedback failed! Reason: " +
