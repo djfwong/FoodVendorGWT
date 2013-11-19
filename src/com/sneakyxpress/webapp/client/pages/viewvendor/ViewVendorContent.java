@@ -1,5 +1,6 @@
 package com.sneakyxpress.webapp.client.pages.viewvendor;
 
+import com.github.gwtbootstrap.client.ui.Label;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -90,6 +91,17 @@ public class ViewVendorContent extends Content {
 				} else { textInfo.add(displayReviews(vendor)); }
 				
 				textInfo.add(new HTML("<br>")); // Some padding
+				textInfo.add(new HTML("<p><strong>Submit a Review!</strong><br>"));
+				textInfo.add(new HTML("<p>Rating<br>"));
+				textInfo.add(new HTML("<input type=" + "rating" 
+						+ " class=" + "form-control" + " id=" + "Rating" + " placeholder="
+						+ "rating>"));
+				textInfo.add(new HTML("<p>Review<br>"));
+				textInfo.add(new HTML("<textarea class="+"form-control"+" rows="+"3"+"></textarea>"));
+				textInfo.add(getSubmitReviewButton());
+				
+				textInfo.add(new HTML("<br>")); // Some padding
+				textInfo.add(new HTML("<br>"));
 
 				// Group all the information together
 				HTMLPanel mapInfo = new HTMLPanel("");
@@ -100,6 +112,7 @@ public class ViewVendorContent extends Content {
 				info.add(mapInfo);
 
 				content.add(info);
+				
 				content.add(getClaimButton());
 
 				
@@ -160,4 +173,13 @@ public class ViewVendorContent extends Content {
 		button.addClickHandler(new PageClickHandler(new TruckClaimContent(module), vendorId));		
 		return button;
 	}
+	
+	public Button getSubmitReviewButton() {
+		Button button = new Button("Submit");
+		button.addStyleName("btn btn-primary btn-sm");
+		button.addClickHandler(new PageClickHandler(new ViewVendorContent(module), vendorId));		
+		return button;
+	}
+	
+
 }
