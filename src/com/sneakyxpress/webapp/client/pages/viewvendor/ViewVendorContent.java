@@ -6,12 +6,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.MarkerOptions;
+import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
@@ -76,15 +78,16 @@ public class ViewVendorContent extends Content {
 						"<div class=\"page-header\"><h2>" + name
 						+ "</h2></div>");
 				textInfo.addStyleName("span6");
-
+				
 				textInfo.add(getInfoWidget("Rating",
-						Integer.toString(vendor.getRating())));
+						Integer.toString(vendor.getAverageRating())));
 				textInfo.add(getInfoWidget("Description",
 						vendor.getDescription()));
 				textInfo.add(getInfoWidget("Location",
 						vendor.getLocation()));
 				textInfo.add(getInfoWidget("Reviews",
-						vendor.getReviews()));
+						"reviews"));
+				//textInfo.add(displayReviews());
 				textInfo.add(new HTML("<br>")); // Some padding
 
 				// Group all the information together
@@ -98,8 +101,7 @@ public class ViewVendorContent extends Content {
 				content.add(info);
 				content.add(getClaimButton());
 
-				// TODO: Reviews will go here
-
+				
 				// Change the content
 				module.changeContent(content);
 
@@ -134,8 +136,22 @@ public class ViewVendorContent extends Content {
 				return new HTML("<p><strong>" + title + "</strong><br>"
 						+ info + "</p>");
 			}
+			
+			/*
+			 * 
+			private SimpleTable displayReviews() {
+				SimpleTable review_table = new SimpleTable("table-hover table-bordered table-striped",
+                        "Key", "Name");
+				
+				
+				return new SimpleTable("table-hover table-bordered table-striped",
+                        "Key", "Name");
+			};
+			*/
+			
 		});
 	}
+	
 
 	public Button getClaimButton() {
 		// Truck owner claim button

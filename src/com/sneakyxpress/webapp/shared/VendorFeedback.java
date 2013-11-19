@@ -20,13 +20,13 @@ public class VendorFeedback implements IsSerializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Persistent
-	private Long id;
+	private int id;
 
 	@Persistent
 	private String userId;
 
 	@Persistent
-	private String vendorId;
+	private String ownerVendorId;
 
 	@Persistent
 	private int rating;
@@ -42,7 +42,7 @@ public class VendorFeedback implements IsSerializable {
     }
 
 
-	public void setId(Long id){
+	public void setId(int id){
 		this.id = id;
 	}
 
@@ -52,8 +52,8 @@ public class VendorFeedback implements IsSerializable {
 	}
 
 
-	public void setVendorId(String vendorId){
-		this.vendorId = vendorId;
+	public void setOwnerVendorId(String vendorId){
+		this.ownerVendorId = ownerVendorId;
 	}
 
 
@@ -67,7 +67,7 @@ public class VendorFeedback implements IsSerializable {
 	}
 
 
-	public Long getId(){
+	public int getId(){
 		return id;
 	}
 
@@ -77,8 +77,8 @@ public class VendorFeedback implements IsSerializable {
 	}
 
 
-	public String getvendorId(){
-		return vendorId;
+	public String getownerVendorId(){
+		return ownerVendorId;
 	}
 
 	public int getRating(){

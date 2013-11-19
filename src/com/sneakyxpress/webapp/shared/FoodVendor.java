@@ -1,5 +1,8 @@
 package com.sneakyxpress.webapp.shared;
 
+import java.awt.List;
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -42,13 +45,9 @@ public class FoodVendor implements IsSerializable {
     @Persistent
 	private double latitude = 0;
     
-    // Rating
+    // Vendor Feedback
     @Persistent
-    private int rating = 5;
-    
-    // Reviews
-    @Persistent
-    private String reviews = "";
+    private ArrayList<VendorFeedback> vendorFeedback = new ArrayList<VendorFeedback>();
 
 	public void setVendorId(String vendorId) {
 		this.vendorId = vendorId;
@@ -74,12 +73,8 @@ public class FoodVendor implements IsSerializable {
 		this.latitude = latitude;
 	}
 	
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
-	
-	public void setReviews(String reviews) {
-		this.reviews = reviews;
+	public void setVendorFeedback(ArrayList<VendorFeedback> vendorFeedback) {
+		this.vendorFeedback = vendorFeedback;
 	}
 
 	public String getVendorId() {
@@ -106,11 +101,21 @@ public class FoodVendor implements IsSerializable {
 		return latitude;
 	}
 	
-	public int getRating() {
+	public ArrayList<VendorFeedback> getVendorFeedback() {
+		return vendorFeedback;
+	}
+	
+	public int getAverageRating() {
+		int rating = 0;
+		
+		if (vendorFeedback.size() == 0)
+			return rating;
+		
+		for (VendorFeedback vf : vendorFeedback) {
+			rating += vf.getRating();
+		}
+		rating = (int)Math.round(rating/vendorFeedback.size());
 		return rating;
 	}
 	
-	public String getReviews() {
-		return reviews;
-	}
 }
