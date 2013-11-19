@@ -294,7 +294,7 @@ public class FacebookTools {
 										+ existingUser);
 						if (existingUser) {
 							module.addMessage(false,
-									"Welcome back " + userName);
+									"Welcome back " + userName + "!");
 						} else {
 							module.addMessage(false,
 									"Welcome " + userName

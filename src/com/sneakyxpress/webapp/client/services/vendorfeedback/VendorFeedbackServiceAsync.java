@@ -12,4 +12,6 @@ import java.util.List;
 public interface VendorFeedbackServiceAsync {
     void getVendorFeedback(String userId, AsyncCallback<List<VendorFeedback>> callback)
             throws IllegalArgumentException;
+    void getUserReviews(String userId, AsyncCallback<List<VendorFeedback>> callback)
+            throws IllegalArgumentException;
 }

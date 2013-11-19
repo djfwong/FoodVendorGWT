@@ -33,7 +33,7 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
         List<VendorFeedback> feedback = new ArrayList<VendorFeedback>();
         for (VerifiedVendor v : verifiedVendors) {
             Query q2 = pm.newQuery("SELECT FROM " + VendorFeedback.class.getName()
-                    + " WHERE vendorId == \"" + v.getVendorId() + "\"");
+                    + " WHERE ownerVendorId == \"" + v.getVendorId() + "\"");
             List<VendorFeedback> result = (List<VendorFeedback>) q2.execute();
             feedback.addAll(result);
         }
@@ -44,6 +44,24 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
             return null;
         } else {
             return feedback;
+        }
+    }
+
+    @Override
+    public List<VendorFeedback> getUserReviews(String userId)
+            throws IllegalArgumentException {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        Query q = pm.newQuery("SELECT FROM " + VendorFeedback.class.getName()
+                + " WHERE authorUserId == \"" + userId + "\"");
+        List<VendorFeedback> result = (List<VendorFeedback>) q.execute();
+
+        pm.close();
+
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result;
         }
     }
 }

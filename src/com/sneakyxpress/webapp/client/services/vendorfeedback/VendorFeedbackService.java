@@ -13,4 +13,5 @@ import java.util.List;
 @RemoteServiceRelativePath("getVendorFeedback")
 public interface VendorFeedbackService extends RemoteService {
     List<VendorFeedback> getVendorFeedback(String userId) throws IllegalArgumentException;
+    List<VendorFeedback> getUserReviews(String userId) throws IllegalArgumentException;
 }
