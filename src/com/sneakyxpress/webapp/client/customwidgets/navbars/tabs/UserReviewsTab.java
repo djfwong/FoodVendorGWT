@@ -53,6 +53,10 @@ public class UserReviewsTab extends AbstractNavbarTab {
                             response.addStyleName("lead pagination-centered");
                             reviews.add(response);
                         } else {
+                            HTMLPanel header = new HTMLPanel("p", "You have " + result.size() + " reviews!");
+                            header.addStyleName("lead");
+                            reviews.add(header);
+
                             Collections.sort(result, new FeedbackComparator());
                             for (VendorFeedback f : result) {
                                 reviews.add(getReviewWidget(f));

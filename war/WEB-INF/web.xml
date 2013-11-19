@@ -69,17 +69,29 @@
 		<url-pattern>/sneaky_xpress/profile</url-pattern>
 	</servlet-mapping>
 
-	<!-- Vendor Feedback retrieval service -->
-	<servlet>
-		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
-			VendorFeedbackService</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.services.VendorFeedbackServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
-			VendorFeedbackService</servlet-name>
-		<url-pattern>/sneaky_xpress/getVendorFeedback</url-pattern>
-	</servlet-mapping>
+    <!-- Vendor Feedback retrieval service -->
+    <servlet>
+        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+            VendorFeedbackService</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.services.VendorFeedbackServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+            VendorFeedbackService</servlet-name>
+        <url-pattern>/sneaky_xpress/getVendorFeedback</url-pattern>
+    </servlet-mapping>
+
+    <!-- Favourites retrieval service -->
+    <servlet>
+        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+            FavouritesService</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.services.FavouritesServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.sneakyxpress.webapp.Sneaky_Xpress
+            FavouritesService</servlet-name>
+        <url-pattern>/sneaky_xpress/getFavourites</url-pattern>
+    </servlet-mapping>
 
 	<!-- Update Data cron job -->
 	<servlet>
@@ -92,17 +104,27 @@
 	</servlet-mapping>
 
 
-	<!-- Process claim form data servlet -->
-	<servlet>
-		<servlet-name>processFormServlet</servlet-name>
-		<servlet-class>com.sneakyxpress.webapp.server.ClaimFormServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>processFormServlet</servlet-name>
-		<url-pattern>/sneaky_xpress/claimFormReq</url-pattern>
-	</servlet-mapping>
+    <!-- Process claim form data servlet -->
+    <servlet>
+        <servlet-name>processFormServlet</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.ClaimFormServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>processFormServlet</servlet-name>
+        <url-pattern>/sneaky_xpress/claimFormReq</url-pattern>
+    </servlet-mapping>
 
-		<!-- Login -->
+    <!-- User statistics service -->
+    <servlet>
+        <servlet-name>friendsService</servlet-name>
+        <servlet-class>com.sneakyxpress.webapp.server.services.FriendsServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>friendsService</servlet-name>
+        <url-pattern>/sneaky_xpress/getUserFriends</url-pattern>
+    </servlet-mapping>
+
+	<!-- Login -->
 	<servlet>
 		<servlet-name>claimImageService</servlet-name>
 		<servlet-class>com.sneakyxpress.webapp.server.services.ClaimImageServiceImpl</servlet-class>
@@ -111,8 +133,8 @@
 		<servlet-name>claimImageService</servlet-name>
 		<url-pattern>/sneaky_xpress/images</url-pattern>
 	</servlet-mapping>
-	
-	
+
+
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>Sneaky_Xpress.html</welcome-file>
