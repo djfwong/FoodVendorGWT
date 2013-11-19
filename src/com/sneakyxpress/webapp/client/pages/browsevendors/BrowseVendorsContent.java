@@ -101,6 +101,7 @@ public class BrowseVendorsContent extends Content {
 
 						// Load the appropriate view
 						if (input.equals("map")) {
+							// Map view
 							mapView.addStyleName("active");
 							listView.removeStyleName("active");
                             localView.removeStyleName("active");
@@ -135,7 +136,7 @@ public class BrowseVendorsContent extends Content {
 	                	    			newMarkerOpts.setPosition(LatLng.create(c.getLatitude(), c.getLongitude()));
 
 	                	    			// Custom icon from my Dropbox
-	                	    			newMarkerOpts.setIcon(MarkerImage.create("https://dl.dropboxusercontent.com/u/15430100/user.png"));
+	                	    			newMarkerOpts.setIcon(MarkerImage.create("/sneaky_xpress/img/user.png"));
 	                            	    newMarkerOpts.setMap(map);
 	                            	    newMarkerOpts.setTitle("Your Location");
 	                            	    Marker.create(newMarkerOpts);
@@ -167,6 +168,7 @@ public class BrowseVendorsContent extends Content {
                                 });
                             }
 						} else if (input.equals("local")) {
+							// Vendors Near Me view
                             localView.addStyleName("active");
                             listView.removeStyleName("active");
                             mapView.removeStyleName("active");

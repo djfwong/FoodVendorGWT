@@ -7,6 +7,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HTML;
 
+/*
+ * Code modified from https://code.google.com/p/gwt-examples/wiki/demogwtshare
+ */
 public class Share extends Composite {
   private HTML hFacebook;
   private String url;
