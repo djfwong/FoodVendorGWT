@@ -1,5 +1,6 @@
 package com.sneakyxpress.webapp.client.pages.search;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -7,7 +8,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.*;
+import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
 import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.shared.FoodVendor;
@@ -52,6 +55,16 @@ public class SearchContent extends Content {
                             table.addRow(new PageClickHandler(module.VENDOR_PAGE, v.getVendorId()),
                                     v.getVendorId(), v.getName(), v.getDescription(), v.getLocation());
                         }
+
+                        List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
+                        if (FacebookTools.isLoggedIn()) {
+                            for (FoodVendor v : search_results) {
+                                FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId());
+                                hearts.add(fb);
+                            }
+                            table.addWidgetColumn("", hearts);
+                        }
+
                         table.sortRows(0, false);
 
                 		content.add(table);

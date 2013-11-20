@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
+import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
@@ -15,6 +17,7 @@ import com.sneakyxpress.webapp.shared.Favourite;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 import com.sneakyxpress.webapp.shared.User;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,7 +40,6 @@ public class FavouritesTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         final FlowPanel favourites = new FlowPanel();
-        favourites.addStyleName("well");
 
         FavouritesServiceAsync favouritesService = GWT
                 .create(FavouritesService.class);
@@ -55,46 +57,33 @@ public class FavouritesTab extends AbstractNavbarTab {
                             HTMLPanel response = new HTMLPanel("p", "No favourites could be found :(");
                             response.addStyleName("lead pagination-centered");
                             favourites.add(response);
+                            favourites.addStyleName("well");
                         } else {
                             HTMLPanel header = new HTMLPanel("p", "You have " + result.size() + " favourites!");
-                            header.addStyleName("lead pagination-centered");
+                            header.addStyleName("lead pagination-centered well");
                             favourites.add(header);
 
+
+                            SimpleTable table = new SimpleTable("table-hover table-bordered",
+                                    "Key", "Name");
+                            List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
+
                             for (Favourite f : result) {
-                                favourites.add(getVendorWidget(f));
+                                table.addRow(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()),
+                                        f.getVendorId(), f.getVendorName());
+                                FavouriteButton fb = new FavouriteButton(module, f.getVendorId(), f.getVendorName(),
+                                        FacebookTools.getUserId());
+                                hearts.add(fb);
                             }
+
+                            table.addWidgetColumn("", hearts);
+                            table.sortRows(0, false);
+
+                            favourites.add(table);
                         }
                     }
                 });
 
         return favourites;
-    }
-
-    private HTMLPanel getVendorWidget(Favourite f) {
-        String name = f.getVendorName();
-        if (name.isEmpty()) {
-            name = "<em class=\"muted\">No Name Available</em>";
-        }
-
-        HTMLPanel favourite = new HTMLPanel("p", name + " ");
-        favourite.addStyleName("lead");
-
-        // Group of buttons
-        HTMLPanel buttonGroup = new HTMLPanel("");
-        buttonGroup.addStyleName("pull-right btn-group");
-
-        // The heart button
-        buttonGroup.add(
-                new FavouriteButton(module, f.getVendorId(), f.getVendorName(), f.getUserId()));
-
-        // The view button
-        Button vendorLink = new Button("View");
-        vendorLink.addClickHandler(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()));
-        vendorLink.addStyleName("btn btn-info");
-        buttonGroup.add(vendorLink);
-
-        favourite.add(buttonGroup);
-
-        return favourite;
     }
 }

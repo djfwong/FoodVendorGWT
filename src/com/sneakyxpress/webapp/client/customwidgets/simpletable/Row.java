@@ -29,6 +29,7 @@ public class Row {
 
     public void addWidgetCell(Widget cell) {
         HTMLPanel td = new HTMLPanel("td", "");
+        td.getElement().setAttribute("style", "text-align: center;");
         td.add(cell);
         widget.add(td);
     }
