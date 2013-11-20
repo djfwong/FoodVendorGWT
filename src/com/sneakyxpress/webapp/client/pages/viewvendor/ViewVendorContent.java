@@ -6,10 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.*;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
@@ -100,6 +97,12 @@ public class ViewVendorContent extends Content {
 						vendor.getDescription()));
 				textInfo.add(getInfoWidget("Location",
 						vendor.getLocation()));
+
+                // Claim vendor link
+                HTMLPanel claim = new HTMLPanel("p", "<strong>Claim this Business</strong><br>"
+                        + "Do you own this business? ");
+                claim.add(getClaimLink());
+                textInfo.add(claim);
 
 				// Group all the information together
 				HTMLPanel mapInfo = new HTMLPanel("");
@@ -228,12 +231,11 @@ public class ViewVendorContent extends Content {
 		});
 	}
 
-	private Button getClaimButton() {
+	private Anchor getClaimLink() {
 		// Truck owner claim button
-		Button button = new Button("Claim Truck");
-		button.addStyleName("btn btn-primary btn-small");
-		button.addClickHandler(new PageClickHandler(new TruckClaimContent(module), vendor.getVendorId()));
-		return button;
+        Anchor link = new Anchor("Claim it!");
+		link.addClickHandler(new PageClickHandler(new TruckClaimContent(module), vendor.getVendorId()));
+		return link;
 	}
 
     private class ReviewSubmitClickHandler implements ClickHandler {

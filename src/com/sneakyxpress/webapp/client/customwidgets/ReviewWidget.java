@@ -26,24 +26,32 @@ public class ReviewWidget extends Composite {
         this.module = module;
         this.f = f;
 
-        String stars = " ";
-        for (int i = 0; i < f.getRating(); i++) {
-            stars = "<i class=\"icon-star\"></i>" + stars;
-        }
-
-        quote = new HTMLPanel("blockquote", "<p>" + stars
-                + f.getReview() + "</p>");
+        quote = new HTMLPanel("blockquote", "");
         initWidget(quote);
 
         String vendorName = f.getVendorName();
         if (vendorName.isEmpty()) {
             vendorName = f.getVendorId();
         }
-
         credit = new HTMLPanel("small", f.getAuthorName() + " reviewing " + vendorName);
-        quote.add(credit);
 
+        updateWidget(f.getRating(), f.getReview());
+    }
+
+    private void updateWidget(int stars, String text) {
+        quote.clear();
+        HTMLPanel review = new HTMLPanel("p", getStars(stars) + text);
+        quote.add(review);
+        quote.add(credit);
         addModifyButtons();
+    }
+
+    private String getStars(int num) {
+        String stars = "    ";
+        for (int i = 0; i < f.getRating(); i++) {
+            stars = "<i class=\"icon-star\"></i>" + stars;
+        }
+        return stars;
     }
 
     private void addModifyButtons() {
@@ -98,12 +106,14 @@ public class ReviewWidget extends Composite {
                                     @Override
                                     public void onFailure(Throwable caught) {
                                         module.addMessage(true, "Updating review failed. Reason: " + caught.getMessage());
+                                        updateWidget(0, "<em class=\"muted\">Review Deleted</em>");
                                         modal.hide();
                                     }
 
                                     @Override
                                     public void onSuccess(Void result) {
                                         module.addMessage(false, "Your review was successfully updated. Thank you!");
+                                        updateWidget(rating.getValue(), reviewText.getText());
                                         modal.hide();
                                     }
                                 });
