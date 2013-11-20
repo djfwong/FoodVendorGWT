@@ -54,7 +54,7 @@ public class FavouritesTab extends AbstractNavbarTab {
                             favourites.add(response);
                         } else {
                             HTMLPanel header = new HTMLPanel("p", "You have " + result.size() + " favourites!");
-                            header.addStyleName("lead");
+                            header.addStyleName("lead pagination-centered");
                             favourites.add(header);
 
                             for (Favourite f : result) {

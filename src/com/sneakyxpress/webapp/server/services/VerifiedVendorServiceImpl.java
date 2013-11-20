@@ -1,11 +1,8 @@
 package com.sneakyxpress.webapp.server.services;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorService;
 import com.sneakyxpress.webapp.server.PMF;
-import com.sneakyxpress.webapp.shared.Favourite;
-import com.sneakyxpress.webapp.shared.User;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
 
 import javax.jdo.PersistenceManager;
@@ -19,7 +16,7 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet
         implements VerifiedVendorService {
 
     @Override
-    public void removeVerifiedVendor(String verifiedVendorId) throws IllegalArgumentException {
+    public void removeVerifiedVendor(Long verifiedVendorId) throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
         Query q = pm.newQuery("SELECT UNIQUE FROM " + VerifiedVendor.class.getName()

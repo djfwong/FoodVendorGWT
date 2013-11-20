@@ -56,7 +56,7 @@ public class FriendsTab extends AbstractNavbarTab {
                             friends.addStyleName("well");
                         } else {
                             HTMLPanel header = new HTMLPanel("p", "You have " + result.size() + " friends!");
-                            header.addStyleName("lead");
+                            header.addStyleName("lead pagination-centered");
                             friends.add(header);
 
                             SimpleTable friendsTable = new SimpleTable("table-bordered", "Friends Name");

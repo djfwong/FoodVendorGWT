@@ -2,25 +2,34 @@ package com.sneakyxpress.webapp.client.pages.viewvendor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
 import com.google.maps.gwt.client.MapTypeId;
 import com.google.maps.gwt.client.Marker;
 import com.google.maps.gwt.client.MarkerOptions;
-import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
+import com.sneakyxpress.webapp.client.customwidgets.ReviewWidget;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.facebook.Share;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.truckclaim.TruckClaimContent;
+import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
+import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
 import com.sneakyxpress.webapp.shared.FoodVendor;
 import com.sneakyxpress.webapp.shared.VendorFeedback;
+import org.cobogw.gwt.user.client.ui.Rating;
+
+import java.util.List;
 
 /**
  * The UI of the Food Vendor pages.
@@ -29,7 +38,7 @@ public class ViewVendorContent extends Content {
 	private static final String pageName = "View Vendor";
 	private static final String pageStub = "view";
 
-	public String vendorId = "";
+	public static FoodVendor vendor;
 
 	private final ViewVendorServiceAsync viewVendorService = GWT
 			.create(ViewVendorService.class);
@@ -60,18 +69,18 @@ public class ViewVendorContent extends Content {
 
 			@Override
 			public void onSuccess(FoodVendor vendor) {
+                ViewVendorContent.vendor = vendor;
+
                 // Mark this vendor as recently viewed
                 module.FACEBOOK_TOOLS.addViewedVendor(vendor);
 
-				HTMLPanel content = new HTMLPanel(""); // The base panel
-				// to hold all
-				// content
+				HTMLPanel content = new HTMLPanel(""); // The base panel to hold all contents
 
-				// Contains the basic information of the Food Vendor
+				/*
+				 * Contains all the information on the food vendor
+				 */
 				HTMLPanel info = new HTMLPanel("");
 				info.addStyleName("row-fluid");
-
-				vendorId = vendor.getVendorId();
 
 				// The basic text information
 				String name = vendor.getName();
@@ -86,29 +95,11 @@ public class ViewVendorContent extends Content {
 				
 				// Facebook Like and Share
 				textInfo.add(new Share(Window.Location.getHref()));
-				
-				textInfo.add(getInfoWidget("Rating",
-						Integer.toString(vendor.getAverageRating())));
+
 				textInfo.add(getInfoWidget("Description",
 						vendor.getDescription()));
 				textInfo.add(getInfoWidget("Location",
 						vendor.getLocation()));
-				if (vendor.getVendorFeedback().size() == 0) {
-					textInfo.add(getInfoWidget("Reviews", "No reviews are currently available"));
-				} else { textInfo.add(displayReviews(vendor)); }
-				
-				textInfo.add(new HTML("<br>")); // Some padding
-				textInfo.add(new HTML("<p><strong>Submit a Review!</strong><br>"));
-				textInfo.add(new HTML("<p>Rating<br>"));
-				textInfo.add(new HTML("<input type=" + "rating" 
-						+ " class=" + "form-control" + " id=" + "Rating" + " placeholder="
-						+ "rating>"));
-				textInfo.add(new HTML("<p>Review<br>"));
-				textInfo.add(new HTML("<textarea class="+"form-control"+" rows="+"3"+"></textarea>"));
-				textInfo.add(getSubmitReviewButton());
-				
-				textInfo.add(new HTML("<br>")); // Some padding
-				textInfo.add(new HTML("<br>"));
 
 				// Group all the information together
 				HTMLPanel mapInfo = new HTMLPanel("");
@@ -119,15 +110,92 @@ public class ViewVendorContent extends Content {
 				info.add(mapInfo);
 
 				content.add(info);
-				
-				content.add(getClaimButton());
 
+                /*
+                 * The rating and reviews, also a form to add new reviews
+                 */
+                HTMLPanel reviews = new HTMLPanel("");
+                reviews.addStyleName("row-fluid");
+                reviews.getElement().setAttribute("style", "padding-top: 10px;");
+
+                // The existing reviews
+                final HTMLPanel showReviews = new HTMLPanel("<h3>Reviews</h3>");
+                showReviews.addStyleName("span6");
+
+                VendorFeedbackServiceAsync vendorFeedbackService = GWT.
+                        create(VendorFeedbackService.class);
+                vendorFeedbackService.getVendorReviews(vendor.getVendorId(), new AsyncCallback<List<VendorFeedback>>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        module.addMessage(true, "Error loading reviews. Reason: " + caught.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(List<VendorFeedback> result) {
+                        if (result == null) {
+                            HTMLPanel response = new HTMLPanel("<p class=\"lead pagination-centered\">" +
+                                    "No reviews could be found :(</p>");
+                            response.addStyleName("well");
+                            showReviews.add(response);
+                        } else {
+                            for (VendorFeedback v : result) {
+                                showReviews.add(new ReviewWidget(v));
+                            }
+                        }
+                    }
+                });
+
+                // Add a new review
+                HTMLPanel addReview = new HTMLPanel("<h3>Add a Review</h3>");
+                addReview.addStyleName("span6");
+
+                if (module.FACEBOOK_TOOLS.isLoggedIn()) {
+                    HTMLPanel form = new HTMLPanel("form", "");
+                    HTMLPanel fieldSet = new HTMLPanel("fieldset", "<label>Rating</label>");
+
+                    // The star rating
+                    Rating rating = new Rating(0, 5);
+                    fieldSet.add(rating);
+
+                    // The text review
+                    fieldSet.add(new HTML("<br><br>"));
+                    fieldSet.add(new HTML("<label>Review (optional)</label>"));
+
+                    TextArea reviewText = new TextArea();
+                    reviewText.addStyleName("input-block-level");
+                    fieldSet.add(reviewText);
+
+                    // The submit button
+                    fieldSet.add(new HTML("<br>"));
+
+                    Button submitButton = new Button("Submit Review");
+                    submitButton.addStyleName("btn btn-info");
+                    submitButton.addClickHandler(new ReviewSubmitClickHandler(rating, reviewText));
+                    fieldSet.add(submitButton);
+
+                    form.add(fieldSet);
+                    addReview.add(form);
+                } else {
+                    HTMLPanel response = new HTMLPanel("<p class=\"lead pagination-centered\">" +
+                            "Please log in to post a review.</p>");
+                    response.addStyleName("well");
+                    addReview.add(response);
+                }
+
+                // Put the review divs together and add it to the contents
+                reviews.add(showReviews);
+                reviews.add(addReview);
+                content.add(reviews);
 				
-				// Change the content
+				/*
+				 * Change the content
+				 */
 				module.changeContent(content);
 
-				// A simple map (it must be last or else it doesn't
-				// really work)
+
+				/*
+				 * A simple map (it must be last or else it doesn't really work)
+				 */
 				MapOptions options = MapOptions.create();
 				options.setZoom(14.0);
 				options.setCenter(LatLng.create(vendor.getLatitude(),
@@ -157,36 +225,56 @@ public class ViewVendorContent extends Content {
 				return new HTML("<p><strong>" + title + "</strong><br>"
 						+ info + "</p>");
 			}
-			
-			private SimpleTable displayReviews(FoodVendor vendor) {
-				SimpleTable reviewTable = new SimpleTable("table-hover table-bordered table-striped",
-                        "User", "Review", "Rating", "Date");
-					
-				for (VendorFeedback vf : vendor.getVendorFeedback()) {
-					reviewTable.addRow(vf.getAuthorUserId(), vf.getReview(), 
-							Integer.toString(vf.getRating()), Long.toString(vf.getCreationTime()));
-				}
-				return reviewTable;
-			}
-			
 		});
 	}
-	
 
-	public Button getClaimButton() {
+	private Button getClaimButton() {
 		// Truck owner claim button
 		Button button = new Button("Claim Truck");
-		button.addStyleName("btn btn-primary btn-sm");
-		button.addClickHandler(new PageClickHandler(new TruckClaimContent(module), vendorId));		
+		button.addStyleName("btn btn-primary btn-small");
+		button.addClickHandler(new PageClickHandler(new TruckClaimContent(module), vendor.getVendorId()));
 		return button;
 	}
-	
-	public Button getSubmitReviewButton() {
-		Button button = new Button("Submit");
-		button.addStyleName("btn btn-primary btn-sm");
-		button.addClickHandler(new PageClickHandler(new ViewVendorContent(module), vendorId));		
-		return button;
-	}
-	
 
+    private class ReviewSubmitClickHandler implements ClickHandler {
+        private final Rating rating;
+        private final TextArea text;
+        private final FacebookTools facebook = module.FACEBOOK_TOOLS;
+
+        public ReviewSubmitClickHandler(Rating rating, TextArea text) {
+            this.rating = rating;
+            this.text = text;
+        }
+
+        @Override
+        public void onClick(ClickEvent event) {
+            if (verifyInput()) {
+                final VendorFeedback feedback = new VendorFeedback();
+                feedback.setAuthorId(facebook.getUserId());
+                feedback.setAuthorName(facebook.getUserName());
+                feedback.setVendorId(vendor.getVendorId());
+                feedback.setVendorName(vendor.getName());
+                feedback.setRating(rating.getValue());
+                feedback.setReview(text.getText());
+
+                VendorFeedbackServiceAsync vendorFeedbackService = GWT.
+                        create(VendorFeedbackService.class);
+                vendorFeedbackService.persistVendorFeedback(feedback, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        module.addMessage(true, "Adding review failed. Reason: " + caught.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(Void result) {
+                        module.addMessage(false, "Your review was successfully added. Thank you!");
+                    }
+                });
+            }
+        }
+
+        private boolean verifyInput() {
+            return true;
+        }
+    }
 }

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.customwidgets.ReviewWidget;
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
 import com.sneakyxpress.webapp.shared.User;
@@ -60,32 +61,18 @@ public class OwnerReviewsTab extends AbstractNavbarTab {
 
                     HTMLPanel header = new HTMLPanel("p", "You have " + result.size() + " reviews from users!<br>"
                             + "Your reviews average at " + mean + " stars.");
-                    header.addStyleName("lead");
+                    header.addStyleName("lead pagination-centered");
                     feedback.add(header);
 
                     Collections.sort(result, new FeedbackComparator());
                     for (VendorFeedback f : result) {
-                        feedback.add(getReviewWidget(f));
+                        feedback.add(new ReviewWidget(f));
                     }
                 }
             }
         });
 
         return feedback;
-    }
-
-    private HTMLPanel getReviewWidget(VendorFeedback f) {
-        String stars = " ";
-        for (int i = 0; i < f.getRating(); i++) {
-            stars = "<i class=\"icon-star\"></i>" + stars;
-        }
-
-        HTMLPanel quote = new HTMLPanel("blockquote", "<p>" + stars
-                + f.getReview() + "</p>");
-        quote.add(new HTMLPanel("small", "User " + f.getAuthorUserId() + " reviewing truck "
-                + f.getOwnerVendorId()));
-
-        return quote;
     }
 
     class FeedbackComparator implements Comparator<VendorFeedback> {

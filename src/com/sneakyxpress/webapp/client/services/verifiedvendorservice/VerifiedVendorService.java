@@ -2,7 +2,6 @@ package com.sneakyxpress.webapp.client.services.verifiedvendorservice;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.sneakyxpress.webapp.shared.Favourite;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
 
 import java.util.List;
@@ -13,6 +12,6 @@ import java.util.List;
  */
 @RemoteServiceRelativePath("verifiedVendor")
 public interface VerifiedVendorService extends RemoteService {
-    void removeVerifiedVendor(String verifiedVendorId) throws IllegalArgumentException;
+    void removeVerifiedVendor(Long verifiedVendorId) throws IllegalArgumentException;
     List<VerifiedVendor> getVerifiedVendors(String userId) throws IllegalArgumentException;
 }

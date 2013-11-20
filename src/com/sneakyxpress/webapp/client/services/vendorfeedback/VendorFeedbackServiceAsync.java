@@ -16,4 +16,6 @@ public interface VendorFeedbackServiceAsync {
             throws IllegalArgumentException;
 
     void getVendorReviews(String vendorId, AsyncCallback<List<VendorFeedback>> async);
+
+    void persistVendorFeedback(VendorFeedback f, AsyncCallback<Void> async);
 }

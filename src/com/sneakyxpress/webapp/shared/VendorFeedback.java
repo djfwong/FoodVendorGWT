@@ -1,32 +1,34 @@
 package com.sneakyxpress.webapp.shared;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
-import com.google.gwt.user.client.rpc.IsSerializable;
-
 import java.util.Date;
-
 
 @Entity
 @PersistenceCapable
 public class VendorFeedback implements IsSerializable {
-	@PrimaryKey
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Persistent
-	private int id;
+    @Id
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private Long feedbackId;
+
+    @Persistent
+	private String authorId;
+
+    @Persistent
+    private String authorName;
 
 	@Persistent
-	private String authorUserId;
+	private String vendorId;
 
-	@Persistent
-	private String ownerVendorId;
+    @Persistent
+    private String vendorName;
 
 	@Persistent
 	private int rating;
@@ -35,25 +37,20 @@ public class VendorFeedback implements IsSerializable {
 	private String review = "";
 
     @Persistent
-    private Date createDate;
+    private long createTime;
 
     public VendorFeedback() {
-        createDate = new Date();
+        Date temp = new Date();
+        createTime = temp.getTime();
     }
 
-
-	public void setId(int id){
-		this.id = id;
+	public void setAuthorId(String authorId){
+		this.authorId = authorId;
 	}
 
 
-	public void setAuthorUserId(String authorUserId){
-		this.authorUserId = authorUserId;
-	}
-
-
-	public void setOwnerVendorId(String vendorId){
-		this.ownerVendorId = ownerVendorId;
+	public void setVendorId(String vendorId){
+		this.vendorId = vendorId;
 	}
 
 
@@ -66,19 +63,13 @@ public class VendorFeedback implements IsSerializable {
 		this.review = review;
 	}
 
-
-	public int getId(){
-		return id;
+	public String getAuthorId(){
+		return authorId;
 	}
 
 
-	public String getAuthorUserId(){
-		return authorUserId;
-	}
-
-
-	public String getOwnerVendorId(){
-		return ownerVendorId;
+	public String getVendorId(){
+		return vendorId;
 	}
 
 	public int getRating(){
@@ -90,7 +81,31 @@ public class VendorFeedback implements IsSerializable {
 		return review;
 	}
 
+    public void setCreationTime(long time) {
+        createTime = time;
+    }
+
     public long getCreationTime() {
-        return createDate.getTime();
+        return createTime;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public Long getFeedbackId() {
+        return feedbackId;
+    }
+
+    public String getVendorName() {
+        return vendorName;
+    }
+
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
     }
 }

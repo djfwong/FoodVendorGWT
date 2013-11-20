@@ -1,14 +1,10 @@
 package com.sneakyxpress.webapp.shared;
 
-import java.awt.List;
-import java.util.ArrayList;
-
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -44,10 +40,6 @@ public class FoodVendor implements IsSerializable {
 	// Latitude coordinate
     @Persistent
 	private double latitude = 0;
-    
-    // Vendor Feedback
-    @Persistent
-    private ArrayList<VendorFeedback> vendorFeedback = new ArrayList<VendorFeedback>();
 
 	public void setVendorId(String vendorId) {
 		this.vendorId = vendorId;
@@ -71,10 +63,6 @@ public class FoodVendor implements IsSerializable {
 
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
-	}
-	
-	public void setVendorFeedback(ArrayList<VendorFeedback> vendorFeedback) {
-		this.vendorFeedback = vendorFeedback;
 	}
 
 	public String getVendorId() {
@@ -100,22 +88,4 @@ public class FoodVendor implements IsSerializable {
 	public double getLatitude() {
 		return latitude;
 	}
-	
-	public ArrayList<VendorFeedback> getVendorFeedback() {
-		return vendorFeedback;
-	}
-	
-	public int getAverageRating() {
-		int rating = 0;
-		
-		if (vendorFeedback.size() == 0)
-			return rating;
-		
-		for (VendorFeedback vf : vendorFeedback) {
-			rating += vf.getRating();
-		}
-		rating = (int)Math.round(rating/vendorFeedback.size());
-		return rating;
-	}
-	
 }

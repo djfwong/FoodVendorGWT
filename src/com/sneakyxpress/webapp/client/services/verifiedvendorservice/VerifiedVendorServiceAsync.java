@@ -11,7 +11,7 @@ import java.util.List;
  * Created by michael on 11/14/2013.
  */
 public interface VerifiedVendorServiceAsync {
-    void removeVerifiedVendor(String verifiedVendorId, AsyncCallback callback)
+    void removeVerifiedVendor(Long verifiedVendorId, AsyncCallback callback)
             throws IllegalArgumentException;
     void getVerifiedVendors(String userId, AsyncCallback<List<VerifiedVendor>> callback);
 }
