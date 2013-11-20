@@ -17,19 +17,25 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.pages.browsevendors.BrowseVendorsContent;
-import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.pages.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.pages.search.SearchContent;
 import com.sneakyxpress.webapp.client.pages.truckclaim.TruckClaimContent;
-import com.sneakyxpress.webapp.client.pages.truckclaim.ViewClaimContent;
+import com.sneakyxpress.webapp.client.pages.viewvendor.ViewVendorContent;
 import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataService;
 import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataServiceAsync;
-import com.sneakyxpress.webapp.client.pages.viewvendor.ViewVendorContent;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -47,10 +53,9 @@ public class Sneaky_Xpress implements EntryPoint {
     public final Content BROWSE_PAGE = new BrowseVendorsContent(this);
     public final Content PROFILE_PAGE = new ProfileContent(this);
     public final Content TRUCK_CLAIM_PAGE = new TruckClaimContent(this);
-    public final Content VIEW_CLAIM_CONTENT = new ViewClaimContent(this);
 
     // Register all pages here so they can be iterated over (used for History support)
-    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE, TRUCK_CLAIM_PAGE, VIEW_CLAIM_CONTENT };
+    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE, TRUCK_CLAIM_PAGE};
 
     // A panel to hold messages in
     private FlowPanel messages = new FlowPanel();
