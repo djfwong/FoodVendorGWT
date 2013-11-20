@@ -81,6 +81,27 @@ public class FavouritesServiceImpl extends RemoteServiceServlet
     }
 
     @Override
+    public List<Favourite> getFriendsFavourites(List<String> friendsIds) throws IllegalArgumentException {
+        List<Favourite> friendsFavourites = new ArrayList<Favourite>();
+
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        for (String id : friendsIds) {
+            Query q = pm.newQuery("SELECT FROM " + Favourite.class.getName()
+                    + " WHERE userId == \"" + id + "\"");
+            List<Favourite> result = (List<Favourite>) q.execute();
+            friendsFavourites.addAll(result);
+        }
+
+        pm.close();
+
+        if (friendsFavourites.isEmpty()) {
+            return null;
+        } else {
+            return friendsFavourites;
+        }
+    }
+
+    @Override
     public int getNumVendorFavourites(String vendorId) throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
 

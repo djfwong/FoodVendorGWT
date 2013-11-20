@@ -17,5 +17,6 @@ public interface FavouritesService extends RemoteService {
     void removeFavourite(String id) throws IllegalArgumentException;
     Favourite getFavourite(String id) throws IllegalArgumentException;
     List<Favourite> getUserFavourites(String userId) throws IllegalArgumentException;
+    List<Favourite> getFriendsFavourites(List<String> friendsIds) throws IllegalArgumentException;
     int getNumVendorFavourites(String vendorId) throws IllegalArgumentException;
 }

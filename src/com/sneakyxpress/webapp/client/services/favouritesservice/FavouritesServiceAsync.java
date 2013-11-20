@@ -21,4 +21,6 @@ public interface FavouritesServiceAsync {
     void getFavourite(String id, AsyncCallback<Favourite> async);
 
     void removeFavourite(String id, AsyncCallback<Void> async);
+
+    void getFriendsFavourites(List<String> friendsIds, AsyncCallback<List<Favourite>> async);
 }

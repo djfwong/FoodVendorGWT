@@ -4,18 +4,21 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
 import com.sneakyxpress.webapp.client.customwidgets.ReviewWidget;
+import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.pages.PageClickHandler;
+import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
+import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
+import com.sneakyxpress.webapp.shared.Favourite;
 import com.sneakyxpress.webapp.shared.VendorFeedback;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Get the content for our home page.
@@ -48,14 +51,19 @@ public class GreetingContent extends Content {
                 }
 
                 public void onSuccess(String result) {
-                    HTMLPanel contents = new HTMLPanel("");
+                    HTMLPanel parentContents = new HTMLPanel("");
+
+                    final HTMLPanel contents = new HTMLPanel("");
+                    contents.addStyleName("row-fluid");
 
                     // Add stats
                     HTMLPanel stats = new HTMLPanel(result);
                     stats.addStyleName("well");
-                    contents.add(stats);
+                    parentContents.add(stats);
 
-                    // Get friend's recent activity
+                    parentContents.add(contents);
+
+                    // Get friend's recent reviews
                     if (FacebookTools.isLoggedIn()) {
                         VendorFeedbackServiceAsync vendorFeedbackService = GWT.
                                 create(VendorFeedbackService.class);
@@ -71,20 +79,74 @@ public class GreetingContent extends Content {
 
                             @Override
                             public void onSuccess(List<VendorFeedback> result) {
-                                if (result != null) {
-                                    HTMLPanel reviews = new HTMLPanel("");
-                                    reviews.addStyleName("well");
+                                HTMLPanel reviews = new HTMLPanel("");
+                                reviews.addStyleName("well span6");
 
+                                if (result == null) {
+                                    HTMLPanel response = new HTMLPanel("p", "No friends\' reviews could be found :(");
+                                    response.addStyleName("lead pagination-centered");
+                                    reviews.add(response);
+                                } else {
                                     Collections.sort(result, new FeedbackComparator());
 
                                     for (VendorFeedback f : result) {
                                         reviews.add(new ReviewWidget(module, f));
                                     }
                                 }
+                                contents.add(reviews);
                             }
                         });
+
+                        // Get friends' favourites
+                        FavouritesServiceAsync favouritesService = GWT.
+                                create(FavouritesService.class);
+
+                        favouritesService.getFriendsFavourites(friendsIds, new AsyncCallback<List<Favourite>>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                module.addMessage(true, "Could not load friends\' favourites! Reason: "
+                                        + caught.getMessage());
+                            }
+
+                            @Override
+                            public void onSuccess(List<Favourite> result) {
+                                HTMLPanel favs = new HTMLPanel("");
+                                favs.addStyleName("span6");
+
+                                if (result == null) {
+                                    HTMLPanel response = new HTMLPanel("p", "No friends\' favourites could be found :(");
+                                    response.addStyleName("lead pagination-centered");
+                                    favs.addStyleName("well");
+                                    favs.add(response);
+                                } else {
+                                    SimpleTable table = new SimpleTable("Key", "Name", "Friend");
+                                    List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
+
+                                    for (Favourite f : result) {
+                                        String friendName = module.FACEBOOK_TOOLS.getUserFriends().get(f.getUserId());
+
+                                        table.addRow(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()),
+                                                f.getVendorId(), f.getVendorName(), friendName);
+
+                                        FavouriteButton fb = new FavouriteButton(module, f.getVendorId(), f.getVendorName(),
+                                                FacebookTools.getUserId());
+                                        hearts.add(fb);
+                                    }
+
+                                    table.addWidgetColumn("", hearts);
+                                    table.sortRows(0, false);
+
+                                    favs.add(table);
+                                }
+
+                                contents.add(favs);
+                            }
+                        });
+
+
                     }
-                    module.changeContent(contents);
+
+                    module.changeContent(parentContents);
                 }
             });
     }

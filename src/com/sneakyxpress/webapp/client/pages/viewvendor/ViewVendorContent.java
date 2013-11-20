@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.client.pages.viewvendor;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
@@ -152,6 +153,16 @@ public class ViewVendorContent extends Content {
 
                             textInfo.add(getInfoWidget("Average Rating", ""));
                         } else {
+                            // Sort the reviews
+                            Set<String> friendIds = module.FACEBOOK_TOOLS.getUserFriends().keySet();
+                            for (VendorFeedback f : result) {
+                                if (friendIds.contains(f.getAuthorId())) {
+                                    result.remove(f);
+                                    result.add(0, f);
+                                }
+                            }
+
+                            // Add the reviews
                             double mean = 0.0;
                             for (VendorFeedback v : result) {
                                 showReviews.add(new ReviewWidget(module, v));
