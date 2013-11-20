@@ -12,9 +12,9 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
-import com.sneakyxpress.webapp.client.pages.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimService;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimServiceAsync;
+import com.sneakyxpress.webapp.client.pages.truckclaim.ViewClaimContent;
 import com.sneakyxpress.webapp.shared.TruckClaim;
 
 public class ClaimsTab extends AbstractNavbarTab {
@@ -142,7 +142,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 					{
 						list.add(tc);
 					}
-
+					clickTableRow(table);
 					claimsPanel.add(table);
 				}
 			}
@@ -165,7 +165,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 				TruckClaim selected = selectionModel
 						.getSelectedObject();
 				if (selected != null) {
-					History.newItem(new ProfileContent(module).getPageStub());
+					History.newItem(new ViewClaimContent(module).getPageStub() + "?" + selected.getFacebookId() + "?" + selected.getTruckId());
 				}
 
 			}

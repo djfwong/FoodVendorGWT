@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
@@ -60,8 +59,9 @@ public class ViewClaimContent extends Content {
 	@Override
 	public void getAndChangeContent(String input)
 	{
-		HTMLPanel htmlPanel = new HTMLPanel("");
-		HorizontalPanel horizonP = new HorizontalPanel();
+		
+		HTMLPanel content = new HTMLPanel("");
+		HTMLPanel panel = new HTMLPanel("");
 
 		// Accept Claim button
 		Button acceptButton = new Button("Accept");
@@ -74,39 +74,39 @@ public class ViewClaimContent extends Content {
 				claimsService.acceptClaim(fbId, truckId,
 						new AsyncCallback<Boolean>() {
 
-							@Override
-							public void onFailure(Throwable caught)
-							{
-								logger.log(Level.SEVERE, caught.getMessage());
-							}
+					@Override
+					public void onFailure(Throwable caught)
+					{
+						logger.log(Level.SEVERE, caught.getMessage());
+					}
 
-							@Override
-							public void onSuccess(Boolean result)
-							{
-								logger.log(Level.INFO,
-										"claimsService.acceptClaim: " + result);
+					@Override
+					public void onSuccess(Boolean result)
+					{
+						logger.log(Level.INFO,
+								"claimsService.acceptClaim: " + result);
 
-								if (result)
-								{
-									module.addMessage(false, "Claim accepted.");
-								}
-								else
-								{
-									module.addMessage(true,
-											"Error in accepting claim.");
-								}
-							}
+						if (result)
+						{
+							module.addMessage(false, "Claim accepted.");
+						}
+						else
+						{
+							module.addMessage(true,
+									"Error in accepting claim.");
+						}
+					}
 
-						});
+				});
 
 				module.addMessage(false, "Claim status set to accepted");
 			}
 		});
 
-		horizonP.add(getButtonWidget(acceptButton));
-		htmlPanel.add(horizonP);
+		panel.add(getButtonWidget(acceptButton));
+		content.add(panel);
 
-		Button rejectButton = new Button("Accept");
+		Button rejectButton = new Button("Reject");
 		rejectButton.addStyleName("btn btn-danger");
 		rejectButton.addClickHandler(new ClickHandler() {
 
@@ -116,37 +116,38 @@ public class ViewClaimContent extends Content {
 				claimsService.rejectClaim(fbId, truckId,
 						new AsyncCallback<Boolean>() {
 
-							@Override
-							public void onFailure(Throwable caught)
-							{
-								logger.log(Level.SEVERE, caught.getMessage());
-							}
+					@Override
+					public void onFailure(Throwable caught)
+					{
+						logger.log(Level.SEVERE, caught.getMessage());
+					}
 
-							@Override
-							public void onSuccess(Boolean result)
-							{
-								logger.log(Level.INFO,
-										"claimsService.rejectClaim: " + result);
+					@Override
+					public void onSuccess(Boolean result)
+					{
+						logger.log(Level.INFO,
+								"claimsService.rejectClaim: " + result);
 
-								if (result)
-								{
-									module.addMessage(false, "Claim rejected.");
-								}
-								else
-								{
-									module.addMessage(true,
-											"Error in rejecting claim.");
-								}
-							}
+						if (result)
+						{
+							module.addMessage(false, "Claim rejected.");
+						}
+						else
+						{
+							module.addMessage(true,
+									"Error in rejecting claim.");
+						}
+					}
 
-						});
+				});
 
 				module.addMessage(false, "Claim status set to rejected");
 			}
 		});
 
-		horizonP.add(getButtonWidget(rejectButton));
-		htmlPanel.add(horizonP);
+		panel.add(getButtonWidget(rejectButton));
+		content.add(panel);
+		module.changeContent(content);
 	}
 
 	// Creates button with space in between panels
@@ -200,28 +201,28 @@ public class ViewClaimContent extends Content {
 		verifiedVendorService.addVerifiedVendor(v,
 				new AsyncCallback<Boolean>() {
 
-					@Override
-					public void onFailure(Throwable caught)
-					{
-						logger.log(Level.SEVERE, caught.getMessage());
-					}
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				logger.log(Level.SEVERE, caught.getMessage());
+			}
 
-					@Override
-					public void onSuccess(Boolean result)
-					{
-						if (result)
-						{
-							module.addMessage(false,
-									"Updated Truck As Verified");
-						}
-						else
-						{
-							module.addMessage(true,
-									"Error in verifying truck, could be already claimed");
-						}
-					}
+			@Override
+			public void onSuccess(Boolean result)
+			{
+				if (result)
+				{
+					module.addMessage(false,
+							"Updated Truck As Verified");
+				}
+				else
+				{
+					module.addMessage(true,
+							"Error in verifying truck, could be already claimed");
+				}
+			}
 
-				});
+		});
 
 	}
 

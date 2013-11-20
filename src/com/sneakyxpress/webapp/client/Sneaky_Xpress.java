@@ -26,6 +26,7 @@ import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.pages.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.pages.search.SearchContent;
 import com.sneakyxpress.webapp.client.pages.truckclaim.TruckClaimContent;
+import com.sneakyxpress.webapp.client.pages.truckclaim.ViewClaimContent;
 import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataService;
 import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataServiceAsync;
 import com.sneakyxpress.webapp.client.pages.viewvendor.ViewVendorContent;
@@ -46,9 +47,10 @@ public class Sneaky_Xpress implements EntryPoint {
     public final Content BROWSE_PAGE = new BrowseVendorsContent(this);
     public final Content PROFILE_PAGE = new ProfileContent(this);
     public final Content TRUCK_CLAIM_PAGE = new TruckClaimContent(this);
+    public final Content VIEW_CLAIM_CONTENT = new ViewClaimContent(this);
 
     // Register all pages here so they can be iterated over (used for History support)
-    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE, TRUCK_CLAIM_PAGE };
+    private final Content[] ALL_PAGES = { HOME_PAGE, SEARCH_PAGE, VENDOR_PAGE, BROWSE_PAGE, PROFILE_PAGE, TRUCK_CLAIM_PAGE, VIEW_CLAIM_CONTENT };
 
     // A panel to hold messages in
     private FlowPanel messages = new FlowPanel();
