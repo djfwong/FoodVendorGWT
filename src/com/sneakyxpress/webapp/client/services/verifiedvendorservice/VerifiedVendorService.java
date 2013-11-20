@@ -12,6 +12,6 @@ import java.util.List;
  */
 @RemoteServiceRelativePath("verifiedVendor")
 public interface VerifiedVendorService extends RemoteService {
-    void removeVerifiedVendor(Long verifiedVendorId) throws IllegalArgumentException;
+    void removeVerifiedVendor(String verifiedVendorId) throws IllegalArgumentException;
     List<VerifiedVendor> getVerifiedVendors(String userId) throws IllegalArgumentException;
 }

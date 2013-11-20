@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,8 +14,9 @@ import javax.persistence.Id;
 public class VerifiedVendor implements IsSerializable {
 	// Unique identifier for object
 	@Id
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Long id;
+    @PrimaryKey
+    @Persistent
+	private String id;
 
     @Persistent
 	private String userId;
@@ -82,7 +84,11 @@ public class VerifiedVendor implements IsSerializable {
         this.vendorName = vendorName;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

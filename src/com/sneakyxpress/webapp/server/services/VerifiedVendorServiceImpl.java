@@ -16,7 +16,7 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet
         implements VerifiedVendorService {
 
     @Override
-    public void removeVerifiedVendor(Long verifiedVendorId) throws IllegalArgumentException {
+    public void removeVerifiedVendor(String verifiedVendorId) throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
         Query q = pm.newQuery("SELECT UNIQUE FROM " + VerifiedVendor.class.getName()

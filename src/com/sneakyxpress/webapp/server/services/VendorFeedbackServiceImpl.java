@@ -23,9 +23,12 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
     public void persistVendorFeedback(VendorFeedback f) throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
+        // Create the key for the feedback
+        f.setId(f.getAuthorId() + f.getVendorId());
+
+        // Ensure there is only one review by
         Query q = pm.newQuery("SELECT UNIQUE FROM " + VendorFeedback.class.getName()
-                + " WHERE authorId == \"" + f.getAuthorId() + "\""
-                + " && vendorId == \"" + f.getVendorId() + "\"");
+                + " WHERE id == \"" + f.getId() + "\"");
         VendorFeedback result = (VendorFeedback) q.execute();
 
         // Replace an existing review if there is one
@@ -39,7 +42,7 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
     }
 
     @Override
-    public void deleteVendorFeedback(Long feedbackId) throws IllegalArgumentException {
+    public void deleteVendorFeedback(String feedbackId) throws IllegalArgumentException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
         Query q = pm.newQuery("SELECT UNIQUE FROM " + VendorFeedback.class.getName()

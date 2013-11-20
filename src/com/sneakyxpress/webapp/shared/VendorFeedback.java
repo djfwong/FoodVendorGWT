@@ -13,10 +13,11 @@ import java.util.Date;
 @Entity
 @PersistenceCapable
 public class VendorFeedback implements IsSerializable {
+    // The key of a vendor feedback is defined to be [User ID][Vendor ID]
     @Id
     @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
+    @Persistent
+    private String id;
 
     @Persistent
 	private String authorId;
@@ -97,10 +98,6 @@ public class VendorFeedback implements IsSerializable {
         this.authorName = authorName;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getVendorName() {
         return vendorName;
     }
@@ -109,7 +106,11 @@ public class VendorFeedback implements IsSerializable {
         this.vendorName = vendorName;
     }
 
-    public void setId(Long feedbackId) {
-        this.id = feedbackId;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

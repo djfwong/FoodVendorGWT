@@ -19,5 +19,5 @@ public interface VendorFeedbackServiceAsync {
 
     void persistVendorFeedback(VendorFeedback f, AsyncCallback<Void> async);
 
-    void deleteVendorFeedback(Long feedbackId, AsyncCallback<Void> async);
+    void deleteVendorFeedback(String feedbackId, AsyncCallback<Void> async);
 }
