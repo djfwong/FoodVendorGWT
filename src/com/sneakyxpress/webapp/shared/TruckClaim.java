@@ -30,7 +30,10 @@ public class TruckClaim implements IsSerializable {
 
 	@Persistent
 	private String phoneNumber = "";
-	
+
+	@Persistent
+	private boolean isViewed = false;
+
 	@Persistent
 	private boolean isAccepted = false;
 
@@ -98,5 +101,15 @@ public class TruckClaim implements IsSerializable {
 	{
 		this.isAccepted = isAccepted;
 	}
-	
+
+	public boolean isViewed()
+	{
+		return isViewed;
+	}
+
+	public void setViewed(boolean isViewed)
+	{
+		this.isViewed = isViewed;
+	}
+
 }

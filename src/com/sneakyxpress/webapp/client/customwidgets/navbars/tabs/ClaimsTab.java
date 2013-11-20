@@ -5,10 +5,14 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.pages.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimService;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimServiceAsync;
 import com.sneakyxpress.webapp.shared.TruckClaim;
@@ -17,7 +21,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 
 	private final ClaimServiceAsync claimsService = GWT
 			.create(ClaimService.class);
-	
+
 	private Sneaky_Xpress module;
 
 	public ClaimsTab(Sneaky_Xpress module) {
@@ -114,7 +118,17 @@ public class ClaimsTab extends AbstractNavbarTab {
 							return String.valueOf(claim.isAccepted());
 						}
 					};
-					table.addColumn(isAcceptedCol, "Accepted (T / F)");
+					table.addColumn(isAcceptedCol, "Accepted");
+
+					// Add Accepted/Rejected column
+					TextColumn<TruckClaim> isViewedCol = new TextColumn<TruckClaim>() {
+						@Override
+						public String getValue(TruckClaim claim)
+						{
+							return String.valueOf(claim.isViewed());
+						}
+					};
+					table.addColumn(isViewedCol, "Viewed");
 
 					// Create a list data provider.
 					final ListDataProvider<TruckClaim> dataProvider = new ListDataProvider<TruckClaim>();
@@ -135,5 +149,26 @@ public class ClaimsTab extends AbstractNavbarTab {
 		});
 
 		return claimsPanel;
+	}
+
+
+
+	public void clickTableRow(CellTable<TruckClaim> table) {
+		// Add a selection model to handle user selection 
+		final SingleSelectionModel<TruckClaim> selectionModel = new SingleSelectionModel<TruckClaim>();
+		table.setSelectionModel(selectionModel);
+		selectionModel
+		.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+
+			@Override
+			public void onSelectionChange(SelectionChangeEvent event) {
+				TruckClaim selected = selectionModel
+						.getSelectedObject();
+				if (selected != null) {
+					History.newItem(new ProfileContent(module).getPageStub());
+				}
+
+			}
+		});
 	}
 }
