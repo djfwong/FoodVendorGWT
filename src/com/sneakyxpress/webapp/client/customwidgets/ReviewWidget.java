@@ -121,7 +121,7 @@ public class ReviewWidget extends Composite {
                 @Override
                 public void onClick(ClickEvent event) {
                     HTMLPanel areYouSure = new HTMLPanel("<p class=\"lead pagination-centered\">"
-                            + "Are you sure?</p><br>");
+                            + "Are you sure?</p>");
                     Button confirm = new Button("Confirm Deletion");
                     confirm.addStyleName("btn btn-danger btn-large btn-block");
 
