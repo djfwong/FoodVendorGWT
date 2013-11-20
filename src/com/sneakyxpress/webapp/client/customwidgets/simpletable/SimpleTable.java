@@ -1,6 +1,8 @@
 package com.sneakyxpress.webapp.client.customwidgets.simpletable;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.Collections;
@@ -68,8 +70,24 @@ public class SimpleTable extends Composite {
      */
     public void addRow(ClickHandler handler, String... cells) {
         Row row = new Row(cells, this);
-        row.addClickHandler(handler);
+
+        for (int i = 0; i < cells.length; i++) {
+            HTMLPanel cell = row.getCell(i).getWidget();
+            cell.sinkEvents(Event.ONCLICK);
+            cell.addHandler(handler, ClickEvent.getType());
+        }
+
         rows.add(row);
+    }
+
+    /**
+     * Adds a column with widget cells to the table
+     */
+    public void addWidgetColumn(String title, List<? extends Widget> widgets) {
+        headerRow.addWidgetCell(new InlineLabel(title));
+        for (int i = 0; i < rows.size(); i++) {
+            rows.get(i).addWidgetCell(widgets.get(i));
+        }
     }
 
 
