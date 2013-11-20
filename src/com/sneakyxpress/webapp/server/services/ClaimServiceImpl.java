@@ -10,7 +10,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimService;
 import com.sneakyxpress.webapp.server.PMF;
 import com.sneakyxpress.webapp.shared.TruckClaim;
-import com.sneakyxpress.webapp.shared.User;
 
 public class ClaimServiceImpl extends RemoteServiceServlet implements
 ClaimService {
@@ -45,7 +44,10 @@ ClaimService {
 			long id = searchForClaim(fbId, truckId);
 			TruckClaim tc = (TruckClaim) pm.getObjectById(id);
 			tc.setAccepted(true);
-			
+
+			//mark as claim viewed as well
+			setViewed(tc);
+
 			pm.close();
 			return true;
 		}
@@ -54,8 +56,8 @@ ClaimService {
 			return false;
 		}
 	}
-	
-	
+
+
 	@Override
 	public boolean rejectClaim(String fbId, String truckId)
 	{
@@ -66,7 +68,10 @@ ClaimService {
 			long id = searchForClaim(fbId, truckId);
 			TruckClaim tc = (TruckClaim) pm.getObjectById(id);
 			tc.setAccepted(false);
-			
+
+			//mark as claim viewed as well
+			setViewed(tc);
+
 			pm.close();
 			return true;
 		}
@@ -76,6 +81,12 @@ ClaimService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param fbId - userID
+	 * @param truckId - truckID
+	 * @return the PK auto-generated id associated with entry for editing an object in other method calls
+	 */
 	public long searchForClaim(String fbId, String truckId)
 	{
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -85,11 +96,15 @@ ClaimService {
 		q.declareParameters("String lastNameParam");
 		q.declareParameters("String truckId");
 
-		@SuppressWarnings("unchecked")
 		TruckClaim results = (TruckClaim) q.execute(fbId, truckId);
 
 		return results.getId();
 
 	}
 
+	public void setViewed(TruckClaim tc){
+
+		tc.setViewed(true);
+
+	}
 }

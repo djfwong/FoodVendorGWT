@@ -1,7 +1,5 @@
 package com.sneakyxpress.webapp.shared;
 
-import java.util.ArrayList;
-
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
