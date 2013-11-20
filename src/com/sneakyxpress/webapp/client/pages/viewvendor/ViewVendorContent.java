@@ -2,6 +2,7 @@ package com.sneakyxpress.webapp.client.pages.viewvendor;
 
 import java.util.List;
 
+import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
 import com.sneakyxpress.webapp.shared.FormValidator;
 import org.cobogw.gwt.user.client.ui.Rating;
@@ -13,11 +14,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.maps.gwt.client.GoogleMap;
 import com.google.maps.gwt.client.LatLng;
 import com.google.maps.gwt.client.MapOptions;
@@ -93,11 +89,16 @@ public class ViewVendorContent extends Content {
 					name = "<em class=\"muted\">No Name Available</em>";
 				}
 
-				final HTMLPanel textInfo = new HTMLPanel(
-						"<div class=\"page-header\"><h2>" + name
-						+ "</h2></div>");
+				final HTMLPanel textInfo = new HTMLPanel("");
 				textInfo.addStyleName("span6");
-				
+
+                HTMLPanel headerDiv = new HTMLPanel("");
+                headerDiv.addStyleName("page-header");
+                textInfo.add(headerDiv);
+
+                final HTMLPanel header = new HTMLPanel("h2", name);
+                headerDiv.add(header);
+
 				// Facebook Like and Share
 				textInfo.add(new Share(Window.Location.getHref()));
 
@@ -166,10 +167,13 @@ public class ViewVendorContent extends Content {
 
                 // Add the favourites button
                 if (module.FACEBOOK_TOOLS.isLoggedIn()) {
+                    header.add(new InlineLabel(" "));
+
                     FavouriteButton heartButton = new FavouriteButton(
                             module, vendor, module.FACEBOOK_TOOLS.getUserId());
-                    heartButton.addStyleName("pagination-centered");
-                    textInfo.add(heartButton);
+                    heartButton.addStyleName("pull-right");
+                    heartButton.getElement().setAttribute("style", "margin-top: 10px;");
+                    header.add(heartButton);
                 }
 
                 // Add a new review
