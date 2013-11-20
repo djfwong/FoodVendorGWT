@@ -10,4 +10,6 @@ import com.sneakyxpress.webapp.shared.User;
 @RemoteServiceRelativePath("addUser")
 public interface PersistUserService extends RemoteService {
 	boolean persistNewUserToDatastore(User user) throws IllegalArgumentException;
+	
+	boolean setToAdmin(String fbId);
 }

@@ -95,6 +95,7 @@ public class ProfileContent extends Content {
                         }
                         if (type == User.ADMINISTRATOR || type == User.ADMIN_AND_OWNER) {
                             sideNavbar.addTab(new AdministrationTab(module));
+                            sideNavbar.addTab(new ClaimsTab(module));
                         }
 
                         // Add the logout tab last
