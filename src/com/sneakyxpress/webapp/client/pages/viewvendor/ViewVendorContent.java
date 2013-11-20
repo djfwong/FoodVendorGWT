@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -85,7 +86,7 @@ public class ViewVendorContent extends Content {
 					name = "<em class=\"muted\">No Name Available</em>";
 				}
 
-				HTMLPanel textInfo = new HTMLPanel(
+				final HTMLPanel textInfo = new HTMLPanel(
 						"<div class=\"page-header\"><h2>" + name
 						+ "</h2></div>");
 				textInfo.addStyleName("span6");
@@ -141,9 +142,14 @@ public class ViewVendorContent extends Content {
                             response.addStyleName("well");
                             showReviews.add(response);
                         } else {
+                            double mean = 0.0;
                             for (VendorFeedback v : result) {
                                 showReviews.add(new ReviewWidget(module, v));
+                                mean += v.getRating();
                             }
+                            mean /= result.size();
+                            String formatted = NumberFormat.getFormat("0.0").format(mean);
+                            textInfo.add(getInfoWidget("Average Rating", formatted + " Stars"));
                         }
                     }
                 });
