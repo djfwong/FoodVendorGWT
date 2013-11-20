@@ -151,7 +151,8 @@ public class ViewVendorContent extends Content {
                             }
                             mean /= result.size();
                             String formatted = NumberFormat.getFormat("0.0").format(mean);
-                            textInfo.add(getInfoWidget("Average Rating", formatted + " Stars"));
+                            textInfo.add(getInfoWidget("Average Rating", formatted + " Stars ("
+                                    + result.size() + " reviews)"));
                         }
                     }
                 });
