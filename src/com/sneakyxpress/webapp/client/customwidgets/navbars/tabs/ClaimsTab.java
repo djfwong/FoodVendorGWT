@@ -23,7 +23,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 			.create(ClaimService.class);
 
 	private Sneaky_Xpress module;
-
+	
 	public ClaimsTab(Sneaky_Xpress module) {
 		this.module = module;
 	}
