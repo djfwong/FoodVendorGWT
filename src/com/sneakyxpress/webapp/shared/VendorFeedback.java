@@ -16,7 +16,7 @@ public class VendorFeedback implements IsSerializable {
     @Id
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long feedbackId;
+    private Long id;
 
     @Persistent
 	private String authorId;
@@ -97,8 +97,8 @@ public class VendorFeedback implements IsSerializable {
         this.authorName = authorName;
     }
 
-    public Long getFeedbackId() {
-        return feedbackId;
+    public Long getadId() {
+        return id;
     }
 
     public String getVendorName() {
@@ -107,5 +107,9 @@ public class VendorFeedback implements IsSerializable {
 
     public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
+    }
+
+    public void setId(Long feedbackId) {
+        this.id = feedbackId;
     }
 }

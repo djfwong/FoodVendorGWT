@@ -73,7 +73,7 @@ public class UserReviewsTab extends AbstractNavbarTab {
 
         @Override
         public int compare(VendorFeedback f1, VendorFeedback f2) {
-            return (int) (f1.getCreationTime() - f2.getCreationTime());
+            return (int) (f2.getCreationTime() - f1.getCreationTime());
         }
     }
 }
