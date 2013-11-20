@@ -17,4 +17,5 @@ public interface VendorFeedbackService extends RemoteService {
     List<VendorFeedback> getVendorReviews(String vendorId) throws IllegalArgumentException;
     List<VendorFeedback> getVendorOwnerFeedback(String userId) throws IllegalArgumentException;
     List<VendorFeedback> getUserReviews(String userId) throws IllegalArgumentException;
+    List<VendorFeedback> getFriendsReviews(List<String> friendsIds) throws IllegalArgumentException;
 }

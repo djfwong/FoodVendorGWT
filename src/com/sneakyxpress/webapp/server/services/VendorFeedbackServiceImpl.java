@@ -141,4 +141,25 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
             return result;
         }
     }
+
+    @Override
+    public List<VendorFeedback> getFriendsReviews(List<String> friendsIds) throws IllegalArgumentException {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        List<VendorFeedback> friendsFeedback = new ArrayList<VendorFeedback>();
+        for (String friendId : friendsIds) {
+            Query q = pm.newQuery("SELECT FROM " + VendorFeedback.class.getName()
+                    + " WHERE authorId == \"" + friendId + "\"");
+            List<VendorFeedback> result = (List<VendorFeedback>) q.execute();
+            friendsFeedback.addAll(result);
+        }
+
+        pm.close();
+
+        if (friendsFeedback.isEmpty()) {
+            return null;
+        } else {
+            return friendsFeedback;
+        }
+    }
 }
