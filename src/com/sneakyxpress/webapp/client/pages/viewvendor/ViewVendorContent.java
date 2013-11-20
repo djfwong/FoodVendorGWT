@@ -2,6 +2,7 @@ package com.sneakyxpress.webapp.client.pages.viewvendor;
 
 import java.util.List;
 
+import com.sneakyxpress.webapp.shared.FormValidator;
 import org.cobogw.gwt.user.client.ui.Rating;
 
 import com.google.gwt.core.client.GWT;
@@ -264,7 +265,9 @@ public class ViewVendorContent extends Content {
 
         @Override
         public void onClick(ClickEvent event) {
-            if (verifyInput()) {
+            try {
+                FormValidator.validateReview(rating.getValue(), text.getText());
+
                 final VendorFeedback feedback = new VendorFeedback();
                 feedback.setAuthorId(facebook.getUserId());
                 feedback.setAuthorName(facebook.getUserName());
@@ -286,6 +289,8 @@ public class ViewVendorContent extends Content {
                         module.addMessage(false, "Your review was successfully added. Thank you!");
                     }
                 });
+            } catch (IllegalArgumentException e) {
+                module.addMessage(true, e.getMessage());
             }
         }
 

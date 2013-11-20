@@ -10,6 +10,7 @@ import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
+import com.sneakyxpress.webapp.shared.FormValidator;
 import com.sneakyxpress.webapp.shared.VendorFeedback;
 import org.cobogw.gwt.user.client.ui.Rating;
 
@@ -103,7 +104,10 @@ public class ReviewWidget extends Composite {
                     submitButton.addClickHandler(new ClickHandler() {
                         @Override
                         public void onClick(ClickEvent event) {
-                            if (verifyInput()) {
+                            try {
+                                // This will thrown an exception if the validation fails
+                                FormValidator.validateReview(rating.getValue(), reviewText.getText());
+
                                 f.setRating(rating.getValue());
                                 f.setReview(reviewText.getText());
                                 f.setAuthorName(facebook.getUserName());
@@ -125,6 +129,8 @@ public class ReviewWidget extends Composite {
                                         modal.hide();
                                     }
                                 });
+                            } catch (IllegalArgumentException e) {
+                                module.addMessage(true, e.getMessage());
                             }
                         }
                     });
@@ -178,9 +184,5 @@ public class ReviewWidget extends Composite {
             credit.add(new InlineLabel(" "));
             credit.add(deleteAnchor);
         }
-    }
-
-    private boolean verifyInput() {
-        return true;
     }
 }

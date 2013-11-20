@@ -3,6 +3,7 @@ package com.sneakyxpress.webapp.server.services;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
 import com.sneakyxpress.webapp.server.PMF;
+import com.sneakyxpress.webapp.shared.FormValidator;
 import com.sneakyxpress.webapp.shared.VendorFeedback;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
 
@@ -21,6 +22,9 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
 
     @Override
     public void persistVendorFeedback(VendorFeedback f) throws IllegalArgumentException {
+        // Validate the review
+        FormValidator.validateReview(f.getRating(), f.getReview());
+
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
         // Create the key for the feedback
