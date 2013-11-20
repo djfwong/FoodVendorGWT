@@ -141,6 +141,8 @@ public class ViewVendorContent extends Content {
                                     "No reviews could be found :(</p>");
                             response.addStyleName("well");
                             showReviews.add(response);
+
+                            textInfo.add(getInfoWidget("Average Rating", ""));
                         } else {
                             double mean = 0.0;
                             for (VendorFeedback v : result) {
