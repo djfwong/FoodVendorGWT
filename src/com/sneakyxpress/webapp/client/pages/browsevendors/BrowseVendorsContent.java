@@ -260,13 +260,11 @@ public class BrowseVendorsContent extends Content {
 
                             // Add a quick favourite button to the table rows
                             List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
-                            if (FacebookTools.isLoggedIn()) {
-                                for (FoodVendor v : result) {
-                                    FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId());
-                                    hearts.add(fb);
-                                }
-                                table.addWidgetColumn("", hearts);
+                            for (FoodVendor v : result) {
+                                FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId());
+                                hearts.add(fb);
                             }
+                            table.addWidgetColumn("", hearts);
 
                             table.sortRows(0, false); // Sort the rows
 

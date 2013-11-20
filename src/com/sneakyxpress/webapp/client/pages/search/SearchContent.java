@@ -57,13 +57,11 @@ public class SearchContent extends Content {
                         }
 
                         List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
-                        if (FacebookTools.isLoggedIn()) {
-                            for (FoodVendor v : search_results) {
-                                FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId());
-                                hearts.add(fb);
-                            }
-                            table.addWidgetColumn("", hearts);
+                        for (FoodVendor v : search_results) {
+                            FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId());
+                            hearts.add(fb);
                         }
+                        table.addWidgetColumn("", hearts);
 
                         table.sortRows(0, false);
 

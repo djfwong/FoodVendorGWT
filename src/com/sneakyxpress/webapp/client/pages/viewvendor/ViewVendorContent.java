@@ -96,7 +96,7 @@ public class ViewVendorContent extends Content {
                 headerDiv.addStyleName("page-header");
                 textInfo.add(headerDiv);
 
-                final HTMLPanel header = new HTMLPanel("h2", name);
+                final HTMLPanel header = new HTMLPanel("h2", name + " ");
                 headerDiv.add(header);
 
 				// Facebook Like and Share
@@ -166,15 +166,11 @@ public class ViewVendorContent extends Content {
                 });
 
                 // Add the favourites button
-                if (module.FACEBOOK_TOOLS.isLoggedIn()) {
-                    header.add(new InlineLabel(" "));
-
-                    FavouriteButton heartButton = new FavouriteButton(
-                            module, vendor, module.FACEBOOK_TOOLS.getUserId());
-                    heartButton.addStyleName("pull-right");
-                    heartButton.getElement().setAttribute("style", "margin-top: 10px;");
-                    header.add(heartButton);
-                }
+                FavouriteButton heartButton = new FavouriteButton(
+                        module, vendor, module.FACEBOOK_TOOLS.getUserId());
+                heartButton.addStyleName("pull-right");
+                heartButton.getElement().setAttribute("style", "margin-top: 10px;");
+                header.add(heartButton);
 
                 // Add a new review
                 HTMLPanel addReview = new HTMLPanel("<h3>Add a Review</h3>");

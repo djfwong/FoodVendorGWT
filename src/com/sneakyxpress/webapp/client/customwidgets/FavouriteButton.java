@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
 import com.sneakyxpress.webapp.shared.Favourite;
@@ -42,24 +43,33 @@ public class FavouriteButton extends Composite {
         starButton.addStyleName("btn");
         initWidget(starButton);
 
-        // Set the initial colour and status
-        favouritesService.getFavourite(id, new AsyncCallback<Favourite>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                module.addMessage(true, "Error loading favourite status. Reason: " + caught.getMessage());
-            }
-
-            @Override
-            public void onSuccess(Favourite result) {
-                if (result != null) {
-                    isFavourite = true;
-                    updateButtonColour();
+        if (FacebookTools.isLoggedIn()) {
+            // Set the initial colour and status
+            favouritesService.getFavourite(id, new AsyncCallback<Favourite>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    module.addMessage(true, "Error loading favourite status. Reason: " + caught.getMessage());
                 }
-            }
-        });
 
-        // Add a click handler
-        starButton.addClickHandler(new StarButtonClickHandler());
+                @Override
+                public void onSuccess(Favourite result) {
+                    if (result != null) {
+                        isFavourite = true;
+                        updateButtonColour();
+                    }
+                }
+            });
+
+            // Add a click handler
+            starButton.addClickHandler(new StarButtonClickHandler());
+        } else {
+            starButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    module.addMessage(false, "Please login to add a favourite vendor.");
+                }
+            });
+        }
     }
 
     public FavouriteButton(Sneaky_Xpress module, FoodVendor v, String userId) {
