@@ -23,7 +23,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 			.create(ClaimService.class);
 
 	private Sneaky_Xpress module;
-	
+
 	public ClaimsTab(Sneaky_Xpress module) {
 		this.module = module;
 	}
@@ -165,7 +165,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 				TruckClaim selected = selectionModel
 						.getSelectedObject();
 				if (selected != null) {
-					History.newItem(new ViewClaimContent(module).getPageStub() + "?" + selected.getFacebookId() + "?" + selected.getTruckId());
+					History.newItem(new ViewClaimContent(module).getPageStub());
 				}
 
 			}

@@ -59,6 +59,7 @@ public class ViewClaimContent extends Content {
 	@Override
 	public void getAndChangeContent(String input)
 	{
+		System.out.println("PageName: " + module.toString());
 		
 		HTMLPanel content = new HTMLPanel("");
 		HTMLPanel panel = new HTMLPanel("");
@@ -98,8 +99,6 @@ public class ViewClaimContent extends Content {
 					}
 
 				});
-
-				module.addMessage(false, "Claim status set to accepted");
 			}
 		});
 
@@ -140,8 +139,6 @@ public class ViewClaimContent extends Content {
 					}
 
 				});
-
-				module.addMessage(false, "Claim status set to rejected");
 			}
 		});
 
@@ -157,9 +154,6 @@ public class ViewClaimContent extends Content {
 		div.add(button);
 		return div;
 	}
-
-	// TODO
-	// Update VerifiedVendor table and check a truckID is not already there
 
 	// Change role of user to owner
 	public void updateUserRole()
@@ -192,6 +186,7 @@ public class ViewClaimContent extends Content {
 
 	}
 
+	// Update VerifiedVendor table 
 	public void addToVerifiedVendors()
 	{
 		VerifiedVendor v = new VerifiedVendor();
