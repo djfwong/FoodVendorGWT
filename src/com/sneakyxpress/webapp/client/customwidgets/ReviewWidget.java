@@ -29,20 +29,29 @@ public class ReviewWidget extends Composite {
         quote = new HTMLPanel("blockquote", "");
         initWidget(quote);
 
-        String vendorName = f.getVendorName();
-        if (vendorName.isEmpty()) {
-            vendorName = f.getVendorId();
-        }
-        credit = new HTMLPanel("small", f.getAuthorName() + " reviewing " + vendorName);
+        credit = new HTMLPanel("small", "");
 
         updateWidget(f.getRating(), f.getReview());
     }
 
     private void updateWidget(int stars, String text) {
+        // Update the review
         quote.clear();
         HTMLPanel review = new HTMLPanel("p", getStars(stars) + text);
         quote.add(review);
+
+        // Get the vendor name
+        String vendorName = f.getVendorName();
+        if (vendorName.isEmpty()) {
+            vendorName = f.getVendorId();
+        }
+
+        // Update the credit text
+        credit.clear();
+        credit.add(new InlineLabel(f.getAuthorName() + " reviewing " + vendorName));
         quote.add(credit);
+
+        // Add modify buttons to the credit text if applicable
         addModifyButtons();
     }
 
@@ -58,7 +67,6 @@ public class ReviewWidget extends Composite {
         final FacebookTools facebook = module.FACEBOOK_TOOLS;
 
         if (facebook.isLoggedIn() && f.getAuthorId().equals(facebook.getUserId())) {
-
             /*
              * Update functionality
              */
@@ -153,6 +161,7 @@ public class ReviewWidget extends Composite {
                                 @Override
                                 public void onSuccess(Void result) {
                                     module.addMessage(false, "Deletion of review was successful.");
+                                    ReviewWidget.this.removeFromParent();
                                     modal2.hide();
                                 }
                             });

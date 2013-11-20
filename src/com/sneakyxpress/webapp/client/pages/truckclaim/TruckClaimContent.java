@@ -1,395 +1,369 @@
 package com.sneakyxpress.webapp.client.pages.truckclaim;
 
-import java.util.logging.Level;
-
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.CheckBox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.WatermarkedTextBox;
 import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.Content;
 import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 
+import java.util.logging.Level;
+
 public class TruckClaimContent extends Content {
 
-	private static final String pageName = "Claim Food Truck";
-	private static final String pageStub = "claim";
+    // Umm this is a long string sorry about that
+    private static final String TERMS_OF_SERVICE =
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse justo mi, ultricies non lorem ut, tristique convallis tellus. In et egestas odio. Aliquam erat volutpat. Quisque diam metus, sollicitudin vitae eros a, malesuada consequat est. Praesent arcu eros, ultricies non tincidunt et, mattis at mauris. Duis lacinia pharetra nunc nec suscipit. Cras sit amet diam et diam luctus scelerisque. Nullam accumsan metus vel nunc condimentum, non dapibus nunc facilisis. Ut porta, mi tincidunt congue congue, ante ante gravida mi, eu volutpat nulla ligula at orci. In hac habitasse platea dictumst. In metus augue, fermentum a lectus eu, sollicitudin posuere magna. Etiam eleifend, est vitae sagittis dignissim, eros sapien consequat nisl, quis facilisis nunc neque tincidunt lorem. Praesent sapien velit, pulvinar vel interdum at, faucibus non magna.\n" +
+            "\n" +
+            "Nullam ac cursus libero. Pellentesque malesuada posuere ipsum, nec accumsan augue faucibus vel. Aliquam nunc dolor, varius ac pellentesque eget, volutpat in justo. Fusce congue lectus elit, non pharetra sapien sagittis ac. Fusce rutrum massa varius orci lacinia mollis. Pellentesque semper sem sed enim pulvinar viverra. Cras nec dui quam. ";
 
-	// A panel to hold messages in
-	private FlowPanel messages = new FlowPanel();
+    private static final String pageName = "Claim Food Truck";
+    private static final String pageStub = "claim";
+    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String NAME_PATTERN = "(\\w| )*";
+    private static final String PHONE_PATTERN = "^[0-9]*$";
+    private static final int STANDARD_MAX_FULL_NAME_LENGTH = 70;
+    private static final int STANDARD_MAX_EMAIL_LENGTH = 70;
+    private static final int STANDARD_PHONE_NUMBER_LENGTH = 10;
+    WatermarkedTextBox vendorIdBox;
+    WatermarkedTextBox fbIdBox;
+    WatermarkedTextBox nameBox;
+    WatermarkedTextBox emailBox;
+    WatermarkedTextBox phoneBox;
+    CheckBox checkTerms;
+    Button submitButton;
+    // Declare form
+    FormPanel form;
+    // A panel to hold messages in
+    private FlowPanel messages = new FlowPanel();
 
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public TruckClaimContent(Sneaky_Xpress module) {
+        super(module);
 
-	private static final String NAME_PATTERN = "(\\w| )*";
-	private static final String PHONE_PATTERN = "^[0-9]*$";
+        // Create a FormPanel
+        form = new FormPanel();
+    }
 
-	private static final int STANDARD_MAX_FULL_NAME_LENGTH = 70;
-	private static final int STANDARD_MAX_EMAIL_LENGTH = 70;
-	private static final int STANDARD_PHONE_NUMBER_LENGTH = 10;
+    @Override
+    public String getPageName() {
+        return pageName;
+    }
 
-	WatermarkedTextBox vendorIdBox;
-	WatermarkedTextBox fbIdBox;
-	WatermarkedTextBox nameBox;
-	WatermarkedTextBox emailBox;
-	WatermarkedTextBox phoneBox;
-	CheckBox checkTerms;
-	
-	Button submitButton;
-	
-	// Declare form
-	FormPanel form;
+    @Override
+    public String getPageStub() {
+        return pageStub;
+    }
 
-	public TruckClaimContent(Sneaky_Xpress module) {
-		super(module);
+    @Override
+    public void getAndChangeContent(final String input) {
 
-		// Create a FormPanel
-		form = new FormPanel();
-	}
+        HTMLPanel content = new HTMLPanel(""); // The base panel to hold all content
+        content.addStyleName("row-fluid");
 
-	@Override
-	public String getPageName()
-	{
-		return pageName;
-	}
+        // The left side will hold the form
+        HTMLPanel leftSide = new HTMLPanel("");
+        leftSide.addStyleName("span6");
 
-	@Override
-	public String getPageStub()
-	{
-		return pageStub;
-	}
+        // Because we're going to add a FileUpload widget, we'll need to set the
+        // form to use the POST method, and multipart MIME encoding.
+        form.setEncoding(FormPanel.ENCODING_MULTIPART);
+        form.setMethod(FormPanel.METHOD_POST);
+        System.out.println(GWT.getModuleBaseURL());
+        form.setAction(GWT.getModuleBaseURL() + "claimFormReq");
 
-	@Override
-	public void getAndChangeContent(final String input)
-	{
+        // Create TextBoxes, giving it a name so that it will be submitted.
+        // Vendor Id textbox - used to add to form
+        vendorIdBox = createTextBox("Vendor Key");
+        vendorIdBox.setName("vendorId");
+        vendorIdBox.setVisible(false);
+        vendorIdBox.setText(input);
 
-		HTMLPanel content = new HTMLPanel(""); // The base panel to hold all
-		// content
+        // Facebook Id textbox - used to add to form
+        fbIdBox = createTextBox("Vendor Key");
+        fbIdBox.setName("fbId");
+        fbIdBox.setVisible(false);
 
-		// Because we're going to add a FileUpload widget, we'll need to set the
-		// form to use the POST method, and multipart MIME encoding.
-		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		form.setMethod(FormPanel.METHOD_POST);
-		System.out.println(GWT.getModuleBaseURL());
-		form.setAction(GWT.getModuleBaseURL() + "claimFormReq");
+        // Name textbox
+        nameBox = createTextBox("Name On Business License");
+        nameBox.setName("nameBoxInput");
+        nameBox.setStyleName("input-block-level");
 
-		// Create TextBoxes, giving it a name so that it will be submitted.
-		// Vendor Id textbox - used to add to form
-		vendorIdBox = createTextBox("Vendor Key");
-		vendorIdBox.setName("vendorId");
-		vendorIdBox.setVisible(false);
-		vendorIdBox.setText(input);
+        // Email textbox
+        emailBox = createTextBox("Contact Email");
+        emailBox.setName("emailBoxInput");
+        emailBox.setStyleName("input-block-level");
 
-		// Facebook Id textbox - used to add to form
-		fbIdBox = createTextBox("Vendor Key");
-		fbIdBox.setName("fbId");
-		fbIdBox.setVisible(false);
+        // Phone textbox
+        phoneBox = createTextBox("Contact Number");
+        phoneBox.setName("phoneBoxInput");
+        phoneBox.setStyleName("input-block-level");
 
-		// Name textbox
-		nameBox = createTextBox("Name On Business License");
-		nameBox.setName("nameBoxInput");
+        // Terms and agreement checkbox
+        checkTerms = new CheckBox(
+                "I have read and agree to the Terms of Service.");
+        checkTerms.setName("checkTerms");
+        checkTerms.setValue(false);
+        checkTerms.setWidth("400px");
 
-		// Email textbox
-		emailBox = createTextBox("Contact Email");
-		emailBox.setName("emailBoxInput");
+        // Widget to set as form since can only add one widget to a form.
+        VerticalPanel componentPanel = new VerticalPanel();
 
-		// Phone textbox
-		phoneBox = createTextBox("Contact Number");
-		phoneBox.setName("phoneBoxInput");
+        // Add text boxes and checkbox
+        componentPanel.add(fbIdBox);
+        componentPanel.add(vendorIdBox);
+        componentPanel.add(nameBox);
+        componentPanel.add(emailBox);
+        componentPanel.add(phoneBox);
+        componentPanel.add(checkTerms);
 
-		// Terms and agreement checkbox
-		checkTerms = new CheckBox(
-				"I have read and agree to the Terms of Service.");
-		checkTerms.setName("checkTerms");
-		checkTerms.setValue(false);
-		checkTerms.setWidth("400px");
+        // Add a 'submit' button.
+        submitButton = new Button("Submit Request");
+        submitButton.addStyleName("btn btn-primary");
+        submitButton.addClickHandler(new ClickHandler() {
 
-		// Widget to set as form since can only add one widget to a form.
-		VerticalPanel componentPanel = new VerticalPanel();
+            @Override
+            public void onClick(ClickEvent event) {
+                form.submit();
+            }
+        });
 
-		// Add text boxes and checkbox
-		componentPanel.add(fbIdBox);
-		componentPanel.add(vendorIdBox);
-		componentPanel.add(nameBox);
-		componentPanel.add(emailBox);
-		componentPanel.add(phoneBox);
-		componentPanel.add(checkTerms);
+        // Add an event handler to the form. Form validation checks
+        form.addSubmitHandler(new FormPanel.SubmitHandler() {
+            public void onSubmit(SubmitEvent event) {
+                String name = nameBox.getText().trim();
+                String email = emailBox.getText().trim();
+                String number = phoneBox.getText().trim();
+                String facebookId = "";
 
-		// Add a 'submit' button.
-		submitButton = new Button("Submit Request");
-		submitButton.addStyleName("btn btn-primary");
-		submitButton.addClickHandler(new ClickHandler() {
+                // Check to make sure logged in user is making request
+                if (!FacebookTools.isLoggedIn()) {
+                    String errorMsg = "Sorry you're not logged in. Login or register a new account. ";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-			@Override
-			public void onClick(ClickEvent event)
-			{
-				form.submit();
-			}
-		});
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                }
 
-		// Add an event handler to the form. Form validation checks
-		form.addSubmitHandler(new FormPanel.SubmitHandler() {
-			public void onSubmit(SubmitEvent event)
-			{
-				String name = nameBox.getText().trim();
-				String email = emailBox.getText().trim();
-				String number = phoneBox.getText().trim();
-				String facebookId = "";
+                // Check for empty strings
+                else if (name.length() == 0 || email.length() == 0
+                        || number.length() == 0) {
+                    String errorMsg = "Sorry some of your inputs are empty. Please enter something.";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-				// Check to make sure logged in user is making request
-				if (!FacebookTools.isLoggedIn())
-				{
-					String errorMsg = "Sorry you're not logged in. Login or register a new account. ";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+                    // if/else to detect and find a bug (can't submit multiple forms)
+                    if (name.length() == 0) {
+                        logger.log(
+                                Level.INFO,
+                                "Name Empty. Contents of TextBox: "
+                                        + nameBox.getText());
+                        nameBox.setFocus(true);
+                    } else if (email.length() == 0) {
+                        logger.log(
+                                Level.INFO,
+                                "Email Empty. Contents of TextBox: "
+                                        + emailBox.getText());
+                        emailBox.setFocus(true);
+                    } else if (number.length() == 0) {
+                        logger.log(Level.INFO,
+                                "Number Empty. Contents of TextBox: "
+                                        + phoneBox.getText());
+                        phoneBox.setFocus(true);
+                    } else {
+                        logger.log(Level.SEVERE, "Unfound bug");
+                    }
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                }
 
-				// Check for empty strings
-				else if (name.length() == 0 || email.length() == 0
-						|| number.length() == 0)
-				{
-					String errorMsg = "Sorry some of your inputs are empty. Please enter something.";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+                // Check name length does not exceed 70
+                else if (name.length() > STANDARD_MAX_FULL_NAME_LENGTH) {
+                    String errorMsg = "Sorry, " + name + " is too long. "
+                            + "Please ensure your full name input is within "
+                            + STANDARD_MAX_FULL_NAME_LENGTH + " characters";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-					// if/else to detect and find a bug (can't submit multiple forms)
-					if (name.length() == 0)
-					{
-						logger.log(
-								Level.INFO,
-								"Name Empty. Contents of TextBox: "
-										+ nameBox.getText());
-						nameBox.setFocus(true);
-					}
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                } else if (!name.matches(NAME_PATTERN)) {
+                    String errorMsg = "Sorry, \""
+                            + name
+                            + "\" contains invalid characters. "
+                            + "Only letters and spaces are allowed. Please check your name input and try again.";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-					else if (email.length() == 0)
-					{
-						logger.log(
-								Level.INFO,
-								"Email Empty. Contents of TextBox: "
-										+ emailBox.getText());
-						emailBox.setFocus(true);
-					}
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                }
 
-					else if (number.length() == 0)
-					{
-						logger.log(Level.INFO,
-								"Number Empty. Contents of TextBox: "
-										+ phoneBox.getText());
-						phoneBox.setFocus(true);
-					}
+                // Check email length does not exceed 255
+                else if (email.length() > STANDARD_MAX_EMAIL_LENGTH) {
+                    String errorMsg = "Sorry, " + email + " is too long. "
+                            + "Please ensure your email input is within "
+                            + STANDARD_MAX_EMAIL_LENGTH + " characters";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-					else
-					{
-						logger.log(Level.SEVERE, "Unfound bug");
-					}
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                } else if (!email.matches(EMAIL_PATTERN)) {
+                    String errorMsg = "Sorry, \"" + email
+                            + "\" contains invalid characters. "
+                            + "Please check your email input and try again.";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                }
 
-				// Check name length does not exceed 70
-				else if (name.length() > STANDARD_MAX_FULL_NAME_LENGTH)
-				{
-					String errorMsg = "Sorry, " + name + " is too long. "
-							+ "Please ensure your full name input is within "
-							+ STANDARD_MAX_FULL_NAME_LENGTH + " characters";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+                // Check phone number input only contains numbers
+                else if (!number.matches(PHONE_PATTERN)) {
+                    String errorMsg = "Sorry, \""
+                            + number
+                            + "\" contains invalid characters. "
+                            + "Only numbers are allowed. Please check your phone number input and try again.";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                }
 
-				else if (!name.matches(NAME_PATTERN))
-				{
-					String errorMsg = "Sorry, \""
-							+ name
-							+ "\" contains invalid characters. "
-							+ "Only letters and spaces are allowed. Please check your name input and try again.";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+                // Phone number must have 10 digits
+                else if (number.length() > STANDARD_PHONE_NUMBER_LENGTH
+                        || number.length() < STANDARD_PHONE_NUMBER_LENGTH) {
+                    String errorMsg = "Please ensure your phone number input "
+                            + number + " contains "
+                            + STANDARD_PHONE_NUMBER_LENGTH + " numbers.";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                } else if (!checkTerms.getValue()) {
+                    String errorMsg = "Sorry, please check off terms and agreement box and retry submitting your request again";
+                    module.addMessage(true, errorMsg);
+                    addMessage(true, errorMsg);
 
-				// Check email length does not exceed 255
-				else if (email.length() > STANDARD_MAX_EMAIL_LENGTH)
-				{
-					String errorMsg = "Sorry, " + email + " is too long. "
-							+ "Please ensure your email input is within "
-							+ STANDARD_MAX_EMAIL_LENGTH + " characters";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+                    // Re-enable button to allow user to resubmit form with
+                    // changes
+                    submitButton.setEnabled(true);
+                    event.cancel();
+                } else {
+                    // All checks passed, grab user's ID
+                    facebookId = FacebookTools.getUserId();
+                    fbIdBox.setText(facebookId);
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+                    // Disable button to disallow users to resubmit same form
+                    // twice
+                    submitButton.setEnabled(false);
+                }
+            }
+        });
 
-				else if (!email.matches(EMAIL_PATTERN))
-				{
-					String errorMsg = "Sorry, \"" + email
-							+ "\" contains invalid characters. "
-							+ "Please check your email input and try again.";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+        form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+            public void onSubmitComplete(SubmitCompleteEvent event) {
+                // When the form submission is successfully completed, this
+                // event is
+                // fired. Assuming the service returned a response of type
+                // text/html,
+                // we can get the result text here (see the FormPanel
+                // documentation for
+                // further explanation).
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+                logger.log(Level.INFO, event.getResults());
 
-				// Check phone number input only contains numbers
-				else if (!number.matches(PHONE_PATTERN))
-				{
-					String errorMsg = "Sorry, \""
-							+ number
-							+ "\" contains invalid characters. "
-							+ "Only numbers are allowed. Please check your phone number input and try again.";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+                // Display message to user
+                module.addMessage(false,
+                        "Your request has been submitted to our administrators.");
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+                // Clear form
+                form.reset();
 
-				// Phone number must have 10 digits
-				else if (number.length() > STANDARD_PHONE_NUMBER_LENGTH
-						|| number.length() < STANDARD_PHONE_NUMBER_LENGTH)
-				{
-					String errorMsg = "Please ensure your phone number input "
-							+ number + " contains "
-							+ STANDARD_PHONE_NUMBER_LENGTH + " numbers.";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+                // Re-direct to home page since it's faster than re-directing to
+                // user profile page
+                History.newItem(new GreetingContent(module).getPageStub());
+            }
+        });
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+        componentPanel.add(getButtonWidget(submitButton));
 
-				else if (!checkTerms.getValue())
-				{
-					String errorMsg = "Sorry, please check off terms and agreement box and retry submitting your request again";
-					module.addMessage(true, errorMsg);
-					addMessage(true, errorMsg);
+        form.setWidget(componentPanel);
+        leftSide.add(form);
 
-					// Re-enable button to allow user to resubmit form with
-					// changes
-					submitButton.setEnabled(true);
-					event.cancel();
-				}
+        // The right side will hold the ToS
+        HTMLPanel rightSide = new HTMLPanel("<p class=\"well\"><strong>Terms of Service:</strong> "
+                + TERMS_OF_SERVICE + "</p>");
+        rightSide.addStyleName("span6");
 
-				else
-				{
-					// All checks passed, grab user's ID
-					facebookId = FacebookTools.getUserId();
-					fbIdBox.setText(facebookId);
+        // Put it all together
+        content.add(leftSide);
+        content.add(rightSide);
 
-					// Disable button to disallow users to resubmit same form
-					// twice
-					submitButton.setEnabled(false);
-				}
-			}
-		});
+        // Change the content
+        module.changeContent(content);
+    }
 
-		form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-			public void onSubmitComplete(SubmitCompleteEvent event)
-			{
-				// When the form submission is successfully completed, this
-				// event is
-				// fired. Assuming the service returned a response of type
-				// text/html,
-				// we can get the result text here (see the FormPanel
-				// documentation for
-				// further explanation).
+    // Returns a text box with the specified watermark for phone number input
+    public WatermarkedTextBox createTextBox(String watermark) {
 
-				logger.log(Level.INFO, event.getResults());
+        final WatermarkedTextBox input = new WatermarkedTextBox();
 
-				// Display message to user
-				module.addMessage(false,
-						"Your request has been submitted to our administrators.");
+        input.setWatermark(watermark);
 
-				// Clear form
-				form.reset();
+        input.setWidth("400px");
 
-				// Re-direct to home page since it's faster than re-directing to
-				// user profile page
-				History.newItem(new GreetingContent(module).getPageStub());		
-			}
-		});
+        return input;
+    }
 
-		componentPanel.add(getButtonWidget(submitButton));
+    // Logs error messages
+    public void addMessage(boolean error, String info) {
+        // Create & add the message
+        String type = error ? "alert-danger" : "alert-info";
+        HTML alert = new HTML(
+                "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
+                        + "&times;</button>" + info);
+        alert.addStyleName("alert " + type + " fade");
+        messages.insert(alert, 0); // Add the message to the top
+        alert.addStyleName("in");
 
-		form.setWidget(componentPanel);
-		content.add(form);
+        logger.log(Level.INFO, "addMessage: " + info);
+    }
 
-		// Change the content
-		module.changeContent(form);
-	}
-
-	// Returns a text box with the specified watermark for phone number input
-	public WatermarkedTextBox createTextBox(String watermark)
-	{
-
-		final WatermarkedTextBox input = new WatermarkedTextBox();
-
-		input.setWatermark(watermark);
-
-		input.setWidth("400px");
-
-		return input;
-	}
-
-	// Logs error messages
-	public void addMessage(boolean error, String info)
-	{
-		// Create & add the message
-		String type = error ? "alert-danger" : "alert-info";
-		HTML alert = new HTML(
-				"<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
-						+ "&times;</button>" + info);
-		alert.addStyleName("alert " + type + " fade");
-		messages.insert(alert, 0); // Add the message to the top
-		alert.addStyleName("in");
-
-		logger.log(Level.INFO, "addMessage: " + info);
-	}
-
-	// Creates button with space in between panels
-	private HTMLPanel getButtonWidget(Button button)
-	{
-		HTMLPanel div = new HTMLPanel("<br>");
-		div.add(button);
-		return div;
-	}
+    // Creates button with space in between panels
+    private HTMLPanel getButtonWidget(Button button) {
+        HTMLPanel div = new HTMLPanel("<br>");
+        div.add(button);
+        return div;
+    }
 }
