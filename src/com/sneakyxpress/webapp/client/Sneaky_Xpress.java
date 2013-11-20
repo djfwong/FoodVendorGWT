@@ -95,11 +95,12 @@ public class Sneaky_Xpress implements EntryPoint {
      * @param title     The title of the modal
      * @param body      The content of the modal
      */
-    public void addModal(String title, Widget body) {
+    public Modal addModal(String title, Widget body) {
         Modal modal = new Modal(true, true);
         modal.setTitle(title);
         modal.add(body);
         modal.show();
+        return modal;
     }
 
 

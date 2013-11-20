@@ -66,7 +66,7 @@ public class OwnerReviewsTab extends AbstractNavbarTab {
 
                     Collections.sort(result, new FeedbackComparator());
                     for (VendorFeedback f : result) {
-                        feedback.add(new ReviewWidget(f));
+                        feedback.add(new ReviewWidget(module, f));
                     }
                 }
             }

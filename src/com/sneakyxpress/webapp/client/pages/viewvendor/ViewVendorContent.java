@@ -139,7 +139,7 @@ public class ViewVendorContent extends Content {
                             showReviews.add(response);
                         } else {
                             for (VendorFeedback v : result) {
-                                showReviews.add(new ReviewWidget(v));
+                                showReviews.add(new ReviewWidget(module, v));
                             }
                         }
                     }

@@ -97,7 +97,7 @@ public class VendorFeedback implements IsSerializable {
         this.authorName = authorName;
     }
 
-    public Long getadId() {
+    public Long getId() {
         return id;
     }
 

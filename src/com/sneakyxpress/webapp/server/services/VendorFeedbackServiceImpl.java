@@ -18,8 +18,6 @@ import java.util.logging.Logger;
  */
 public class VendorFeedbackServiceImpl extends RemoteServiceServlet
         implements VendorFeedbackService {
-    private final Logger logger = Logger.getLogger("");
-
 
     @Override
     public void persistVendorFeedback(VendorFeedback f) throws IllegalArgumentException {
@@ -32,15 +30,25 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
 
         // Replace an existing review if there is one
         if (result != null) {
-            logger.log(Level.INFO, "persistVendorFeedback: replacing old review with new one");
             pm.deletePersistent(result);
-        } else {
-            logger.log(Level.INFO, "persistVendorFeedback: creating a new review");
         }
 
         pm.makePersistent(f);
 
         pm.close();
+    }
+
+    @Override
+    public void deleteVendorFeedback(Long feedbackId) throws IllegalArgumentException {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        Query q = pm.newQuery("SELECT UNIQUE FROM " + VendorFeedback.class.getName()
+                + " WHERE id == \"" + feedbackId + "\"");
+        VendorFeedback result = (VendorFeedback) q.execute();
+
+        if (result != null) {
+            pm.deletePersistent(result);
+        }
     }
 
     @Override

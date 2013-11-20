@@ -18,4 +18,6 @@ public interface VendorFeedbackServiceAsync {
     void getVendorReviews(String vendorId, AsyncCallback<List<VendorFeedback>> async);
 
     void persistVendorFeedback(VendorFeedback f, AsyncCallback<Void> async);
+
+    void deleteVendorFeedback(Long feedbackId, AsyncCallback<Void> async);
 }

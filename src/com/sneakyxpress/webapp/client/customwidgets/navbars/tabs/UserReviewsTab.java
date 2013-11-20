@@ -60,7 +60,7 @@ public class UserReviewsTab extends AbstractNavbarTab {
 
                             Collections.sort(result, new FeedbackComparator());
                             for (VendorFeedback f : result) {
-                                reviews.add(new ReviewWidget(f));
+                                reviews.add(new ReviewWidget(module, f));
                             }
                         }
                     }
