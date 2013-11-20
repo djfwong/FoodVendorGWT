@@ -46,7 +46,7 @@ ClaimService {
 			tc.setAccepted(true);
 
 			//mark as claim viewed as well
-			setViewed(pm, id);
+			setViewed(tc);
 
 			pm.close();
 			return true;
@@ -70,7 +70,7 @@ ClaimService {
 			tc.setAccepted(false);
 
 			//mark as claim viewed as well
-			setViewed(pm, id);
+			setViewed(tc);
 
 			pm.close();
 			return true;
@@ -102,9 +102,8 @@ ClaimService {
 
 	}
 
-	public void setViewed(PersistenceManager pm, long id){
+	public void setViewed(TruckClaim tc){
 
-		TruckClaim tc = (TruckClaim) pm.getObjectById(id);
 		tc.setViewed(true);
 
 	}
