@@ -6,6 +6,6 @@ import com.sneakyxpress.webapp.shared.User;
 public interface PersistUserServiceAsync {
     void persistNewUserToDatastore(User user, AsyncCallback<Boolean> async);
 
-	void setToAdmin(String fbId, AsyncCallback<Boolean> callback);
+	void changeUserStatus(String fbId, int type, AsyncCallback<Boolean> callback);
 }
 	

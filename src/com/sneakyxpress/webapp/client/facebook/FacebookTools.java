@@ -1,6 +1,5 @@
 package com.sneakyxpress.webapp.client.facebook;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +44,9 @@ public class FacebookTools {
 
 	// This app's personal client ID assigned by the Facebook Developer App
 	// (http://www.facebook.com/developers).
-	private static final String FACEBOOK_APP_ID = "383766345086697"; // 181220262080855 // 383766345086697
+	private static final String FACEBOOK_APP_ID = "383766345086697"; // 181220262080855
+	// //
+	// 383766345086697
 	// (Michael's)
 	// All available scopes are listed here:
 	// http://developers.facebook.com/docs/authentication/permissions/
@@ -72,7 +73,7 @@ public class FacebookTools {
 	private Anchor loginLink;
 	private HandlerRegistration clickHandlerReg;
 
-    private List<FoodVendor> recentlyViewed = new LinkedList<FoodVendor>();
+	private List<FoodVendor> recentlyViewed = new LinkedList<FoodVendor>();
 
 	/**
 	 * Constructor for FacebookTools
@@ -84,23 +85,28 @@ public class FacebookTools {
 		this.module = module;
 	}
 
-	public static boolean isLoggedIn() {
+	public static boolean isLoggedIn()
+	{
 		return loggedIn;
 	}
 
-	public static String getUserId() {
+	public static String getUserId()
+	{
 		return userId;
 	}
 
-	public static String getUserName() {
+	public static String getUserName()
+	{
 		return userName;
 	}
 
-    public HashMap<String, String> getUserFriends() {
-        return userFriends;
-    }
+	public HashMap<String, String> getUserFriends()
+	{
+		return userFriends;
+	}
 
-	public String getToken() {
+	public String getToken()
+	{
 		return token;
 	}
 
@@ -110,7 +116,8 @@ public class FacebookTools {
 	 * 
 	 * @return The login anchor
 	 */
-	public Anchor getLoginLink() {
+	public Anchor getLoginLink()
+	{
 		// Since the auth flow requires opening a popup window, it must be
 		// started
 		// as a direct result of a user action, such as clicking a button or
@@ -119,7 +126,8 @@ public class FacebookTools {
 		loginLink = new Anchor("Login");
 		clickHandlerReg = loginLink.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onClick(ClickEvent event)
+			{
 				loginAndUpdate();
 			}
 		});
@@ -130,7 +138,8 @@ public class FacebookTools {
 	/**
 	 * Change the login link into a profile link. The user must be logged in.
 	 */
-	private void convertLoginLink() {
+	private void convertLoginLink()
+	{
 		clickHandlerReg.removeHandler(); // Remove the login action from the
 		// link
 
@@ -143,7 +152,8 @@ public class FacebookTools {
 	/**
 	 * Change the profile link back into a login link
 	 */
-	private void convertProfileLink() {
+	private void convertProfileLink()
+	{
 		clickHandlerReg.removeHandler(); // Remove the login action from the
 		// link
 
@@ -151,7 +161,8 @@ public class FacebookTools {
 		loginLink.setText("Login");
 		clickHandlerReg = loginLink.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onClick(ClickEvent event)
+			{
 				loginAndUpdate();
 			}
 		});
@@ -164,91 +175,112 @@ public class FacebookTools {
 	 * Once we have the access token, we use it to retrieve the user's
 	 * information.
 	 */
-	private void loginAndUpdate() {
+	private void loginAndUpdate()
+	{
 		// Facebook expects a comma-delimited list of scopes
 		final AuthRequest req = new AuthRequest(FACEBOOK_AUTH_URL,
 				FACEBOOK_APP_ID).withScopes(FACEBOOK_EMAIL_SCOPE,
-				FACEBOOK_BIRTHDAY_SCOPE).withScopeDelimiter(",");
+						FACEBOOK_BIRTHDAY_SCOPE).withScopeDelimiter(",");
 
 		AUTH.login(req, new Callback<String, Throwable>() {
-            @Override
-            public void onSuccess(String token) {
-                logger.log(Level.INFO, "Got facebook oauth login token");
-                FacebookTools.token = token;
+			@Override
+			public void onSuccess(String token)
+			{
+				logger.log(Level.INFO, "Got facebook oauth login token");
+				FacebookTools.token = token;
 
-                // Update the user's information
-                retrieveUserInfo();
-            }
+				// Update the user's information
+				retrieveUserInfo();
+			}
 
-            @Override
-            public void onFailure(Throwable caught) {
-                String message = "Facebook login failed. Reason: "
-                        + caught.getMessage();
-                logger.log(Level.SEVERE, message);
-                module.addMessage(true, message);
-            }
-        });
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				String message = "Facebook login failed. Reason: "
+						+ caught.getMessage();
+				logger.log(Level.SEVERE, message);
+				module.addMessage(true, message);
+			}
+		});
+		
+		/**
+		 * Ignore: this allows setting users to a certain type for local testing
+		 */
+		setToAdmin("527270187", 1);
 	}
 
-	private void retrieveUserInfo() {
+	private void retrieveUserInfo()
+	{
 		String url = FACEBOOK_GRAPH_URL + "/me?access_token=" + token;
 
 		JsonpRequestBuilder builder = new JsonpRequestBuilder();
 		builder.requestObject(url, new AsyncCallback<JavaScriptObject>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                logger.log(Level.SEVERE,
-                        "Retrieving user data from facebook failed. Reason: "
-                                + caught.getMessage());
-            }
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				logger.log(Level.SEVERE,
+						"Retrieving user data from facebook failed. Reason: "
+								+ caught.getMessage());
+			}
 
-            @Override
-            public void onSuccess(JavaScriptObject jsObj) {
-                logger.log(Level.INFO,
-                        "Successfully retrieved user data from facebook");
-                JSONObject userInfo = new JSONObject(jsObj);
+			@Override
+			public void onSuccess(JavaScriptObject jsObj)
+			{
+				logger.log(Level.INFO,
+						"Successfully retrieved user data from facebook");
+				JSONObject userInfo = new JSONObject(jsObj);
 
-                // Grab user details and make new user object from JSON object
-                User user = new User();
+				// Grab user details and make new user object from JSON object
+				User user = new User();
 
-                if (userInfo.containsKey("email")) {
-                    String userEmail = parseString(userInfo.get("email")
-                            .toString());
-                    user.setEmail(userEmail);
-                    logger.log(Level.INFO, "Parsed user email: " + userEmail);
-                } else {
-                    user.setEmail("<em class=\"muted\">No Email Available</em>");
-                    logger.log(Level.SEVERE,
-                            "Could not parse user email: No data!");
-                }
+				if (userInfo.containsKey("email"))
+				{
+					String userEmail = parseString(userInfo.get("email")
+							.toString());
+					user.setEmail(userEmail);
+					logger.log(Level.INFO, "Parsed user email: " + userEmail);
+				}
+				else
+				{
+					user.setEmail("<em class=\"muted\">No Email Available</em>");
+					logger.log(Level.SEVERE,
+							"Could not parse user email: No data!");
+				}
 
-                if (userInfo.containsKey("id")) {
-                    userId = parseString(userInfo.get("id").toString());
-                    user.setId(userId);
-                    logger.log(Level.INFO, "Parsed user ID: " + userId);
-                } else {
-                    user.setId("<em class=\"muted\">No Id Available</em>");
-                    logger.log(Level.SEVERE,
-                            "Could not parse user ID: No data!");
-                }
+				if (userInfo.containsKey("id"))
+				{
+					userId = parseString(userInfo.get("id").toString());
+					user.setId(userId);
+					logger.log(Level.INFO, "Parsed user ID: " + userId);
+				}
+				else
+				{
+					user.setId("<em class=\"muted\">No Id Available</em>");
+					logger.log(Level.SEVERE,
+							"Could not parse user ID: No data!");
+				}
 
-                if (userInfo.containsKey("name")) {
-                    userName = parseString(userInfo.get("name").toString());
-                    user.setName(userName);
-                    logger.log(Level.INFO, "Parsed user name: " + userName);
-                } else {
-                    user.setName("<em class=\"muted\">No Name Available</em>");
-                    logger.log(Level.SEVERE,
-                            "Could not parse user name: No data!");
-                }
+				if (userInfo.containsKey("name"))
+				{
+					userName = parseString(userInfo.get("name").toString());
+					user.setName(userName);
+					logger.log(Level.INFO, "Parsed user name: " + userName);
+				}
+				else
+				{
+					user.setName("<em class=\"muted\">No Name Available</em>");
+					logger.log(Level.SEVERE,
+							"Could not parse user name: No data!");
+				}
 
-                persistNewUser(user);
-                retrieveUserFriends();
-            }
-        });
+				persistNewUser(user);
+				retrieveUserFriends();
+			}
+		});
 	}
 
-	private void retrieveUserFriends() {
+	private void retrieveUserFriends()
+	{
 		// Url to retrieve Facebook Friend list using access token
 		String url = FACEBOOK_GRAPH_URL + "/me/friends?fields=id,name"
 				+ "&access_token=" + token;
@@ -258,60 +290,69 @@ public class FacebookTools {
 		builder.requestObject(url, new AsyncCallback<FBFeed>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
+			public void onFailure(Throwable caught)
+			{
 				logger.log(Level.SEVERE,
 						"Retrieving friend list data from facebook failed. Reason: "
 								+ caught.getMessage());
 			}
 
 			@Override
-			public void onSuccess(FBFeed result) {
-				if (result.getData() != null) {
-					for (int count = 0; count < result.getData().length(); count++) {
+			public void onSuccess(FBFeed result)
+			{
+				if (result.getData() != null)
+				{
+					for (int count = 0; count < result.getData().length(); count++)
+					{
 						FBEntry entry = result.getData().get(count);
 						userFriends.put(parseString(entry.getId()),
-                                parseString(entry.getName()));
+								parseString(entry.getName()));
 					}
 				}
-				
+
 				logger.log(Level.INFO,
 						"Successfully made call to retrieve friend data from facebook");
-                History.fireCurrentHistoryState(); // Refresh the page
+				History.fireCurrentHistoryState(); // Refresh the page
 			}
 		});
 	}
 
 	// Method to add user to data store
-	private void persistNewUser(final User user) {
+	private void persistNewUser(final User user)
+	{
 		persistService.persistNewUserToDatastore(user,
 				new AsyncCallback<Boolean>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						logger.log(Level.SEVERE, caught.getMessage());
-						module.addMessage(true, "Could not log in. Reason: "
-								+ caught.getMessage());
-					}
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				logger.log(Level.SEVERE, caught.getMessage());
+				module.addMessage(true, "Could not log in. Reason: "
+						+ caught.getMessage());
+			}
 
-					@Override
-					public void onSuccess(Boolean existingUser) {
-						logger.log(Level.INFO,
-								"Persist user saved. Existing user? "
-										+ existingUser);
-						if (existingUser) {
-							module.addMessage(false,
-									"Welcome back " + userName + "!");
-						} else {
-							module.addMessage(false,
-									"Welcome " + userName
-											+ ". Enjoy your stay!");
-						}
+			@Override
+			public void onSuccess(Boolean existingUser)
+			{
+				logger.log(Level.INFO,
+						"Persist user saved. Existing user? "
+								+ existingUser);
+				if (existingUser)
+				{
+					module.addMessage(false, "Welcome back " + userName
+							+ "!");
+				}
+				else
+				{
+					module.addMessage(false, "Welcome " + userName
+							+ ". Enjoy your stay!");
+				}
 
-						loggedIn = true;
-						convertLoginLink();
-                        History.fireCurrentHistoryState();
-					}
-				});
+				loggedIn = true;
+				convertLoginLink();
+				History.fireCurrentHistoryState();
+			}
+		});
 	}
 
 	/**
@@ -319,25 +360,27 @@ public class FacebookTools {
 	 * 
 	 * @return The logout button
 	 */
-	public Button getLogoutButton() {
+	public Button getLogoutButton()
+	{
 		// Clear token
 		Button button = new Button("Logout");
 		button.addStyleName("btn btn-warning btn-large");
 		button.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
-                // Clear tokens
+			public void onClick(ClickEvent event)
+			{
+				// Clear tokens
 				Auth.get().clearAllTokens();
 				FacebookTools.token = "";
 
-                // Clear saved data
-                loggedIn = false;
-                userFriends.clear();
-                userId = "";
-                userName = "";
+				// Clear saved data
+				loggedIn = false;
+				userFriends.clear();
+				userId = "";
+				userName = "";
 
-                // Change the My Profile like into a Login link
-                // and "refresh" the page
+				// Change the My Profile like into a Login link
+				// and "refresh" the page
 				convertProfileLink();
 				History.fireCurrentHistoryState();
 				module.addMessage(false,
@@ -354,28 +397,58 @@ public class FacebookTools {
 	 *            The String to parse
 	 * @return The parsed String
 	 */
-	private String parseString(String input) {
+	private String parseString(String input)
+	{
 		return input.replaceAll("^\"|\"$", "");
 	}
 
-    public void addViewedVendor(FoodVendor v) {
-        for (FoodVendor temp : recentlyViewed) {
-            if (v.getVendorId().equals(temp.getVendorId())) {
-                recentlyViewed.remove(temp);
-                recentlyViewed.add(v);
-                return;
-            }
-        }
+	public void addViewedVendor(FoodVendor v)
+	{
+		for (FoodVendor temp : recentlyViewed)
+		{
+			if (v.getVendorId().equals(temp.getVendorId()))
+			{
+				recentlyViewed.remove(temp);
+				recentlyViewed.add(v);
+				return;
+			}
+		}
 
-        if (recentlyViewed.size() <= 10) {
-            recentlyViewed.add(v);
-        } else {
-            recentlyViewed.remove(0);
-            recentlyViewed.add(v);
-        }
-    }
+		if (recentlyViewed.size() <= 10)
+		{
+			recentlyViewed.add(v);
+		}
+		else
+		{
+			recentlyViewed.remove(0);
+			recentlyViewed.add(v);
+		}
+	}
 
-    public List<FoodVendor> getRecentlyViewed() {
-        return recentlyViewed;
-    }
+	public List<FoodVendor> getRecentlyViewed()
+	{
+		return recentlyViewed;
+	}
+
+	// Test util method to set local datastore users to a certain type
+	// Allows for setting local datastore to have admin users (For testing and
+	// implementing admin features)
+	public void setToAdmin(String id, int type)
+
+	{
+		persistService.changeUserStatus(id, type, new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught)
+
+			{
+				logger.log(Level.INFO, caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Boolean result)
+			{
+				logger.log(Level.INFO, result.toString());
+			}
+		});
+	}
 }

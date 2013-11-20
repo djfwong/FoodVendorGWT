@@ -46,13 +46,19 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 		return existingMember;
 	}
 
-	public boolean setToAdmin(String fbId)
+	/**
+	 * 
+	 * @param fbId
+	 * @param type 1-Admin, 2-Owner, 3-User, 4-Admin&Owner as defined in User class
+	 * @return
+	 */
+	public boolean changeUserStatus(String fbId, int type)
 	{
 		try
 		{
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			User user = pm.getObjectById(User.class, fbId);
-			user.setType(User.ADMINISTRATOR);
+			user.setType(type);
 			pm.close();
 			return true;
 		}
@@ -61,4 +67,6 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 			return false;
 		}
 	}
+	
+
 }
