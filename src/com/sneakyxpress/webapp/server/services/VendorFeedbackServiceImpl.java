@@ -56,6 +56,8 @@ public class VendorFeedbackServiceImpl extends RemoteServiceServlet
         if (result != null) {
             pm.deletePersistent(result);
         }
+
+        pm.close();
     }
 
     @Override

@@ -13,6 +13,9 @@ import java.util.List;
  */
 @RemoteServiceRelativePath("getFavourites")
 public interface FavouritesService extends RemoteService {
+    void persistFavourite(Favourite f) throws IllegalArgumentException;
+    void removeFavourite(String id) throws IllegalArgumentException;
+    Favourite getFavourite(String id) throws IllegalArgumentException;
     List<Favourite> getUserFavourites(String userId) throws IllegalArgumentException;
     int getNumVendorFavourites(String vendorId) throws IllegalArgumentException;
 }

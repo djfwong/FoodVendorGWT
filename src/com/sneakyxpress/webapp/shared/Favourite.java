@@ -20,8 +20,7 @@ public class Favourite implements IsSerializable {
 	@Id
     @Persistent
     @PrimaryKey
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String id;
 
 	// User Id
     @Persistent
@@ -56,5 +55,13 @@ public class Favourite implements IsSerializable {
 
     public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

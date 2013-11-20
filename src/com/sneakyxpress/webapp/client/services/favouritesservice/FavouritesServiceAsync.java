@@ -15,4 +15,10 @@ public interface FavouritesServiceAsync {
             throws IllegalArgumentException;
 
     void getNumVendorFavourites(String vendorId, AsyncCallback<Integer> async);
+
+    void persistFavourite(Favourite f, AsyncCallback<Void> async);
+
+    void getFavourite(String id, AsyncCallback<Favourite> async);
+
+    void removeFavourite(String id, AsyncCallback<Void> async);
 }

@@ -2,6 +2,7 @@ package com.sneakyxpress.webapp.client.pages.viewvendor;
 
 import java.util.List;
 
+import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
 import com.sneakyxpress.webapp.shared.FormValidator;
 import org.cobogw.gwt.user.client.ui.Rating;
 
@@ -162,6 +163,14 @@ public class ViewVendorContent extends Content {
                         }
                     }
                 });
+
+                // Add the favourites button
+                if (module.FACEBOOK_TOOLS.isLoggedIn()) {
+                    FavouriteButton heartButton = new FavouriteButton(
+                            module, vendor, module.FACEBOOK_TOOLS.getUserId());
+                    heartButton.addStyleName("pagination-centered");
+                    textInfo.add(heartButton);
+                }
 
                 // Add a new review
                 HTMLPanel addReview = new HTMLPanel("<h3>Add a Review</h3>");
