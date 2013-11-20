@@ -28,9 +28,8 @@ public class FavouritesServiceImpl extends RemoteServiceServlet
         Query q = pm.newQuery("SELECT UNIQUE FROM " + Favourite.class.getName()
                 + " WHERE id == \"" + f.getId() + "\"");
         Favourite result = (Favourite) q.execute();
-        System.out.println("1");
+
         if (result == null) {
-            System.out.println("2");
             pm.makePersistent(f);
         }
 
@@ -43,9 +42,8 @@ public class FavouritesServiceImpl extends RemoteServiceServlet
         Query q = pm.newQuery("SELECT UNIQUE FROM " + Favourite.class.getName()
                 + " WHERE id == \"" + id + "\"");
         Favourite result = (Favourite) q.execute();
-        System.out.println("3");
+
         if (result != null) {
-            System.out.println("4");
             pm.deletePersistent(result);
         }
 
@@ -58,7 +56,6 @@ public class FavouritesServiceImpl extends RemoteServiceServlet
         Query q = pm.newQuery("SELECT UNIQUE FROM " + Favourite.class.getName()
                 + " WHERE id == \"" + id + "\"");
         Favourite result = (Favourite) q.execute();
-        System.out.println("4");
         pm.close();
 
         return result;

@@ -3,13 +3,16 @@ package com.sneakyxpress.webapp.client.customwidgets.navbars.tabs;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
 import com.sneakyxpress.webapp.shared.Favourite;
+import com.sneakyxpress.webapp.shared.FoodVendor;
 import com.sneakyxpress.webapp.shared.User;
 
 import java.util.List;
@@ -58,7 +61,7 @@ public class FavouritesTab extends AbstractNavbarTab {
                             favourites.add(header);
 
                             for (Favourite f : result) {
-                                favourites.add(getFavouriteWidget(f));
+                                favourites.add(getVendorWidget(f));
                             }
                         }
                     }
@@ -67,19 +70,31 @@ public class FavouritesTab extends AbstractNavbarTab {
         return favourites;
     }
 
-    private HTMLPanel getFavouriteWidget(Favourite f) {
+    private HTMLPanel getVendorWidget(Favourite f) {
         String name = f.getVendorName();
         if (name.isEmpty()) {
-            name = "<em>No Name Available</em>";
+            name = "<em class=\"muted\">No Name Available</em>";
         }
 
-        HTMLPanel vendor = new HTMLPanel("p", name + " ");
+        HTMLPanel favourite = new HTMLPanel("p", name + " ");
+        favourite.addStyleName("lead");
 
-        Anchor vendorLink = new Anchor("View");
+        // Group of buttons
+        HTMLPanel buttonGroup = new HTMLPanel("");
+        buttonGroup.addStyleName("pull-right btn-group");
+
+        // The heart button
+        buttonGroup.add(
+                new FavouriteButton(module, f.getVendorId(), f.getVendorName(), f.getUserId()));
+
+        // The view button
+        Button vendorLink = new Button("View");
         vendorLink.addClickHandler(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()));
+        vendorLink.addStyleName("btn btn-info");
+        buttonGroup.add(vendorLink);
 
-        vendor.add(vendorLink);
+        favourite.add(buttonGroup);
 
-        return vendor;
+        return favourite;
     }
 }
