@@ -12,7 +12,7 @@ import java.util.List;
  */
 @RemoteServiceRelativePath("verifiedVendor")
 public interface VerifiedVendorService extends RemoteService {
-    void removeVerifiedVendor(String verifiedVendorId) throws IllegalArgumentException;
+    boolean removeVerifiedVendor(String verifiedVendorId);
     List<VerifiedVendor> getVerifiedVendors(String userId) throws IllegalArgumentException;
 	
     // For truck claims

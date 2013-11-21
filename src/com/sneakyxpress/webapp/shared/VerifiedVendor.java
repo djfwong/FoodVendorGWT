@@ -1,19 +1,17 @@
 package com.sneakyxpress.webapp.shared;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-@Entity
+@PersistenceCapable
 public class VerifiedVendor implements IsSerializable {
-	// Unique identifier for object
-	@Id
-    @PrimaryKey
-    @Persistent
-	private String id;
+
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private Long id;
 
     @Persistent
 	private String userId;
@@ -81,7 +79,7 @@ public class VerifiedVendor implements IsSerializable {
         this.vendorName = vendorName;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 }

@@ -10,7 +10,7 @@ import com.sneakyxpress.webapp.shared.VerifiedVendor;
  * on 11/14/2013.
  */
 public interface VerifiedVendorServiceAsync {
-	void removeVerifiedVendor(String verifiedVendorId, AsyncCallback callback)
+	void removeVerifiedVendor(String verifiedVendorId, AsyncCallback<Boolean> callback)
 			throws IllegalArgumentException;
 
 	void getVerifiedVendors(String userId,

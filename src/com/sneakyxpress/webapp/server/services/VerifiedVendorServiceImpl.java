@@ -56,6 +56,11 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 			}
 			else
 			{
+				for (VerifiedVendor ve : vList)
+				{
+					System.out.println(ve.getUserId());
+					System.out.println(ve.getVendorId());
+				}
 				logger.log(Level.INFO, "addVerifiedVendor: Possible Duplicate");
 				return false;
 			}
@@ -68,53 +73,58 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void removeVerifiedVendor(String verifiedVendorId)
+	public boolean removeVerifiedVendor(String verifiedVendorId)
 			throws IllegalArgumentException
 	{
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-
-		Query q = pm.newQuery("SELECT UNIQUE FROM "
-				+ VerifiedVendor.class.getName() + " WHERE id == \""
-				+ verifiedVendorId + "\"");
-		VerifiedVendor result = (VerifiedVendor) q.execute();
-
-		if (result == null)
+		try
 		{
-			throw new IllegalArgumentException(
-					"This user does not own this vendor");
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+
+			Query q = pm.newQuery("SELECT UNIQUE FROM "
+					+ VerifiedVendor.class.getName() + " WHERE vendorId == \""
+					+ verifiedVendorId + "\"");
+			VerifiedVendor result = (VerifiedVendor) q.execute();
+
+			if (result == null)
+			{
+				throw new IllegalArgumentException(
+						"This user does not own this vendor");
+			}
+
+			pm.deletePersistent(result); // Remove the verified vendor
+
+			pm.close();
+			return true;
+		}
+		catch (Exception e)
+		{
+			logger.log(Level.SEVERE, "removeVerifiedVendor: " + e.getMessage());
+			return false;
 		}
 
-		pm.deletePersistent(result); // Remove the verified vendor
-
-		pm.close();
 	}
 
 	@Override
 	public List<VerifiedVendor> getVerifiedVendors(String userId)
 			throws IllegalArgumentException
 	{
-		try
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+
+		Query q = pm.newQuery("SELECT FROM " + VerifiedVendor.class.getName()
+				+ " WHERE userId == \"" + userId + "\"");
+
+		@SuppressWarnings("unchecked")
+		List<VerifiedVendor> result = (List<VerifiedVendor>) q.execute();
+
+		pm.close();
+
+		if (result.isEmpty())
 		{
-			// Persist truck claim data
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-
-			Query q = pm.newQuery(VerifiedVendor.class);
-			q.setFilter("userId == :fbid");
-
-			Map<String, String> paramValues = new HashMap<String, String>();
-			paramValues.put("fbid", userId);
-
-			@SuppressWarnings("unchecked")
-			List<VerifiedVendor> vList = (List<VerifiedVendor>) q
-					.executeWithMap(paramValues);
-			
-			return vList;
-
-		}
-		catch (Exception e)
-		{
-			logger.log(Level.SEVERE, "addVerifiedVendor: " + e.getMessage());
 			return null;
+		}
+		else
+		{
+			return result;
 		}
 	}
 }
