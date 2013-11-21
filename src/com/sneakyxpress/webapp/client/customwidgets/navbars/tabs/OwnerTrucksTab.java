@@ -84,13 +84,17 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 
 	private HTMLPanel getVendorWidget(final VerifiedVendor v)
 	{
+		/**
 		String name = v.getVendorName();
 		if (name.isEmpty())
 		{
 			name = "<em class=\"muted\">No Name Available</em>";
-		}
+		}**/
+		//NPE returned when v.getVendorName() returns null
+		
+		String vendorId = v.getVendorId();
 
-		HTMLPanel vendor = new HTMLPanel("p", name + " ");
+		HTMLPanel vendor = new HTMLPanel("p", vendorId + " ");
 		vendor.addStyleName("lead");
 
 		HTMLPanel statsDiv = new HTMLPanel("small", "");
@@ -213,7 +217,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 								{
 									module.addMessage(
 											false,
-											v.getVendorName()
+											v.getVendorId()
 													+ " has been removed from your account.");
 									deleteLink.getParent().getParent()
 											.removeFromParent(); // May need to

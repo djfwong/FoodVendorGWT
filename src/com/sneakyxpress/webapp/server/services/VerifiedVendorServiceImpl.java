@@ -1,5 +1,6 @@
 package com.sneakyxpress.webapp.server.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,12 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 
 		@SuppressWarnings("unchecked")
 		List<VerifiedVendor> result = (List<VerifiedVendor>) q.execute();
+		
+		// to deal with RPC exception
+		List<VerifiedVendor> vList = new ArrayList<VerifiedVendor>();
+		for(VerifiedVendor v: result){
+			vList.add(v);
+		}
 
 		pm.close();
 
@@ -124,7 +131,7 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 		}
 		else
 		{
-			return result;
+			return vList;
 		}
 	}
 }
