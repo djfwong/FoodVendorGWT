@@ -1,5 +1,7 @@
 package com.sneakyxpress.webapp.client.customwidgets.navbars.tabs;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -9,6 +11,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.facebook.FacebookTools;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
@@ -19,8 +22,6 @@ import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVen
 import com.sneakyxpress.webapp.shared.User;
 import com.sneakyxpress.webapp.shared.VendorFeedback;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
-
-import java.util.List;
 
 /**
  * Created by michael on 11/19/2013.
@@ -46,7 +47,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 
         VerifiedVendorServiceAsync verifiedVendorService = GWT.
                 create(VerifiedVendorService.class);
-        verifiedVendorService.getVerifiedVendors(user.getId(), new AsyncCallback<List<VerifiedVendor>>() {
+        verifiedVendorService.getVerifiedVendors(FacebookTools.getUserId(), new AsyncCallback<List<VerifiedVendor>>() {
             @Override
             public void onFailure(Throwable caught) {
                 module.addMessage(true, "Loading your truck failed! Reason: " +

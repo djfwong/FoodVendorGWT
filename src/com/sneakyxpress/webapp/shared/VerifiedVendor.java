@@ -1,14 +1,11 @@
 package com.sneakyxpress.webapp.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 @Entity
 public class VerifiedVendor implements IsSerializable {
@@ -86,9 +83,5 @@ public class VerifiedVendor implements IsSerializable {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

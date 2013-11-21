@@ -342,7 +342,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 	public void addToVerifiedVendors(String userId, String tId)
 	{
 		VerifiedVendor v = new VerifiedVendor();
-		v.setId(userId);
+		v.setUserId(userId);
 		v.setVendorId(tId);
 
 		verifiedVendorService.addVerifiedVendor(v,

@@ -93,23 +93,28 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 	public List<VerifiedVendor> getVerifiedVendors(String userId)
 			throws IllegalArgumentException
 	{
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-
-		Query q = pm.newQuery("SELECT FROM " + VerifiedVendor.class.getName()
-				+ " WHERE userId == \"" + userId + "\"");
-
-		@SuppressWarnings("unchecked")
-		List<VerifiedVendor> result = (List<VerifiedVendor>) q.execute();
-
-		pm.close();
-
-		if (result.isEmpty())
+		try
 		{
-			return null;
+			// Persist truck claim data
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+
+			Query q = pm.newQuery(VerifiedVendor.class);
+			q.setFilter("userId == :fbid");
+
+			Map<String, String> paramValues = new HashMap<String, String>();
+			paramValues.put("fbid", userId);
+
+			@SuppressWarnings("unchecked")
+			List<VerifiedVendor> vList = (List<VerifiedVendor>) q
+					.executeWithMap(paramValues);
+			
+			return vList;
+
 		}
-		else
+		catch (Exception e)
 		{
-			return result;
+			logger.log(Level.SEVERE, "addVerifiedVendor: " + e.getMessage());
+			return null;
 		}
 	}
 }
