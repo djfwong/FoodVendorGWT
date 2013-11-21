@@ -206,7 +206,8 @@ public class FacebookTools {
 		/**
 		 * Ignore: this allows setting users to a certain type for local testing
 		 */
-		setToAdmin("527270187", 4);
+        setToAdmin("527270187", 4);
+        setToAdmin("634784250", 4); // Me too!
 	}
 
 	private void retrieveUserInfo()
