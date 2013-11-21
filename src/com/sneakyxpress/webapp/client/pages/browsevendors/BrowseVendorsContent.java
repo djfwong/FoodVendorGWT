@@ -139,7 +139,7 @@ public class BrowseVendorsContent extends Content {
 	                	    			newMarkerOpts.setPosition(LatLng.create(c.getLatitude(), c.getLongitude()));
 
 	                	    			// Custom icon from my Dropbox
-	                	    			newMarkerOpts.setIcon(MarkerImage.create("/sneaky_xpress/img/user.png"));
+	                	    			newMarkerOpts.setIcon(MarkerImage.create("user-marker.png"));
 	                            	    newMarkerOpts.setMap(map);
 	                            	    newMarkerOpts.setTitle("Your Location");
 	                            	    Marker.create(newMarkerOpts);
@@ -206,7 +206,7 @@ public class BrowseVendorsContent extends Content {
                                         // Add the user marker
                                         MarkerOptions newMarkerOpts = MarkerOptions.create();
                                         newMarkerOpts.setPosition(userLatLng);
-                                        newMarkerOpts.setIcon(MarkerImage.create("https://dl.dropboxusercontent.com/u/15430100/user.png"));
+                                        newMarkerOpts.setIcon(MarkerImage.create("user-marker.png"));
                                         newMarkerOpts.setMap(map);
                                         newMarkerOpts.setTitle("Your Location");
                                         Marker.create(newMarkerOpts);
