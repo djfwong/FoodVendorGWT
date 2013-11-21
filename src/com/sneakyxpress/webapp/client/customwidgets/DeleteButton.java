@@ -10,7 +10,12 @@ import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
  * Created by michael on 11/20/2013.
  */
 public class DeleteButton extends Composite {
-    private final String userId;
+    public String getUserId()
+	{
+		return userId;
+	}
+
+	private final String userId;
     private boolean selected = false;
     private final Button button;
 

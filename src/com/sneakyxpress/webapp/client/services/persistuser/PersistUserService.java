@@ -14,4 +14,5 @@ public interface PersistUserService extends RemoteService {
 	boolean persistNewUserToDatastore(User user) throws IllegalArgumentException;
 	boolean changeUserStatus(String fbId, int type);
     List<User> getAllUsers() throws IllegalArgumentException;
+	boolean removeUser(String userId);
 }
