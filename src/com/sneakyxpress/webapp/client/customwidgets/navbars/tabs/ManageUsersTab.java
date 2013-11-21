@@ -4,6 +4,7 @@ import com.github.gwtbootstrap.client.ui.Modal;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -13,6 +14,7 @@ import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.customwidgets.DeleteButton;
 import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
+import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserServiceAsync;
 import com.sneakyxpress.webapp.shared.User;
@@ -129,6 +131,9 @@ public class ManageUsersTab extends AbstractNavbarTab {
 				public void onClick(ClickEvent event)
 				{
 					modal.hide();
+					
+					//re-direct to home page since table doesn't refresh
+					History.newItem(new GreetingContent(module).getPageStub());
 					
 					for (DeleteButton b : buttons) {
                         if (b.isSelected()) {
