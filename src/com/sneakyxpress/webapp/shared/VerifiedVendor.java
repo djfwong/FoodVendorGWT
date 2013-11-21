@@ -20,16 +20,16 @@ public class VerifiedVendor implements IsSerializable {
 	private String vendorId;
 
     @Persistent
-    private String vendorName;
+    private String vendorName = "";
 
     @Persistent
-	private String deals;
+	private String deals = "";
 
     @Persistent
-	private String hours;
+	private String hours = "";
 
     @Persistent
-	private String phoneNumber;
+	private String phoneNumber = "";
 
     public String getUserId() {
         return userId;

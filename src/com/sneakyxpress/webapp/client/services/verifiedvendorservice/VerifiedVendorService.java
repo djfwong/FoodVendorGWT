@@ -14,7 +14,7 @@ import java.util.List;
 public interface VerifiedVendorService extends RemoteService {
     boolean removeVerifiedVendor(String verifiedVendorId);
     List<VerifiedVendor> getVerifiedVendors(String userId) throws IllegalArgumentException;
-	
+    VerifiedVendor getVerifiedVendor(String vendorId) throws IllegalArgumentException;
     // For truck claims
     boolean addVerifiedVendor(VerifiedVendor v);
 }

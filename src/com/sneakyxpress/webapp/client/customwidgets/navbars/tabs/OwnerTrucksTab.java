@@ -2,14 +2,12 @@ package com.sneakyxpress.webapp.client.customwidgets.navbars.tabs;
 
 import java.util.List;
 
+import com.github.gwtbootstrap.client.ui.Modal;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
@@ -84,23 +82,13 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 
 	private HTMLPanel getVendorWidget(final VerifiedVendor v)
 	{
-		/**
-		String name = v.getVendorName();
-		if (name.isEmpty())
-		{
-			name = "<em class=\"muted\">No Name Available</em>";
-		}**/
-		//NPE returned when v.getVendorName() returns null
-		
-		String vendorId = v.getVendorId();
-
-		HTMLPanel vendor = new HTMLPanel("p", vendorId + " ");
+		HTMLPanel vendor = new HTMLPanel("p", v.getVendorId());
 		vendor.addStyleName("lead");
 
-		HTMLPanel statsDiv = new HTMLPanel("small", "");
-		vendor.add(statsDiv);
-		final Label stats = new Label();
-		statsDiv.add(stats);
+		final HTMLPanel stats1 = new HTMLPanel("span", "");
+        vendor.add(stats1);
+        final HTMLPanel stats2 = new HTMLPanel("span", "");
+        vendor.add(stats2);
 
 		// Get the ratings for this truck
 		VendorFeedbackServiceAsync vendorFeedbackService = GWT
@@ -128,8 +116,8 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 								mean += f.getRating();
 							}
 							mean /= result.size();
-							stats.setText(result.size() + " reviews, " + mean
-									+ " average rating");
+                            stats1.add(new HTMLPanel("span", ", " + result.size() + " reviews, " + mean
+                                    + " average rating"));
 						}
 					}
 				});
@@ -152,8 +140,8 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 					@Override
 					public void onSuccess(Integer result)
 					{
-						stats.setText(stats.getText() + ", " + result
-								+ " favourites");
+                        stats2.add(new HTMLPanel("span", ", " + result
+								+ " favourites"));
 					}
 				});
 
@@ -178,12 +166,73 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 		return vendorLink;
 	}
 
-	private Anchor getEditButton(VerifiedVendor v)
+	private Anchor getEditButton(final VerifiedVendor v)
 	{
 		Anchor editLink = new Anchor("Edit");
 		editLink.addStyleName("btn btn-warning");
 
-		// TODO: Add edit functionality
+        editLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                HTMLPanel form = new HTMLPanel("form", "");
+                HTMLPanel fieldSet = new HTMLPanel("fieldset", "<label>Phone No.</label>");
+
+                final TextArea phoneNo = new TextArea();
+                phoneNo.addStyleName("input-block-level");
+                phoneNo.setText(v.getPhoneNumber());
+                fieldSet.add(phoneNo);
+
+                fieldSet.add(new HTML("<br>"));
+                fieldSet.add(new HTML("<label>Hours</label>"));
+
+                final TextArea hours = new TextArea();
+                hours.addStyleName("input-block-level");
+                hours.setText(v.getHours());
+                fieldSet.add(hours);
+
+                fieldSet.add(new HTML("<br>"));
+                fieldSet.add(new HTML("<label>Deals</label>"));
+
+                final TextArea deals = new TextArea();
+                deals.addStyleName("input-block-level");
+                deals.setText(v.getDeals());
+                fieldSet.add(deals);
+
+                fieldSet.add(new HTML("<br>"));
+
+                Button submitButton = new Button("Submit Changes");
+
+                fieldSet.add(submitButton);
+                form.add(fieldSet);
+                final Modal modal = module.addModal("Edit Vendor", form);
+
+                submitButton.addStyleName("btn btn-info");
+                submitButton.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        v.setPhoneNumber(phoneNo.getText());
+                        v.setHours(hours.getText());
+                        v.setDeals(deals.getText());
+
+                        VerifiedVendorServiceAsync verifiedVendorService = GWT
+                                .create(VerifiedVendorService.class);
+                        verifiedVendorService.addVerifiedVendor(v, new AsyncCallback<Boolean>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                module.addMessage(true, "Updating vendor failed. Reason: " + caught.getMessage());
+                                modal.hide();
+                            }
+
+                            @Override
+                            public void onSuccess(Boolean result) {
+                                module.addMessage(false, "Updating vendor was successful!");
+                                modal.hide();
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
 		return editLink;
 	}

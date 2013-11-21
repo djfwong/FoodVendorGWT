@@ -5,7 +5,10 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
+import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorService;
+import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorServiceAsync;
 import com.sneakyxpress.webapp.shared.FormValidator;
+import com.sneakyxpress.webapp.shared.VerifiedVendor;
 import org.cobogw.gwt.user.client.ui.Rating;
 
 import com.google.gwt.core.client.GWT;
@@ -107,6 +110,8 @@ public class ViewVendorContent extends Content {
 						vendor.getDescription()));
 				textInfo.add(getInfoWidget("Location",
 						vendor.getLocation()));
+
+                textInfo.add(getVerifiedInformation());
 
                 // Claim vendor link
                 HTMLPanel claim = new HTMLPanel("p", "<strong>Claim this Business</strong><br>"
@@ -254,19 +259,45 @@ public class ViewVendorContent extends Content {
 				markerOptions.setTitle(vendor.getName());
 				Marker.create(markerOptions);
 			}
-
-			private HTML getInfoWidget(String title, String info) {
-				if (info.isEmpty()) {
-					info = "<em class=\"muted\">Information currently not available</em>";
-				}
-
-				return new HTML("<p><strong>" + title + "</strong><br>"
-						+ info + "</p>");
-			}
 		});
 	}
 
-	private Anchor getClaimLink() {
+    private HTML getInfoWidget(String title, String info) {
+        if (info.isEmpty()) {
+            info = "<em class=\"muted\">Information currently not available</em>";
+        }
+
+        return new HTML("<p><strong>" + title + "</strong><br>"
+                + info + "</p>");
+    }
+
+    private HTMLPanel getVerifiedInformation() {
+        VerifiedVendorServiceAsync verifiedVendorService = GWT.
+                create(VerifiedVendorService.class);
+
+        final HTMLPanel verifiedInformation = new HTMLPanel("");
+
+        verifiedVendorService.getVerifiedVendor(vendor.getVendorId(), new AsyncCallback<VerifiedVendor>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                module.addMessage(true, "Error retrieving verified vendor information. Reason: "
+                        + caught.getMessage());
+            }
+
+            @Override
+            public void onSuccess(VerifiedVendor result) {
+                if (result != null) {
+                    verifiedInformation.add(getInfoWidget("Phone No.", result.getPhoneNumber()));
+                    verifiedInformation.add(getInfoWidget("Hours", result.getHours()));
+                    verifiedInformation.add(getInfoWidget("Deals", result.getDeals()));
+                }
+            }
+        });
+
+        return verifiedInformation;
+    }
+
+    private Anchor getClaimLink() {
 		// Truck owner claim button
         Anchor link = new Anchor("Claim it!");
 		link.addClickHandler(new PageClickHandler(new TruckClaimContent(module), vendor.getVendorId()));

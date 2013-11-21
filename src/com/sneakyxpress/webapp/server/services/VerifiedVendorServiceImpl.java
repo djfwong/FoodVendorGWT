@@ -31,46 +31,30 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public boolean addVerifiedVendor(VerifiedVendor v)
 	{
-		try
-		{
-			// Persist truck claim data
-			PersistenceManager pm = PMF.get().getPersistenceManager();
+        // Persist truck claim data
+        PersistenceManager pm = PMF.get().getPersistenceManager();
 
-			Query q = pm.newQuery(VerifiedVendor.class);
-			q.setFilter("userId == :fbid && vendorId == :truckid");
+        Query q = pm.newQuery(VerifiedVendor.class);
+        q.setFilter("userId == :fbid && vendorId == :truckid");
 
-			Map<String, String> paramValues = new HashMap<String, String>();
-			paramValues.put("fbid", v.getUserId());
-			paramValues.put("truckid", v.getVendorId());
+        Map<String, String> paramValues = new HashMap<String, String>();
+        paramValues.put("fbid", v.getUserId());
+        paramValues.put("truckid", v.getVendorId());
 
-			@SuppressWarnings("unchecked")
-			List<VerifiedVendor> vList = (List<VerifiedVendor>) q
-					.executeWithMap(paramValues);
+        List<VerifiedVendor> vList = (List<VerifiedVendor>) q.executeWithMap(paramValues);
 
-			if (vList.size() == 0)
-			{
-				// Check Same FB Id and Truck Id is not already in datastore
-				pm.makePersistent(v);
+        if (vList.size() == 0) {
+            pm.makePersistent(v);
 
-				pm.close();
-				return true;
-			}
-			else
-			{
-				for (VerifiedVendor ve : vList)
-				{
-					System.out.println(ve.getUserId());
-					System.out.println(ve.getVendorId());
-				}
-				logger.log(Level.INFO, "addVerifiedVendor: Possible Duplicate");
-				return false;
-			}
-		}
-		catch (Exception e)
-		{
-			logger.log(Level.SEVERE, "addVerifiedVendor: " + e.getMessage());
-			return false;
-		}
+            pm.close();
+            return true;
+        } else {
+            pm.deletePersistentAll(vList);
+
+            pm.makePersistent(v); // We still want to update the VV (I think)
+
+            return false;
+        }
 	}
 
 	@Override
@@ -104,6 +88,17 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 		}
 
 	}
+
+    @Override
+    public VerifiedVendor getVerifiedVendor(String vendorId) throws IllegalArgumentException {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        Query q = pm.newQuery("SELECT UNIQUE FROM " + VerifiedVendor.class.getName()
+                + " WHERE vendorId == \"" + vendorId + "\"");
+        VerifiedVendor result = (VerifiedVendor) q.execute();
+
+        return result;
+    }
 
 	@Override
 	public List<VerifiedVendor> getVerifiedVendors(String userId)

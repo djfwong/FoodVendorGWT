@@ -17,4 +17,6 @@ public interface VerifiedVendorServiceAsync {
 			AsyncCallback<List<VerifiedVendor>> callback);
 
 	void addVerifiedVendor(VerifiedVendor v, AsyncCallback<Boolean> callback);
+
+    void getVerifiedVendor(String vendorId, AsyncCallback<VerifiedVendor> async);
 }

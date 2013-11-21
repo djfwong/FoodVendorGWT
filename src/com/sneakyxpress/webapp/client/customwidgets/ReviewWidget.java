@@ -118,7 +118,6 @@ public class ReviewWidget extends Composite {
                                     @Override
                                     public void onFailure(Throwable caught) {
                                         module.addMessage(true, "Updating review failed. Reason: " + caught.getMessage());
-                                        updateWidget(0, "<em class=\"muted\">Review Deleted</em>");
                                         modal.hide();
                                     }
 

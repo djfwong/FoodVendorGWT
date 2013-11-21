@@ -35,6 +35,7 @@ public class OwnerReviewsTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         final FlowPanel feedback = new FlowPanel();
+        feedback.addStyleName("well");
 
         VendorFeedbackServiceAsync vendorFeedbackService = GWT.
                 create(VendorFeedbackService.class);
@@ -51,7 +52,6 @@ public class OwnerReviewsTab extends AbstractNavbarTab {
                     HTMLPanel response = new HTMLPanel("p", "No feedback could be found :(");
                     response.addStyleName("lead pagination-centered");
                     feedback.add(response);
-                    feedback.addStyleName("well");
                 } else {
                     double mean = 0.0;
                     for (VendorFeedback v : result) {
