@@ -1,8 +1,14 @@
 package com.sneakyxpress.webapp.server;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +26,7 @@ public class ClaimFormServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	protected static final Logger logger = Logger.getLogger("");
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
@@ -87,22 +94,47 @@ public class ClaimFormServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 
-		persistClaimData(truckClaim);
-
-		response.getWriter().write("Submitted");
+		response.getWriter().write(String.valueOf(persistClaimData(truckClaim)));
 		response.getWriter().close();
 	}
 
-	public void persistClaimData(TruckClaim claim)
+	public boolean persistClaimData(TruckClaim claim)
 	{
-		// Persist truck claim data
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try
+		{
+			// Persist truck claim data
+			PersistenceManager pm = PMF.get().getPersistenceManager();
 
-		
-		
-		pm.makePersistent(claim);
+			Query q = pm.newQuery(TruckClaim.class);
+			q.setFilter("facebookId == :fbid && truckId == :truckid");
 
-		pm.close();
+			Map<String, String> paramValues = new HashMap<String, String>();
+			paramValues.put("fbid", claim.getFacebookId());
+			paramValues.put("truckid", claim.getTruckId());
+
+			@SuppressWarnings("unchecked")
+			List<TruckClaim> claims = (List<TruckClaim>) q
+					.executeWithMap(paramValues);
+
+			if (claims.size() == 0)
+			{
+				// Check Same FB Id and Truck Id is not already in datastore
+				pm.makePersistent(claim);
+
+				pm.close();
+				return true;
+			}
+
+			else
+			{
+				return false;
+			}
+		}
+		catch (Exception e)
+		{
+			logger.log(Level.SEVERE, "persistClaimData: " + e.getMessage());
+			return false;
+		}
 	}
 
 }
