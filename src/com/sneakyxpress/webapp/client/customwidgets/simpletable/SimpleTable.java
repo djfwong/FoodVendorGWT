@@ -90,6 +90,15 @@ public class SimpleTable extends Composite {
         }
     }
 
+    /**
+     * Adds a column with widget cells to the table
+     */
+    public void addWidgetColumn(Widget title, List<? extends Widget> widgets) {
+        headerRow.addWidgetCell(title);
+        for (int i = 0; i < rows.size(); i++) {
+            rows.get(i).addWidgetCell(widgets.get(i));
+        }
+    }
 
     /**
      * Sorts the rows then clears the table widget and re-adds the rows in the

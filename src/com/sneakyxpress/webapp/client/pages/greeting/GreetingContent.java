@@ -119,7 +119,8 @@ public class GreetingContent extends Content {
                                     favs.addStyleName("well");
                                     favs.add(response);
                                 } else {
-                                    SimpleTable table = new SimpleTable("Key", "Name", "Friend");
+                                    SimpleTable table = new SimpleTable("table-hover table-bordered",
+                                            "Key", "Name", "Friend");
                                     List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
 
                                     for (Favourite f : result) {

@@ -6,7 +6,11 @@ import javax.jdo.Query;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.server.PMF;
+import com.sneakyxpress.webapp.shared.FoodVendor;
 import com.sneakyxpress.webapp.shared.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Updates the Food Vendor data from DataVancouver
@@ -67,6 +71,19 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 			return false;
 		}
 	}
-	
+
+    @Override
+    public List<User> getAllUsers() throws IllegalArgumentException {
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        Query q = pm.newQuery();
+        q.setClass(User.class);
+
+        List<User> results = (List<User>) q.execute();
+
+        pm.close();
+
+        return new ArrayList<User>(results);
+    }
+
 
 }
