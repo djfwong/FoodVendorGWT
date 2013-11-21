@@ -6,6 +6,7 @@ import com.github.gwtbootstrap.client.ui.Modal;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
@@ -116,7 +117,8 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 								mean += f.getRating();
 							}
 							mean /= result.size();
-                            stats1.add(new HTMLPanel("span", ", " + result.size() + " reviews, " + mean
+                            String formatted = NumberFormat.getFormat("0.0").format(mean);
+                            stats1.add(new HTMLPanel("span", ", " + result.size() + " reviews, " + formatted
                                     + " average rating"));
 						}
 					}
@@ -141,7 +143,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 					public void onSuccess(Integer result)
 					{
                         stats2.add(new HTMLPanel("span", ", " + result
-								+ " favourites"));
+                                + " favourites"));
 					}
 				});
 
@@ -157,7 +159,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 		return vendor;
 	}
 
-	private Anchor getViewButton(VerifiedVendor v)
+	private Anchor getViewButton(final VerifiedVendor v)
 	{
 		Anchor vendorLink = new Anchor("View");
 		vendorLink.addStyleName("btn btn-info");
@@ -171,70 +173,86 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 		Anchor editLink = new Anchor("Edit");
 		editLink.addStyleName("btn btn-warning");
 
-        editLink.addClickHandler(new ClickHandler() {
+        final HTMLPanel form = new HTMLPanel("form", "");
+        final HTMLPanel fieldSet = new HTMLPanel("fieldset", "<label>Phone No.</label>");
+
+        final TextBox phoneNo = new TextBox();
+        phoneNo.addStyleName("input-block-level");
+        phoneNo.setText(v.getPhoneNumber());
+        fieldSet.add(phoneNo);
+
+        fieldSet.add(new HTML("<br>"));
+        fieldSet.add(new HTML("<label>Email</label>"));
+
+        final TextBox email = new TextBox();
+        email.addStyleName("input-block-level");
+        email.setText(v.getHours());
+        fieldSet.add(email);
+
+        fieldSet.add(new HTML("<br>"));
+        fieldSet.add(new HTML("<label>Hours</label>"));
+
+        final TextArea hours = new TextArea();
+        hours.addStyleName("input-block-level");
+        hours.setText(v.getHours());
+        fieldSet.add(hours);
+
+        fieldSet.add(new HTML("<br>"));
+        fieldSet.add(new HTML("<label>Deals</label>"));
+
+        final TextArea deals = new TextArea();
+        deals.addStyleName("input-block-level");
+        deals.setText(v.getDeals());
+        fieldSet.add(deals);
+
+        fieldSet.add(new HTML("<br>"));
+
+        form.add(fieldSet);
+
+        // The modal
+        final Modal modal = new Modal(true, false);
+        modal.setTitle("Edit Vendor");
+        modal.add(form);
+
+        // The submit button
+        final Button submitButton = new Button("Submit Changes");
+        fieldSet.add(submitButton);
+
+        submitButton.addStyleName("btn btn-info");
+        submitButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                HTMLPanel form = new HTMLPanel("form", "");
-                HTMLPanel fieldSet = new HTMLPanel("fieldset", "<label>Phone No.</label>");
+                v.setPhoneNumber(phoneNo.getText());
+                v.setEmail(email.getText());
+                v.setHours(hours.getText());
+                v.setDeals(deals.getText());
 
-                final TextArea phoneNo = new TextArea();
-                phoneNo.addStyleName("input-block-level");
-                phoneNo.setText(v.getPhoneNumber());
-                fieldSet.add(phoneNo);
-
-                fieldSet.add(new HTML("<br>"));
-                fieldSet.add(new HTML("<label>Hours</label>"));
-
-                final TextArea hours = new TextArea();
-                hours.addStyleName("input-block-level");
-                hours.setText(v.getHours());
-                fieldSet.add(hours);
-
-                fieldSet.add(new HTML("<br>"));
-                fieldSet.add(new HTML("<label>Deals</label>"));
-
-                final TextArea deals = new TextArea();
-                deals.addStyleName("input-block-level");
-                deals.setText(v.getDeals());
-                fieldSet.add(deals);
-
-                fieldSet.add(new HTML("<br>"));
-
-                Button submitButton = new Button("Submit Changes");
-
-                fieldSet.add(submitButton);
-                form.add(fieldSet);
-                final Modal modal = module.addModal("Edit Vendor", form);
-
-                submitButton.addStyleName("btn btn-info");
-                submitButton.addClickHandler(new ClickHandler() {
+                VerifiedVendorServiceAsync verifiedVendorService = GWT
+                        .create(VerifiedVendorService.class);
+                verifiedVendorService.addVerifiedVendor(v, new AsyncCallback<Boolean>() {
                     @Override
-                    public void onClick(ClickEvent event) {
-                        v.setPhoneNumber(phoneNo.getText());
-                        v.setHours(hours.getText());
-                        v.setDeals(deals.getText());
+                    public void onFailure(Throwable caught) {
+                        module.addMessage(true, "Updating vendor failed. Reason: " + caught.getMessage());
+                        modal.hide();
+                    }
 
-                        VerifiedVendorServiceAsync verifiedVendorService = GWT
-                                .create(VerifiedVendorService.class);
-                        verifiedVendorService.addVerifiedVendor(v, new AsyncCallback<Boolean>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                module.addMessage(true, "Updating vendor failed. Reason: " + caught.getMessage());
-                                modal.hide();
-                            }
-
-                            @Override
-                            public void onSuccess(Boolean result) {
-                                module.addMessage(false, "Updating vendor was successful!");
-                                modal.hide();
-                            }
-                        });
+                    @Override
+                    public void onSuccess(Boolean result) {
+                        module.addMessage(false, "Updating vendor was successful!");
+                        modal.hide();
                     }
                 });
             }
         });
 
-		return editLink;
+        editLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                modal.show();
+            }
+        });
+
+        return editLink;
 	}
 
 	private Anchor getDeleteButton(final VerifiedVendor v)

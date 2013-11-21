@@ -29,7 +29,10 @@ public class VerifiedVendor implements IsSerializable {
 	private String hours = "";
 
     @Persistent
-	private String phoneNumber = "";
+    private String phoneNumber = "";
+
+    @Persistent
+    private String email = "";
 
     public String getUserId() {
         return userId;
@@ -81,5 +84,13 @@ public class VerifiedVendor implements IsSerializable {
 
     public long getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

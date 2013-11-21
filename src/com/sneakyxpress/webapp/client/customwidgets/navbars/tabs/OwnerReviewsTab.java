@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.client.customwidgets.navbars.tabs;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -58,9 +59,10 @@ public class OwnerReviewsTab extends AbstractNavbarTab {
                         mean += v.getRating();
                     }
                     mean /= result.size();
+                    String formatted = NumberFormat.getFormat("0.0").format(mean);
 
                     HTMLPanel header = new HTMLPanel("p", "You have " + result.size() + " reviews from users!<br>"
-                            + "Your reviews average at " + mean + " stars.");
+                            + "Your reviews average at " + formatted + " stars.");
                     header.addStyleName("lead pagination-centered");
                     feedback.add(header);
 

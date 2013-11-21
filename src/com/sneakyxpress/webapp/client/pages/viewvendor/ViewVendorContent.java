@@ -288,6 +288,7 @@ public class ViewVendorContent extends Content {
             public void onSuccess(VerifiedVendor result) {
                 if (result != null) {
                     verifiedInformation.add(getInfoWidget("Phone No.", result.getPhoneNumber()));
+                    verifiedInformation.add(getInfoWidget("Email", result.getEmail()));
                     verifiedInformation.add(getInfoWidget("Hours", result.getHours()));
                     verifiedInformation.add(getInfoWidget("Deals", result.getDeals()));
                 }
