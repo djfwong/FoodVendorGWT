@@ -69,7 +69,16 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 		{
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			User user = pm.getObjectById(User.class, fbId);
-			user.setType(type);
+
+            // Make it so we can't demote users (just delete their accounts I guess)
+            if (user.getType() == 3) {
+                user.setType(type);
+            } else if (user.getType() == 2 && (type == 1 || type == 4)) {
+                user.setType(4);
+            } else if (user.getType() == 1 && type == 2) {
+                user.setType(4);
+            }
+
 			pm.close();
 			return true;
 		}

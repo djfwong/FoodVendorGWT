@@ -8,7 +8,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -36,16 +35,16 @@ public class TruckClaimContent extends Content {
 	private static final int STANDARD_MAX_FULL_NAME_LENGTH = 70;
 	private static final int STANDARD_MAX_EMAIL_LENGTH = 70;
 	private static final int STANDARD_PHONE_NUMBER_LENGTH = 10;
-	WatermarkedTextBox vendorIdBox;
-	WatermarkedTextBox fbIdBox;
-	WatermarkedTextBox nameBox;
-	WatermarkedTextBox emailBox;
-	WatermarkedTextBox phoneBox;
-	CheckBox checkTerms;
-	Button submitButton;
+	private WatermarkedTextBox vendorIdBox;
+    private WatermarkedTextBox fbIdBox;
+    private WatermarkedTextBox nameBox;
+    private WatermarkedTextBox emailBox;
+    private WatermarkedTextBox phoneBox;
+    private CheckBox checkTerms;
+    private Button submitButton;
 
 	// Declare form
-	FormPanel form;
+    private FormPanel form;
 
 
 	public TruckClaimContent(Sneaky_Xpress module) {
