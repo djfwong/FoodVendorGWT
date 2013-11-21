@@ -2,6 +2,8 @@ package com.sneakyxpress.webapp.server.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -21,6 +23,7 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	protected static final Logger logger = Logger.getLogger("");
 
 	@Override
 	public boolean persistNewUserToDatastore(User user)
@@ -52,7 +55,9 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 	/**
 	 * 
 	 * @param fbId
-	 * @param type 1-Admin, 2-Owner, 3-User, 4-Admin&Owner as defined in User class
+	 * @param type
+	 *            1-Admin, 2-Owner, 3-User, 4-Admin&Owner as defined in User
+	 *            class
 	 * @return
 	 */
 	public boolean changeUserStatus(String fbId, int type)
@@ -71,18 +76,44 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-    @Override
-    public List<User> getAllUsers() throws IllegalArgumentException {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        Query q = pm.newQuery();
-        q.setClass(User.class);
+	@Override
+	public List<User> getAllUsers() throws IllegalArgumentException
+	{
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = pm.newQuery();
+		q.setClass(User.class);
 
-        List<User> results = (List<User>) q.execute();
+		@SuppressWarnings("unchecked")
+		List<User> results = (List<User>) q.execute();
 
-        pm.close();
+		pm.close();
 
-        return new ArrayList<User>(results);
-    }
+		return new ArrayList<User>(results);
+	}
 
+	@Override
+	public boolean removeUser(String userId)
+	{
+		try
+		{
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			User u = (User) pm.getObjectById(userId);
+			
+			if(u == null)
+			{
+				return false;
+			}
+			
+			pm.deletePersistent(u);
+			return true;
+		}
+		catch (Exception e)
+		{
+			logger.log(Level.SEVERE, "removeUser: " + e.getMessage());
+		}
+
+		return false;
+
+	}
 
 }

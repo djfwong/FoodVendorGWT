@@ -19,7 +19,12 @@ import com.sneakyxpress.webapp.shared.VerifiedVendor;
 public class VendorFeedbackServiceImpl extends RemoteServiceServlet
         implements VendorFeedbackService {
 
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
     public void persistVendorFeedback(VendorFeedback f) throws IllegalArgumentException {
         // Validate the review
         FormValidator.validateReview(f.getRating(), f.getReview());

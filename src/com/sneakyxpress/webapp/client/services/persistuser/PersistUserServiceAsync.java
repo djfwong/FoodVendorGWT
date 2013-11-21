@@ -11,5 +11,7 @@ public interface PersistUserServiceAsync {
 	void changeUserStatus(String fbId, int type, AsyncCallback<Boolean> callback);
 
     void getAllUsers(AsyncCallback<List<User>> async);
+
+	void removeUser(String userId, AsyncCallback<Boolean> callback);
 }
 	

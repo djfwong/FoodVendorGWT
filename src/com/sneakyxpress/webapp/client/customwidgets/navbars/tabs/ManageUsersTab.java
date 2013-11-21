@@ -18,92 +18,148 @@ import com.sneakyxpress.webapp.shared.User;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by michael on 11/20/2013.
  */
 public class ManageUsersTab extends AbstractNavbarTab {
-    private final Sneaky_Xpress module;
+	private final Sneaky_Xpress module;
 
-    public ManageUsersTab(Sneaky_Xpress module) {
-        this.module = module;
-    }
+	public ManageUsersTab(Sneaky_Xpress module) {
+		this.module = module;
+	}
 
-    @Override
-    public String getTitle() {
-        return "Manage Users";
-    }
+	private final PersistUserServiceAsync userService = GWT
+			.create(PersistUserService.class);
 
-    @Override
-    public FlowPanel getContent() {
-        final FlowPanel content = new FlowPanel();
+	protected static final Logger logger = Logger.getLogger("");
 
-        PersistUserServiceAsync persistUserService = GWT.
-                create(PersistUserService.class);
-        persistUserService.getAllUsers(new AsyncCallback<List<User>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                module.addMessage(true, "Error loading application users. Reason: " + caught.getMessage());
-            }
+	String id = "";
 
-            @Override
-            public void onSuccess(List<User> result) {
-                if (result == null) {
-                    HTMLPanel response = new HTMLPanel("p", "No users could be found :(");
-                    response.addStyleName("lead pagination-centered");
-                    content.add(response);
-                    content.addStyleName("well");
-                } else {
-                    SimpleTable userTable = new SimpleTable("table-hover table-bordered",
-                            "Id", "Name", "Type", "Email");
+	@Override
+	public String getTitle()
+	{
+		return "Manage Users";
+	}
 
-                    List<DeleteButton> buttons = new LinkedList<DeleteButton>();
-                    for (User u : result) {
-                        userTable.addRow(new PageClickHandler(module.PROFILE_PAGE, u.getId()),
-                                u.getId(), u.getName(), u.getTypeName(), u.getEmail());
-                        buttons.add(new DeleteButton(u.getId()));
-                    }
+	@Override
+	public FlowPanel getContent()
+	{
+		final FlowPanel content = new FlowPanel();
 
-                    // Create the delete button
-                    Button button = new Button("Delete Selected");
-                    button.addClickHandler(new DeleteUsersClickHandler(buttons));
+		PersistUserServiceAsync persistUserService = GWT
+				.create(PersistUserService.class);
+		persistUserService.getAllUsers(new AsyncCallback<List<User>>() {
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				module.addMessage(
+						true,
+						"Error loading application users. Reason: "
+								+ caught.getMessage());
+			}
 
-                    userTable.addWidgetColumn(button, buttons);
+			@Override
+			public void onSuccess(List<User> result)
+			{
+				if (result == null)
+				{
+					HTMLPanel response = new HTMLPanel("p",
+							"No users could be found :(");
+					response.addStyleName("lead pagination-centered");
+					content.add(response);
+					content.addStyleName("well");
+				}
+				else
+				{
+					SimpleTable userTable = new SimpleTable(
+							"table-hover table-bordered", "Id", "Name", "Type",
+							"Email");
 
-                    userTable.sortRows(0, false);
+					List<DeleteButton> buttons = new LinkedList<DeleteButton>();
+					for (User u : result)
+					{
+						userTable.addRow(new PageClickHandler(
+								module.PROFILE_PAGE, u.getId()), u.getId(), u
+								.getName(), u.getTypeName(), u.getEmail());
+						buttons.add(new DeleteButton(u.getId()));
+					}
 
-                    content.add(userTable);
-                }
-            }
-        });
+					// Create the delete button
+					Button button = new Button("Delete Selected");
+					button.addClickHandler(new DeleteUsersClickHandler(buttons) {
+					});
 
-        return content;
-    }
+					userTable.addWidgetColumn(button, buttons);
 
-    private class DeleteUsersClickHandler implements ClickHandler {
-        private final List<DeleteButton> buttons;
-        public DeleteUsersClickHandler(List<DeleteButton> buttons) {
-            this.buttons = buttons;
-        }
+					userTable.sortRows(0, false);
 
-        @Override
-        public void onClick(ClickEvent event) {
-            HTMLPanel areYouSure = new HTMLPanel("<p class=\"lead pagination-centered\">"
-                    + "Are you sure?</p>");
-            Button confirm = new Button("Confirm Deletion");
-            confirm.addStyleName("btn btn-danger btn-large btn-block");
+					content.add(userTable);
+				}
+			}
+		});
 
-            areYouSure.add(confirm);
-            final Modal modal = module.addModal("Confirm Deletion", areYouSure);
+		return content;
+	}
 
-            confirm.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    module.addMessage(false, "Fake deleting users");
-                    // TODO: Add delete users service ehre
-                    modal.hide();
-                }
-            });
-        }
-    }
+	private class DeleteUsersClickHandler implements ClickHandler {
+		private final List<DeleteButton> buttons;
+
+		public DeleteUsersClickHandler(List<DeleteButton> buttons) {
+			this.buttons = buttons;
+		}
+
+		@Override
+		public void onClick(ClickEvent event)
+		{
+			HTMLPanel areYouSure = new HTMLPanel(
+					"<p class=\"lead pagination-centered\">"
+							+ "Are you sure?</p>");
+			Button confirm = new Button("Confirm Deletion");
+			confirm.addStyleName("btn btn-danger btn-large btn-block");
+
+			areYouSure.add(confirm);
+			final Modal modal = module.addModal("Confirm Deletion", areYouSure);
+
+			confirm.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event)
+				{
+					modal.hide();
+					
+					// remove user service TODO
+					//deleteUser(String id)
+				}
+			});
+		}
+	}
+
+	public void deleteUser(String id)
+	{
+		userService.removeUser(id, new AsyncCallback<Boolean>() {
+
+			@Override
+			public void onFailure(Throwable caught)
+			{
+
+				logger.log(Level.SEVERE, "deleteUser: " + caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Boolean result)
+			{
+				if (result)
+				{
+					module.addMessage(false, "User deleted from our databases");
+				}
+				else
+				{
+					module.addMessage(false,
+							"Unexpected error occurred deleting users from databases");
+				}
+			}
+		});
+	}
 }
