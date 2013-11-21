@@ -173,52 +173,61 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 		Anchor editLink = new Anchor("Edit");
 		editLink.addStyleName("btn btn-warning");
 
-        final HTMLPanel form = new HTMLPanel("form", "");
-        final HTMLPanel fieldSet = new HTMLPanel("fieldset", "<label>Phone No.</label>");
-
         final TextBox phoneNo = new TextBox();
         phoneNo.addStyleName("input-block-level");
-        phoneNo.setText(v.getPhoneNumber());
-        fieldSet.add(phoneNo);
-
-        fieldSet.add(new HTML("<br>"));
-        fieldSet.add(new HTML("<label>Email</label>"));
 
         final TextBox email = new TextBox();
         email.addStyleName("input-block-level");
-        email.setText(v.getHours());
-        fieldSet.add(email);
-
-        fieldSet.add(new HTML("<br>"));
-        fieldSet.add(new HTML("<label>Hours</label>"));
 
         final TextArea hours = new TextArea();
         hours.addStyleName("input-block-level");
-        hours.setText(v.getHours());
-        fieldSet.add(hours);
-
-        fieldSet.add(new HTML("<br>"));
-        fieldSet.add(new HTML("<label>Deals</label>"));
 
         final TextArea deals = new TextArea();
         deals.addStyleName("input-block-level");
-        deals.setText(v.getDeals());
-        fieldSet.add(deals);
 
-        fieldSet.add(new HTML("<br>"));
-
-        form.add(fieldSet);
+        final Button submitButton = new Button("Submit Changes");
+        submitButton.addStyleName("btn btn-info");
 
         // The modal
-        final Modal modal = new Modal(true, false);
-        modal.setTitle("Edit Vendor");
-        modal.add(form);
+        final Modal[] modal = new Modal[1];
 
-        // The submit button
-        final Button submitButton = new Button("Submit Changes");
-        fieldSet.add(submitButton);
+        editLink.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                modal[0] = new Modal(true, true);
+                modal[0].setTitle("Edit Vendor");
 
-        submitButton.addStyleName("btn btn-info");
+                // The form
+                HTMLPanel form = new HTMLPanel("form", "");
+                HTMLPanel fieldSet = new HTMLPanel("fieldset", "<label>Phone No.</label>");
+                phoneNo.setText(v.getPhoneNumber());
+                fieldSet.add(phoneNo);
+
+                fieldSet.add(new HTML("<br>"));
+                fieldSet.add(new HTML("<label>Email</label>"));
+                email.setText(v.getHours());
+                fieldSet.add(email);
+
+                fieldSet.add(new HTML("<br>"));
+                fieldSet.add(new HTML("<label>Hours</label>"));
+                hours.setText(v.getHours());
+                fieldSet.add(hours);
+
+                fieldSet.add(new HTML("<br>"));
+                fieldSet.add(new HTML("<label>Deals</label>"));
+                deals.setText(v.getDeals());
+                fieldSet.add(deals);
+
+                fieldSet.add(new HTML("<br>"));
+                fieldSet.add(submitButton);
+
+                form.add(fieldSet);
+                modal[0].add(form);
+                modal[0].show();
+            }
+        });
+
+        // The submit button handler
         submitButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -233,22 +242,15 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
                     @Override
                     public void onFailure(Throwable caught) {
                         module.addMessage(true, "Updating vendor failed. Reason: " + caught.getMessage());
-                        modal.hide();
+                        modal[0].hide();
                     }
 
                     @Override
                     public void onSuccess(Boolean result) {
                         module.addMessage(false, "Updating vendor was successful!");
-                        modal.hide();
+                        modal[0].hide();
                     }
                 });
-            }
-        });
-
-        editLink.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                modal.show();
             }
         });
 
