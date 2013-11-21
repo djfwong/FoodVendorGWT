@@ -27,8 +27,9 @@ public class HeaderRow extends Row {
 
     @Override
     public void addWidgetCell(Widget cell) {
-        HTMLPanel td = new HTMLPanel("th", "");
-        td.add(cell);
-        widget.add(td);
+        HTMLPanel th = new HTMLPanel("th", "");
+        th.getElement().setAttribute("style", "text-align: center;");
+        th.add(cell);
+        widget.add(th);
     }
 }

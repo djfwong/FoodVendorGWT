@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -89,8 +90,8 @@ public class ManageUsersTab extends AbstractNavbarTab {
 
 					// Create the delete button
 					Button button = new Button("Delete Selected");
-					button.addClickHandler(new DeleteUsersClickHandler(buttons) {
-					});
+                    button.addStyleName("btn btn-danger");
+					button.addClickHandler(new DeleteUsersClickHandler(buttons));
 
 					userTable.addWidgetColumn(button, buttons);
 
@@ -130,7 +131,9 @@ public class ManageUsersTab extends AbstractNavbarTab {
 					modal.hide();
 					
 					for (DeleteButton b : buttons) {
-                        deleteUser(b.getUserId());
+                        if (b.isSelected()) {
+                            deleteUser(b.getUserId());
+                        }
                     }
 				}
 			});
