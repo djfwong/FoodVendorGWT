@@ -1,6 +1,8 @@
 package com.sneakyxpress.webapp.server.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,7 +12,6 @@ import javax.jdo.Query;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorService;
 import com.sneakyxpress.webapp.server.PMF;
-import com.sneakyxpress.webapp.shared.TruckClaim;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
 
 /**
@@ -29,30 +30,39 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public boolean addVerifiedVendor(VerifiedVendor v)
 	{
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-
-		// Check to make sure truckId is not already there
-		Query q = pm.newQuery(TruckClaim.class,
-				"facebookId == fbId && truckId == truckId");
-		q.declareParameters("String lastNameParam");
-		q.declareParameters("String truckId");
-
-		@SuppressWarnings("unchecked")
-		List<TruckClaim> results = (List<TruckClaim>) q.execute(v.getId(),
-				v.getVendorId());
-
-		if (results.isEmpty())
+		try
 		{
-			pm.makePersistentAll(v);
+			// Persist truck claim data
+			PersistenceManager pm = PMF.get().getPersistenceManager();
 
-			// Clean-up
-			pm.close();
-			return true;
+			Query q = pm.newQuery(VerifiedVendor.class);
+			q.setFilter("userId == :fbid && vendorId == :truckid");
+
+			Map<String, String> paramValues = new HashMap<String, String>();
+			paramValues.put("fbid", v.getUserId());
+			paramValues.put("truckid", v.getVendorId());
+
+			@SuppressWarnings("unchecked")
+			List<VerifiedVendor> vList = (List<VerifiedVendor>) q
+					.executeWithMap(paramValues);
+
+			if (vList.size() == 0)
+			{
+				// Check Same FB Id and Truck Id is not already in datastore
+				pm.makePersistent(v);
+
+				pm.close();
+				return true;
+			}
+			else
+			{
+				logger.log(Level.INFO, "addVerifiedVendor: Possible Duplicate");
+				return false;
+			}
 		}
-
-		else
+		catch (Exception e)
 		{
-			logger.log(Level.INFO, "User email already in datastore");
+			logger.log(Level.SEVERE, "addVerifiedVendor: " + e.getMessage());
 			return false;
 		}
 	}

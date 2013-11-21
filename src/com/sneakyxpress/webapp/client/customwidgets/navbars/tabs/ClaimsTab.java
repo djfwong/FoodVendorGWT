@@ -21,7 +21,6 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
-import com.sneakyxpress.webapp.client.pages.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimService;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimServiceAsync;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;

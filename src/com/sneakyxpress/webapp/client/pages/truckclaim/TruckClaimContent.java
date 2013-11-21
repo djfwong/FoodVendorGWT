@@ -323,9 +323,6 @@ public class TruckClaimContent extends Content {
 				// documentation for
 				// further explanation).
 
-				logger.log(Level.INFO,
-						"onSubmitComplete: " + event.getResults());
-
 				if (event.getResults().equals("true"))
 				{
 					// Display message to user
