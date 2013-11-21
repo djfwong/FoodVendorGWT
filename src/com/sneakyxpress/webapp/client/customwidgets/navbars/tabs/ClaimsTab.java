@@ -20,6 +20,8 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.customwidgets.simpletable.SimpleTable;
+import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimService;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimServiceAsync;
@@ -67,108 +69,24 @@ public class ClaimsTab extends AbstractNavbarTab {
 		claimsService.retrieveClaims(new AsyncCallback<List<TruckClaim>>() {
 
 			@Override
-			public void onFailure(Throwable caught)
-			{
-				System.out.println("Exception: " + caught.getMessage());
+			public void onFailure(Throwable caught) {
+                module.addMessage(true, "Failed to load claim. Reason: " + caught.getMessage());
 			}
 
 			@Override
-			public void onSuccess(List<TruckClaim> result)
-			{
+			public void onSuccess(List<TruckClaim> result) {
 
-				if (!result.isEmpty())
-				{
+				if (!result.isEmpty()) {
+                    SimpleTable claimsTable = new SimpleTable("table-hover table-bordered",
+                            "Truck ID", "Facebook ID", "Name", "Email", "Phone No.", "Accepted", "Viewed");
 
-					// Create table
-					CellTable<TruckClaim> table = new CellTable<TruckClaim>();
+                    for (TruckClaim c : result) {
+                        claimsTable.addRow(new ClaimClickHandler(),
+                                c.getTruckId(), c.getFacebookId(), c.getName(), c.getEmail(), c.getPhoneNumber(),
+                                String.valueOf(c.isAccepted()), String.valueOf(c.isViewed()));
+                    }
 
-					// Configure table to display all results onto one page
-					table.setPageSize(result.size());
-
-					// Add Truck Id column
-					TextColumn<TruckClaim> truckIdCol = new TextColumn<TruckClaim>() {
-						@Override
-						public String getValue(TruckClaim claim)
-						{
-							return claim.getTruckId();
-						}
-					};
-					table.addColumn(truckIdCol, "Truck ID");
-
-					// Add Facebook Id column
-					TextColumn<TruckClaim> fbIdCol = new TextColumn<TruckClaim>() {
-						@Override
-						public String getValue(TruckClaim claim)
-						{
-							return claim.getFacebookId();
-						}
-					};
-					table.addColumn(fbIdCol, "Facebook ID");
-
-					// Add Name column
-					TextColumn<TruckClaim> nameCol = new TextColumn<TruckClaim>() {
-						@Override
-						public String getValue(TruckClaim claim)
-						{
-							return claim.getName();
-						}
-					};
-					table.addColumn(nameCol, "Name");
-
-					// Add Email column
-					TextColumn<TruckClaim> emailCol = new TextColumn<TruckClaim>() {
-						@Override
-						public String getValue(TruckClaim claim)
-						{
-							return claim.getEmail();
-						}
-					};
-					table.addColumn(emailCol, "Email");
-
-					// Add Phone Number column
-					TextColumn<TruckClaim> phoneCol = new TextColumn<TruckClaim>() {
-						@Override
-						public String getValue(TruckClaim claim)
-						{
-							return claim.getPhoneNumber();
-						}
-					};
-					table.addColumn(phoneCol, "Phone No.");
-
-					// Add Accepted/Rejected column
-					TextColumn<TruckClaim> isAcceptedCol = new TextColumn<TruckClaim>() {
-						@Override
-						public String getValue(TruckClaim claim)
-						{
-							return String.valueOf(claim.isAccepted());
-						}
-					};
-					table.addColumn(isAcceptedCol, "Accepted");
-
-					// Add Accepted/Rejected column
-					TextColumn<TruckClaim> isViewedCol = new TextColumn<TruckClaim>() {
-						@Override
-						public String getValue(TruckClaim claim)
-						{
-							return String.valueOf(claim.isViewed());
-						}
-					};
-					table.addColumn(isViewedCol, "Viewed");
-
-					// Create a list data provider.
-					final ListDataProvider<TruckClaim> dataProvider = new ListDataProvider<TruckClaim>();
-					// Add the cell table to the dataProvider.
-					dataProvider.addDataDisplay(table);
-
-					// List to add results to for data provider
-					List<TruckClaim> list = dataProvider.getList();
-
-					for (TruckClaim tc : result)
-					{
-						list.add(tc);
-					}
-					clickTableRow(table);
-					claimsPanel.add(table);
+                    claimsPanel.add(claimsTable);
 				}
 			}
 		});
@@ -176,35 +94,20 @@ public class ClaimsTab extends AbstractNavbarTab {
 		return claimsPanel;
 	}
 
-	public void clickTableRow(CellTable<TruckClaim> table)
-	{
-		// Add a selection model to handle user selection
-		final SingleSelectionModel<TruckClaim> selectionModel = new SingleSelectionModel<TruckClaim>();
-		table.setSelectionModel(selectionModel);
-		selectionModel
-				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+    private class ClaimClickHandler implements ClickHandler {
+        private final String claimId;
 
-					@Override
-					public void onSelectionChange(SelectionChangeEvent event)
-					{
-						TruckClaim selected = selectionModel
-								.getSelectedObject();
-						if (selected != null)
-						{
-							fbId = selected.getFacebookId();
-							truckId = selected.getTruckId();
-							claimId = selected.getId();
-							modal = module.addModal(
-									"Claim ID: " + selected.getId(),
-									claimAcceptanceWidget());
-						}
+        public ClaimClickHandler(String claimId) {
+            this.claimId = claimId;
+        }
 
-					}
-				});
-	}
+        @Override
+        public void onClick(ClickEvent event) {
+            modal = module.addModal("Claim ID: " + claimId, claimAcceptanceWidget());
+        }
+    }
 
-	public Widget claimAcceptanceWidget()
-	{
+	public Widget claimAcceptanceWidget() {
 
 		HTMLPanel content = new HTMLPanel("");
 		HTMLPanel panel = new HTMLPanel("");
@@ -236,7 +139,9 @@ public class ClaimsTab extends AbstractNavbarTab {
 								if (result)
 								{
 									module.addMessage(false, "Claim accepted.");
+
 									updateUserRole(fbId);
+
 									addToVerifiedVendors(fbId, truckId);
 
 								}
@@ -310,6 +215,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 	// Change role of user to owner
 	public void updateUserRole(String id)
 	{
+
 		userService.changeUserStatus(id, 2, new AsyncCallback<Boolean>() {
 
 			@Override
