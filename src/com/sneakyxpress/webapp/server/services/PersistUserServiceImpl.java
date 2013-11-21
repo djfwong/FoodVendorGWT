@@ -94,25 +94,23 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public boolean removeUser(String userId)
 	{
-		try
-		{
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			User u = (User) pm.getObjectById(userId);
-			
-			if(u == null)
-			{
-				return false;
-			}
-			
-			pm.deletePersistent(u);
-			return true;
-		}
-		catch (Exception e)
-		{
-			logger.log(Level.SEVERE, "removeUser: " + e.getMessage());
-		}
+        boolean foundUser = true;
 
-		return false;
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        Query q = pm.newQuery("SELECT UNIQUE FROM " + User.class.getName()
+                + " WHERE id == \"" + userId + "\"");
+        User result = (User) q.execute();
+
+
+        if(result == null) {
+            foundUser = false;
+        } else {
+            pm.deletePersistent(result);
+        }
+
+        pm.close();
+
+		return foundUser;
 
 	}
 

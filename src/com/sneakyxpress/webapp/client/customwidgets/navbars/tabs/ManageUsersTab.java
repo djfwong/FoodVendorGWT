@@ -129,35 +129,29 @@ public class ManageUsersTab extends AbstractNavbarTab {
 				{
 					modal.hide();
 					
-					// remove user service TODO
-					//deleteUser(String id)
+					for (DeleteButton b : buttons) {
+                        deleteUser(b.getUserId());
+                    }
 				}
 			});
 		}
 	}
 
-	public void deleteUser(String id)
+	public void deleteUser(final String id)
 	{
 		userService.removeUser(id, new AsyncCallback<Boolean>() {
-
 			@Override
-			public void onFailure(Throwable caught)
-			{
-
-				logger.log(Level.SEVERE, "deleteUser: " + caught.getMessage());
+			public void onFailure(Throwable caught) {
+                module.addMessage(true, "Error while attempting to delete user. Reason: "
+                        + caught.getMessage());
 			}
 
 			@Override
-			public void onSuccess(Boolean result)
-			{
-				if (result)
-				{
-					module.addMessage(false, "User deleted from our databases");
-				}
-				else
-				{
-					module.addMessage(false,
-							"Unexpected error occurred deleting users from databases");
+			public void onSuccess(Boolean result) {
+				if (result) {
+					module.addMessage(false, "User " + id + " was deleted from our databases.");
+				} else {
+					module.addMessage(true, "The requested user " + id + " was not found in our database.");
 				}
 			}
 		});
