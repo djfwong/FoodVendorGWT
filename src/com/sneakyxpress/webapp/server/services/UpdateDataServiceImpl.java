@@ -1,23 +1,26 @@
 package com.sneakyxpress.webapp.server.services;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataService;
-import com.sneakyxpress.webapp.server.PMF;
-import com.sneakyxpress.webapp.shared.FoodVendor;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.sneakyxpress.webapp.client.services.updatedata.UpdateDataService;
+import com.sneakyxpress.webapp.server.PMF;
+import com.sneakyxpress.webapp.shared.FoodVendor;
 
 /**
  * Updates the Food Vendor data from DataVancouver

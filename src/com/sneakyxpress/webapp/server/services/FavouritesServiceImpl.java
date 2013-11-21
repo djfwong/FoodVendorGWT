@@ -1,16 +1,15 @@
 package com.sneakyxpress.webapp.server.services;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
-import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackService;
-import com.sneakyxpress.webapp.shared.Favourite;
-import com.sneakyxpress.webapp.server.PMF;
-import com.sneakyxpress.webapp.shared.VendorFeedback;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
+import com.sneakyxpress.webapp.server.PMF;
+import com.sneakyxpress.webapp.shared.Favourite;
 
 /**
  * Created by michael on 11/14/2013.

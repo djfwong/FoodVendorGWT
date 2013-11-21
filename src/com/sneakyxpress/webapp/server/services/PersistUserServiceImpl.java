@@ -1,16 +1,15 @@
 package com.sneakyxpress.webapp.server.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.server.PMF;
-import com.sneakyxpress.webapp.shared.FoodVendor;
 import com.sneakyxpress.webapp.shared.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Updates the Food Vendor data from DataVancouver

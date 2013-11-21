@@ -12,7 +12,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimService;
 import com.sneakyxpress.webapp.server.PMF;
 import com.sneakyxpress.webapp.shared.TruckClaim;
-import com.sneakyxpress.webapp.shared.User;
 
 public class ClaimServiceImpl extends RemoteServiceServlet implements
 		ClaimService {

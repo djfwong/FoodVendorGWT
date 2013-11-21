@@ -5,11 +5,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.Modal;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -18,6 +20,8 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
+import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
+import com.sneakyxpress.webapp.client.pages.profile.ProfileContent;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimService;
 import com.sneakyxpress.webapp.client.pages.truckclaim.ClaimServiceAsync;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
@@ -40,6 +44,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 
 	protected static final Logger logger = Logger.getLogger("");
 
+	private Modal modal;
 	private Sneaky_Xpress module;
 
 	private String fbId;
@@ -190,7 +195,8 @@ public class ClaimsTab extends AbstractNavbarTab {
 							fbId = selected.getFacebookId();
 							truckId = selected.getTruckId();
 							claimId = selected.getId();
-							module.addModal("Claim ID: " + selected.getId(),
+							modal = module.addModal(
+									"Claim ID: " + selected.getId(),
 									claimAcceptanceWidget());
 						}
 
@@ -212,6 +218,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 			@Override
 			public void onClick(ClickEvent event)
 			{
+				modal.hide();
 				claimsService.acceptClaim(claimId,
 						new AsyncCallback<Boolean>() {
 
@@ -242,6 +249,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 							}
 
 						});
+				History.newItem(new GreetingContent(module).getPageStub());
 			}
 		});
 
@@ -255,6 +263,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 			@Override
 			public void onClick(ClickEvent event)
 			{
+				modal.hide();
 				claimsService.rejectClaim(claimId,
 						new AsyncCallback<Boolean>() {
 
@@ -280,8 +289,9 @@ public class ClaimsTab extends AbstractNavbarTab {
 											"Error in rejecting claim.");
 								}
 							}
-
 						});
+
+				History.newItem(new GreetingContent(module).getPageStub());
 			}
 		});
 

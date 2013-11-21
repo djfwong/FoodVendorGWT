@@ -98,6 +98,8 @@ public class ClaimFormServlet extends HttpServlet {
 		// Persist truck claim data
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
+		
+		
 		pm.makePersistent(claim);
 
 		pm.close();
