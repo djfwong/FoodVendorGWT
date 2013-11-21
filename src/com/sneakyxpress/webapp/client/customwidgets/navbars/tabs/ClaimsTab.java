@@ -44,6 +44,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 
 	private String fbId;
 	private String truckId;
+	private Long claimId;
 
 	public ClaimsTab(Sneaky_Xpress module) {
 		this.module = module;
@@ -186,10 +187,9 @@ public class ClaimsTab extends AbstractNavbarTab {
 								.getSelectedObject();
 						if (selected != null)
 						{
-							// History.newItem(new
-							// ViewClaimContent(module).getPageStub());
 							fbId = selected.getFacebookId();
 							truckId = selected.getTruckId();
+							claimId = selected.getId();
 							module.addModal("Claim ID: " + selected.getId(),
 									claimAcceptanceWidget());
 						}
@@ -212,7 +212,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				claimsService.acceptClaim(fbId, truckId,
+				claimsService.acceptClaim(claimId,
 						new AsyncCallback<Boolean>() {
 
 							@Override
@@ -255,7 +255,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				claimsService.rejectClaim(fbId, truckId,
+				claimsService.rejectClaim(claimId,
 						new AsyncCallback<Boolean>() {
 
 							@Override

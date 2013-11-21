@@ -9,10 +9,8 @@ public interface ClaimServiceAsync {
 
 	void retrieveClaims(AsyncCallback<List<TruckClaim>> callback);
 
-	void acceptClaim(String fbId, String truckId,
-			AsyncCallback<Boolean> callback);
+	void acceptClaim(long id, AsyncCallback<Boolean> callback);
 
-	void rejectClaim(String fbId, String truckId,
-			AsyncCallback<Boolean> callback);
+	void rejectClaim(Long claimId, AsyncCallback<Boolean> asyncCallback);
 
 }

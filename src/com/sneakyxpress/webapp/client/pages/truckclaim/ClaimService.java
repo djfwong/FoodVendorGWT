@@ -13,7 +13,7 @@ import com.sneakyxpress.webapp.shared.TruckClaim;
 public interface ClaimService extends RemoteService {
 	List<TruckClaim> retrieveClaims() throws IllegalArgumentException;
 
-	boolean acceptClaim(String fbId, String truckId);
+	boolean acceptClaim(long id);
 
-	boolean rejectClaim(String fbId, String truckId);
+	boolean rejectClaim(Long claimId);
 }
