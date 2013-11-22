@@ -163,10 +163,10 @@ public class Sneaky_Xpress implements EntryPoint {
         logger.log(Level.INFO, "addNavigationLinks: created the login link");
 
         // Add the update data link
-        HTMLPanel dataListElement = new HTMLPanel("li", "");
+        /*HTMLPanel dataListElement = new HTMLPanel("li", "");
         dataListElement.add(getDataLink());
         navbarList.add(dataListElement);
-        logger.log(Level.INFO, "addNavigationLinks: created the update data link");
+        logger.log(Level.INFO, "addNavigationLinks: created the update data link");*/
     }
 
 
