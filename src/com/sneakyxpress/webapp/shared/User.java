@@ -8,7 +8,6 @@ import javax.persistence.Id;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-@Entity
 @PersistenceCapable
 public class User implements IsSerializable {
 

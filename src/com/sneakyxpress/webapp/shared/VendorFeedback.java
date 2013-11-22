@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
-@Entity
 @PersistenceCapable
 public class VendorFeedback implements IsSerializable {
     // The key of a vendor feedback is defined to be [User ID][Vendor ID]
