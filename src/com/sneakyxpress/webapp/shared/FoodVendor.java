@@ -8,7 +8,6 @@ import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 @PersistenceCapable
 public class FoodVendor implements IsSerializable {
 
