@@ -205,7 +205,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 
                 fieldSet.add(new HTML("<br>"));
                 fieldSet.add(new HTML("<label>Email</label>"));
-                email.setText(v.getHours());
+                email.setText(v.getEmail());
                 fieldSet.add(email);
 
                 fieldSet.add(new HTML("<br>"));
