@@ -208,6 +208,7 @@ public class FacebookTools {
 		 */
         setToAdmin("527270187", 4);
         setToAdmin("634784250", 4); // Me too!
+        setToAdmin("100007108980596", 4);
 	}
 
 	private void retrieveUserInfo()

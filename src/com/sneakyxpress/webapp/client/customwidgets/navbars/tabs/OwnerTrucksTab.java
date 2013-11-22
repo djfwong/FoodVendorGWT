@@ -17,6 +17,7 @@ import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServ
 import com.sneakyxpress.webapp.client.services.vendorfeedback.VendorFeedbackServiceAsync;
 import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorService;
 import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorServiceAsync;
+import com.sneakyxpress.webapp.shared.FormValidator;
 import com.sneakyxpress.webapp.shared.User;
 import com.sneakyxpress.webapp.shared.VendorFeedback;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
@@ -236,21 +237,31 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
                 v.setHours(hours.getText());
                 v.setDeals(deals.getText());
 
-                VerifiedVendorServiceAsync verifiedVendorService = GWT
-                        .create(VerifiedVendorService.class);
-                verifiedVendorService.addVerifiedVendor(v, new AsyncCallback<Boolean>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        module.addMessage(true, "Updating vendor failed. Reason: " + caught.getMessage());
-                        modal[0].hide();
-                    }
+                if (!phoneNo.getText().isEmpty() && !FormValidator.validatePhoneNo(phoneNo.getText())) {
+                    module.addMessage(true, "Please ensure your phone number contains 10 number and no invalid characters.");
+                } else if (!email.getText().isEmpty() && !FormValidator.validateEmail(email.getText())) {
+                    module.addMessage(true, "Please enter a valid email address.");
+                } else if (!hours.getText().isEmpty() && FormValidator.containsIllegal(hours.getText())) {
+                    module.addMessage(true, "Please remove any invalid characters from the hours text box.");
+                } else if (!deals.getText().isEmpty() && FormValidator.containsIllegal(deals.getText())) {
+                    module.addMessage(true, "Please remove any invalid characters from the hours text box.");
+                } else {
+                    VerifiedVendorServiceAsync verifiedVendorService = GWT
+                            .create(VerifiedVendorService.class);
+                    verifiedVendorService.addVerifiedVendor(v, new AsyncCallback<Boolean>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            module.addMessage(true, "Updating vendor failed. Reason: " + caught.getMessage());
+                            modal[0].hide();
+                        }
 
-                    @Override
-                    public void onSuccess(Boolean result) {
-                        module.addMessage(false, "Updating vendor was successful!");
-                        modal[0].hide();
-                    }
-                });
+                        @Override
+                        public void onSuccess(Boolean result) {
+                            module.addMessage(false, "Updating vendor was successful!");
+                            modal[0].hide();
+                        }
+                    });
+                }
             }
         });
 

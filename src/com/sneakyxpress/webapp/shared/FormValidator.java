@@ -15,8 +15,19 @@ public class FormValidator {
         }
     }
 
-    private static boolean containsIllegal(String toExamine) {
+    public static boolean containsIllegal(String toExamine) {
         String[] arr = toExamine.split("[~#@*+{}<>\\[\\]|\\_^]", 2);
         return arr.length > 1;
+    }
+
+    public static boolean validatePhoneNo(String toExamine) {
+        boolean patternOK = toExamine.matches("^[0-9]*$");
+        boolean lengthOK = toExamine.length() == 10;
+
+        return lengthOK && patternOK;
+    }
+
+    public static boolean validateEmail(String toExamine) {
+        return toExamine.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     }
 }
