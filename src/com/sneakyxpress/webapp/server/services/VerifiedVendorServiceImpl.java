@@ -34,25 +34,22 @@ public class VerifiedVendorServiceImpl extends RemoteServiceServlet implements
         // Persist truck claim data
         PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        Query q = pm.newQuery(VerifiedVendor.class);
-        q.setFilter("userId == :fbid && vendorId == :truckid");
+        Query q = pm.newQuery("SELECT UNIQUE FROM "
+                + VerifiedVendor.class.getName() + " WHERE vendorId == \""
+                + v.getVendorId() + "\"");
+        VerifiedVendor result = (VerifiedVendor) q.execute();
 
-        Map<String, String> paramValues = new HashMap<String, String>();
-        paramValues.put("fbid", v.getUserId());
-        paramValues.put("truckid", v.getVendorId());
+        if (result != null) {
+            pm.deletePersistent(result);
 
-        List<VerifiedVendor> vList = (List<VerifiedVendor>) q.executeWithMap(paramValues);
-
-        if (vList.size() == 0) {
             pm.makePersistent(v);
 
             pm.close();
             return true;
         } else {
-            pm.deletePersistentAll(vList);
+            pm.makePersistent(v);
 
-            pm.makePersistent(v); // We still want to update the VV (I think)
-
+            pm.close();
             return false;
         }
 	}

@@ -240,16 +240,8 @@ public class ClaimsTab extends AbstractNavbarTab {
 					@Override
 					public void onSuccess(Boolean result)
 					{
-						if (result)
-						{
-							module.addMessage(false,
+						module.addMessage(false,
 									"Updated Truck As Verified");
-						}
-						else
-						{
-							module.addMessage(true,
-									"Error in verifying truck, could be already claimed");
-						}
 					}
 
 				});
