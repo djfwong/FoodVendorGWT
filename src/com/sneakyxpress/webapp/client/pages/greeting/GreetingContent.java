@@ -24,139 +24,152 @@ import java.util.*;
  * Get the content for our home page.
  */
 public class GreetingContent extends Content {
-    private static final String pageName = "Vancouver Food Vendor Reviews";
-    private static final String pageStub = "home";
+	private static final String pageName = "Vancouver Food Vendor Reviews";
+	private static final String pageStub = "home";
 
-    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+	private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
-    public GreetingContent(Sneaky_Xpress module) {
-        super(module);
-    }
+	public GreetingContent(Sneaky_Xpress module) {
+		super(module);
+	}
 
-    @Override
-    public String getPageName() {
-        return pageName;
-    }
+	@Override
+	public String getPageName() {
+		return pageName;
+	}
 
-    @Override
-    public String getPageStub() {
-        return pageStub;
-    }
+	@Override
+	public String getPageStub() {
+		return pageStub;
+	}
 
-    @Override
-    public void getAndChangeContent(String input) {
-        greetingService.greetServer(input, new AsyncCallback<String>() {
-                public void onFailure(Throwable caught) {
-                    module.addMessage(true, GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
-                }
+	@Override
+	public void getAndChangeContent(String input) {
+		greetingService.greetServer(input, new AsyncCallback<String>() {
+			public void onFailure(Throwable caught) {
+				module.addMessage(true, GENERIC_ERROR_MESSAGE + " Reason: " + caught.getMessage());
+			}
 
-                public void onSuccess(String result) {
-                    HTMLPanel parentContents = new HTMLPanel("");
+			public void onSuccess(String result) {
+				HTMLPanel parentContents = new HTMLPanel("");
 
-                    final HTMLPanel contents = new HTMLPanel("");
-                    contents.addStyleName("row-fluid");
+				final HTMLPanel contents = new HTMLPanel("");
+				contents.addStyleName("row-fluid");
 
-                    // Add stats
-                    HTMLPanel stats = new HTMLPanel(result);
-                    stats.addStyleName("well");
-                    parentContents.add(stats);
-
-                    parentContents.add(contents);
-
-                    // Get friend's recent reviews
-                    if (FacebookTools.isLoggedIn()) {
-                        VendorFeedbackServiceAsync vendorFeedbackService = GWT.
-                                create(VendorFeedbackService.class);
-
-                        List<String> friendsIds =
-                                new ArrayList<String>(module.FACEBOOK_TOOLS.getUserFriends().values());
-                        vendorFeedbackService.getFriendsReviews(friendsIds, new AsyncCallback<List<VendorFeedback>>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                module.addMessage(true, "Could not load friends\' reviews! Reason: "
-                                        + caught.getMessage());
-                            }
-
-                            @Override
-                            public void onSuccess(List<VendorFeedback> result) {
-                                HTMLPanel reviews = new HTMLPanel("");
-                                reviews.addStyleName("well span6");
-
-                                if (result == null) {
-                                    HTMLPanel response = new HTMLPanel("p", "No friends\' reviews could be found :(");
-                                    response.addStyleName("lead pagination-centered");
-                                    reviews.add(response);
-                                } else {
-                                    Collections.sort(result, new FeedbackComparator());
-
-                                    for (VendorFeedback f : result) {
-                                        reviews.add(new ReviewWidget(module, f));
-                                    }
-                                }
-                                contents.add(reviews);
-                            }
-                        });
-
-                        // Get friends' favourites
-                        FavouritesServiceAsync favouritesService = GWT.
-                                create(FavouritesService.class);
-
-                        favouritesService.getFriendsFavourites(friendsIds, new AsyncCallback<List<Favourite>>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                module.addMessage(true, "Could not load friends\' favourites! Reason: "
-                                        + caught.getMessage());
-                            }
-
-                            @Override
-                            public void onSuccess(List<Favourite> result) {
-                                HTMLPanel favs = new HTMLPanel("");
-                                favs.addStyleName("span6");
-
-                                if (result == null) {
-                                    HTMLPanel response = new HTMLPanel("p", "No friends\' favourites could be found :(");
-                                    response.addStyleName("lead pagination-centered");
-                                    favs.addStyleName("well");
-                                    favs.add(response);
-                                } else {
-                                    SimpleTable table = new SimpleTable("table-hover table-bordered",
-                                            "Key", "Name", "Friend");
-                                    List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
-
-                                    for (Favourite f : result) {
-                                        String friendName = module.FACEBOOK_TOOLS.getUserFriends().get(f.getUserId());
-
-                                        table.addRow(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()),
-                                                f.getVendorId(), f.getVendorName(), friendName);
-
-                                        FavouriteButton fb = new FavouriteButton(module, f.getVendorId(), f.getVendorName(),
-                                                FacebookTools.getUserId());
-                                        hearts.add(fb);
-                                    }
-
-                                    table.addWidgetColumn("", hearts);
-                                    table.sortRows(0, false);
-
-                                    favs.add(table);
-                                }
-
-                                contents.add(favs);
-                            }
-                        });
+				HTMLPanel info = null;
+				if(!FacebookTools.isLoggedIn())
+				{
+					info = new HTMLPanel("<p class=\"lead pagination-centered\">Click on our Login button at the top to access your account activity or to register today with your Facebook account!</p>");
+				}
+				else{
+					info = new HTMLPanel("<p class=\"lead pagination-centered\">Click on our Profile button at the top to access your account activity.</p>");
+				}
 
 
-                    }
+				info.addStyleName("well");
+				parentContents.add(info);
 
-                    module.changeContent(parentContents);
-                }
-            });
-    }
+				// Add stats
+				HTMLPanel stats = new HTMLPanel(result);
+				stats.addStyleName("well");
+				parentContents.add(stats);
 
-    class FeedbackComparator implements Comparator<VendorFeedback> {
+				parentContents.add(contents);
 
-        @Override
-        public int compare(VendorFeedback f1, VendorFeedback f2) {
-            return (int) (f2.getCreationTime() - f1.getCreationTime());
-        }
-    }
+				// Get friend's recent reviews
+				if (FacebookTools.isLoggedIn()) {
+					VendorFeedbackServiceAsync vendorFeedbackService = GWT.
+							create(VendorFeedbackService.class);
+
+					List<String> friendsIds =
+							new ArrayList<String>(module.FACEBOOK_TOOLS.getUserFriends().values());
+					vendorFeedbackService.getFriendsReviews(friendsIds, new AsyncCallback<List<VendorFeedback>>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							module.addMessage(true, "Could not load friends\' reviews! Reason: "
+									+ caught.getMessage());
+						}
+
+						@Override
+						public void onSuccess(List<VendorFeedback> result) {
+							HTMLPanel reviews = new HTMLPanel("");
+							reviews.addStyleName("well span6");
+
+							if (result == null) {
+								HTMLPanel response = new HTMLPanel("p", "No friends\' reviews could be found :(");
+								response.addStyleName("lead pagination-centered");
+								reviews.add(response);
+							} else {
+								Collections.sort(result, new FeedbackComparator());
+
+								for (VendorFeedback f : result) {
+									reviews.add(new ReviewWidget(module, f));
+								}
+							}
+							contents.add(reviews);
+						}
+					});
+
+					// Get friends' favourites
+					FavouritesServiceAsync favouritesService = GWT.
+							create(FavouritesService.class);
+
+					favouritesService.getFriendsFavourites(friendsIds, new AsyncCallback<List<Favourite>>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							module.addMessage(true, "Could not load friends\' favourites! Reason: "
+									+ caught.getMessage());
+						}
+
+						@Override
+						public void onSuccess(List<Favourite> result) {
+							HTMLPanel favs = new HTMLPanel("");
+							favs.addStyleName("span6");
+
+							if (result == null) {
+								HTMLPanel response = new HTMLPanel("p", "No friends\' favourites could be found :(");
+								response.addStyleName("lead pagination-centered");
+								favs.addStyleName("well");
+								favs.add(response);
+							} else {
+								SimpleTable table = new SimpleTable("table-hover table-bordered",
+										"Key", "Name", "Friend");
+								List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
+
+								for (Favourite f : result) {
+									String friendName = module.FACEBOOK_TOOLS.getUserFriends().get(f.getUserId());
+
+									table.addRow(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()),
+											f.getVendorId(), f.getVendorName(), friendName);
+
+									FavouriteButton fb = new FavouriteButton(module, f.getVendorId(), f.getVendorName(),
+											FacebookTools.getUserId());
+									hearts.add(fb);
+								}
+
+								table.addWidgetColumn("", hearts);
+								table.sortRows(0, false);
+
+								favs.add(table);
+							}
+
+							contents.add(favs);
+						}
+					});
+
+
+				}
+
+				module.changeContent(parentContents);
+			}
+		});
+	}
+
+	class FeedbackComparator implements Comparator<VendorFeedback> {
+
+		@Override
+		public int compare(VendorFeedback f1, VendorFeedback f2) {
+			return (int) (f2.getCreationTime() - f1.getCreationTime());
+		}
+	}
 }
