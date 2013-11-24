@@ -66,7 +66,7 @@ public class FavouriteButton extends Composite {
             starButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    module.addMessage(false, "Please login to add a favourite vendor.");
+                    module.addMessage(true, "Please login to add a favourite vendor.");
                 }
             });
         }
