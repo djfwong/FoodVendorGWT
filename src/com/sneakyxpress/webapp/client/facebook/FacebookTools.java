@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 import com.sneakyxpress.webapp.client.pages.PageClickHandler;
+import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserServiceAsync;
 import com.sneakyxpress.webapp.shared.FoodVendor;
@@ -46,6 +47,7 @@ public class FacebookTools {
 	// (http://www.facebook.com/developers).
 	private static final String FACEBOOK_APP_ID = "181220262080855"; // 181220262080855
 	// //
+	// 564258303629433
 	// 383766345086697
 	// (Michael's)
 	// All available scopes are listed here:
@@ -384,9 +386,10 @@ public class FacebookTools {
 				// Change the My Profile like into a Login link
 				// and "refresh" the page
 				convertProfileLink();
-				History.fireCurrentHistoryState();
+				History.newItem(new GreetingContent(module).getPageStub());
 				module.addMessage(false,
 						"All tokens cleared. You are now logged out!");
+				
 			}
 		});
 		return button;
