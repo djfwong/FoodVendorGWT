@@ -221,7 +221,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
                 v.setDeals(deals.getText());
 
                 if (!phoneNo.getText().isEmpty() && !FormValidator.validatePhoneNo(phoneNo.getText())) {
-                    module.addMessage(true, "Please ensure your phone number contains 10 number and no invalid characters.");
+                    module.addMessage(true, "Please ensure your phone number contains 10 numbers and no invalid characters.");
                 } else if (!email.getText().isEmpty() && !FormValidator.validateEmail(email.getText())) {
                     module.addMessage(true, "Please enter a valid email address.");
                 } else if (!hours.getText().isEmpty() && FormValidator.containsIllegal(hours.getText())) {
