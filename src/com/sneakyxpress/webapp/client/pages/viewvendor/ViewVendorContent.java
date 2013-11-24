@@ -3,6 +3,7 @@ package com.sneakyxpress.webapp.client.pages.viewvendor;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.*;
 import com.sneakyxpress.webapp.client.customwidgets.FavouriteButton;
 import com.sneakyxpress.webapp.client.services.verifiedvendorservice.VerifiedVendorService;
@@ -345,6 +346,7 @@ public class ViewVendorContent extends Content {
                     @Override
                     public void onSuccess(Void result) {
                         module.addMessage(false, "Your review was successfully added. Thank you!");
+                        History.fireCurrentHistoryState(); // Refresh the page
                     }
                 });
             } catch (IllegalArgumentException e) {
