@@ -218,6 +218,12 @@ public class ViewVendorContent extends Content {
 
                     form.add(fieldSet);
                     addReview.add(form);
+
+                    // Overwrite disclaimer
+                    HTMLPanel disclaimer = new HTMLPanel("p", "<em>Note: If you have previously submitted a review,"
+                            + " it will be overwritten. If you would like to update your existing review, please edit your"
+                            + "existing review.</em>");
+                    addReview.add(disclaimer);
                 } else {
                     HTMLPanel response = new HTMLPanel("<p class=\"lead pagination-centered\">" +
                             "Please log in to post a review.</p>");

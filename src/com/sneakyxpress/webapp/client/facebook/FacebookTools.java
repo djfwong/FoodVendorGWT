@@ -44,7 +44,7 @@ public class FacebookTools {
 
 	// This app's personal client ID assigned by the Facebook Developer App
 	// (http://www.facebook.com/developers).
-	private static final String FACEBOOK_APP_ID = "383766345086697"; // 181220262080855
+	private static final String FACEBOOK_APP_ID = "181220262080855"; // 181220262080855
 	// //
 	// 383766345086697
 	// (Michael's)
