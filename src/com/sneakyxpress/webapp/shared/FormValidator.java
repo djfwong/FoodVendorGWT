@@ -13,6 +13,11 @@ public class FormValidator {
             throw new IllegalArgumentException("Your review text contains illegal characters."
                     + " Please remove them and submit your review again.");
         }
+
+        if (!checkLength(text)) {
+            throw new IllegalArgumentException("Sorry, your review is too long!" +
+                    " Reviews must be no longer than 500 characters.");
+        }
     }
 
     public static boolean containsIllegal(String toExamine) {
@@ -29,5 +34,9 @@ public class FormValidator {
 
     public static boolean validateEmail(String toExamine) {
         return toExamine.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    }
+
+    public static boolean checkLength(String toExamine) {
+        return toExamine.length() <= 500;
     }
 }
