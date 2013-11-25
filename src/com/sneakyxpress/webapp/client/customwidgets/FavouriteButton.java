@@ -17,110 +17,144 @@ import com.sneakyxpress.webapp.shared.FoodVendor;
  * Created by michael on 11/20/2013.
  */
 public class FavouriteButton extends Composite {
-    private final Sneaky_Xpress module;
+	private final Sneaky_Xpress module;
 
-    private final Button starButton;
+	private final Button starButton;
 
-    private final String id;
-    private final String vendorId;
-    private final String userId;
-    private final String vendorName;
+	private final String id;
+	private final String vendorId;
+	private final String userId;
+	private final String vendorName;
+	private final String vendorDesc;
 
-    private boolean isFavourite = false;
+	private boolean isFavourite = false;
 
-    private final FavouritesServiceAsync favouritesService = GWT.
-            create(FavouritesService.class);
+	private final FavouritesServiceAsync favouritesService = GWT
+			.create(FavouritesService.class);
 
-    public FavouriteButton(final Sneaky_Xpress module, String vendorId, String vendorName, String userId) {
-        this.module = module;
-        this.id = vendorId + userId;
-        this.vendorId = vendorId;
-        this.vendorName = vendorName;
-        this.userId = userId;
+	public FavouriteButton(final Sneaky_Xpress module, String vendorId,
+			String vendorName, String userId, String vendorDesc) {
+		this.module = module;
+		this.id = vendorId + userId;
+		this.vendorId = vendorId;
+		this.vendorName = vendorName;
+		this.userId = userId;
+		this.vendorDesc = vendorDesc;
 
-        // Create the button
-        starButton = new Button("<i class=\"icon-heart\"></i>");
-        starButton.addStyleName("btn");
-        initWidget(starButton);
+		// Create the button
+		starButton = new Button("<i class=\"icon-heart\"></i>");
+		starButton.addStyleName("btn");
+		initWidget(starButton);
 
-        if (FacebookTools.isLoggedIn()) {
-            // Set the initial colour and status
-            favouritesService.getFavourite(id, new AsyncCallback<Favourite>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    module.addMessage(true, "Error loading favourite status. Reason: " + caught.getMessage());
-                }
+		if (FacebookTools.isLoggedIn())
+		{
+			// Set the initial colour and status
+			favouritesService.getFavourite(id, new AsyncCallback<Favourite>() {
+				@Override
+				public void onFailure(Throwable caught)
+				{
+					module.addMessage(
+							true,
+							"Error loading favourite status. Reason: "
+									+ caught.getMessage());
+				}
 
-                @Override
-                public void onSuccess(Favourite result) {
-                    if (result != null) {
-                        isFavourite = true;
-                        updateButtonColour();
-                    }
-                }
-            });
+				@Override
+				public void onSuccess(Favourite result)
+				{
+					if (result != null)
+					{
+						isFavourite = true;
+						updateButtonColour();
+					}
+				}
+			});
 
-            // Add a click handler
-            starButton.addClickHandler(new StarButtonClickHandler());
-        } else {
-            starButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    module.addMessage(true, "Please login to add a favourite vendor.");
-                }
-            });
-        }
-    }
+			// Add a click handler
+			starButton.addClickHandler(new StarButtonClickHandler());
+		}
+		else
+		{
+			starButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event)
+				{
+					module.addMessage(true,
+							"Please login to add a favourite vendor.");
+				}
+			});
+		}
+	}
 
-    public FavouriteButton(Sneaky_Xpress module, FoodVendor v, String userId) {
-        this(module, v.getVendorId(), v.getName(), userId);
-    }
+	public FavouriteButton(Sneaky_Xpress module, FoodVendor v, String userId,
+			String vendorDesc) {
+		this(module, v.getVendorId(), v.getName(), userId, vendorDesc);
+	}
 
-    private void updateButtonColour() {
-        if (isFavourite) {
-            starButton.addStyleName("btn-success");
-        } else {
-            starButton.removeStyleName("btn-success");
-        }
-    }
+	private void updateButtonColour()
+	{
+		if (isFavourite)
+		{
+			starButton.addStyleName("btn-success");
+		}
+		else
+		{
+			starButton.removeStyleName("btn-success");
+		}
+	}
 
-    private class StarButtonClickHandler implements ClickHandler {
+	private class StarButtonClickHandler implements ClickHandler {
 
-        @Override
-        public void onClick(ClickEvent event) {
-            if (isFavourite) {
-                // Remove as favourite
-                favouritesService.removeFavourite(id, new AsyncCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        module.addMessage(true, "Could not remove favourite. Reason: " + caught.getMessage());
-                    }
+		@Override
+		public void onClick(ClickEvent event)
+		{
+			if (isFavourite)
+			{
+				// Remove as favourite
+				favouritesService.removeFavourite(id,
+						new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught)
+							{
+								module.addMessage(true,
+										"Could not remove favourite. Reason: "
+												+ caught.getMessage());
+							}
 
-                    @Override
-                    public void onSuccess(Void result) {
-                        isFavourite = false;
-                        updateButtonColour();
-                    }
-                });
-            } else {
-                // Persist as favourite
-                Favourite f = new Favourite();
-                f.setVendorId(vendorId);
-                f.setVendorName(vendorName);
-                f.setUserId(userId);
-                favouritesService.persistFavourite(f, new AsyncCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        module.addMessage(true, "Could not add favourite. Reason: " + caught.getMessage());
-                    }
+							@Override
+							public void onSuccess(Void result)
+							{
+								isFavourite = false;
+								updateButtonColour();
+							}
+						});
+			}
+			else
+			{
+				// Persist as favourite
+				Favourite f = new Favourite();
+				f.setVendorId(vendorId);
+				f.setVendorName(vendorName);
+				f.setUserId(userId);
+				f.setVendorDesc(vendorDesc);
+				favouritesService.persistFavourite(f,
+						new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught)
+							{
+								module.addMessage(true,
+										"Could not add favourite. Reason: "
+												+ caught.getMessage());
+							}
 
-                    @Override
-                    public void onSuccess(Void result) {
-                        isFavourite = true;
-                        updateButtonColour();
-                    }
-                });
-            }
-        }
-    }
+							@Override
+							public void onSuccess(Void result)
+							{
+								isFavourite = true;
+								updateButtonColour();
+							}
+						});
+			}
+		}
+	}
 }

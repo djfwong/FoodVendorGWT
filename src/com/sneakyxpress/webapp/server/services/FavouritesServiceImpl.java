@@ -17,7 +17,12 @@ import com.sneakyxpress.webapp.shared.Favourite;
 public class FavouritesServiceImpl extends RemoteServiceServlet
         implements FavouritesService {
 
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
     public void persistFavourite(Favourite f) throws IllegalArgumentException {
         // Create the ID of the favourite. This will be unique.
         f.setId(f.getVendorId() + f.getUserId());
@@ -67,7 +72,8 @@ public class FavouritesServiceImpl extends RemoteServiceServlet
 
         Query q = pm.newQuery("SELECT FROM " + Favourite.class.getName()
                 + " WHERE userId == \"" + userId + "\"");
-        List<Favourite> result = (List<Favourite>) q.execute();
+        @SuppressWarnings("unchecked")
+		List<Favourite> result = (List<Favourite>) q.execute();
         result = new ArrayList<Favourite>(result);
 
         pm.close();
@@ -87,7 +93,8 @@ public class FavouritesServiceImpl extends RemoteServiceServlet
         for (String id : friendsIds) {
             Query q = pm.newQuery("SELECT FROM " + Favourite.class.getName()
                     + " WHERE userId == \"" + id + "\"");
-            List<Favourite> result = (List<Favourite>) q.execute();
+            @SuppressWarnings("unchecked")
+			List<Favourite> result = (List<Favourite>) q.execute();
             friendsFavourites.addAll(result);
         }
 
@@ -106,7 +113,8 @@ public class FavouritesServiceImpl extends RemoteServiceServlet
 
         Query q = pm.newQuery("SELECT FROM " + Favourite.class.getName()
                 + " WHERE vendorId == \"" + vendorId + "\"");
-        List<Favourite> result = (List<Favourite>) q.execute();
+        @SuppressWarnings("unchecked")
+		List<Favourite> result = (List<Favourite>) q.execute();
 
         pm.close();
 

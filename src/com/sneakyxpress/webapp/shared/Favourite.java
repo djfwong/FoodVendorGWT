@@ -1,16 +1,13 @@
 package com.sneakyxpress.webapp.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+@PersistenceCapable
 public class Favourite implements IsSerializable {
 	/**
 	 * Favourite domain object
@@ -18,50 +15,72 @@ public class Favourite implements IsSerializable {
 
 	// Unique identifier for object
 	@Id
-    @Persistent
-    @PrimaryKey
+	@Persistent
+	@PrimaryKey
 	private String id;
 
 	// User Id
-    @Persistent
+	@Persistent
 	private String userId;
 
 	// Vendor Id
-    @Persistent
+	@Persistent
 	private String vendorId;
 
-    @Persistent
-    private String vendorName;
+	@Persistent
+	private String vendorName;
 
-    public String getUserId() {
-        return userId;
-    }
+	@Persistent
+	// Vendor description
+	private String vendorDesc;
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public String getUserId()
+	{
+		return userId;
+	}
 
-    public String getVendorId() {
-        return vendorId;
-    }
+	public void setUserId(String userId)
+	{
+		this.userId = userId;
+	}
 
-    public void setVendorId(String vendorId) {
-        this.vendorId = vendorId;
-    }
+	public String getVendorId()
+	{
+		return vendorId;
+	}
 
-    public String getVendorName() {
-        return vendorName;
-    }
+	public void setVendorId(String vendorId)
+	{
+		this.vendorId = vendorId;
+	}
 
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
-    }
+	public String getVendorName()
+	{
+		return vendorName;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setVendorName(String vendorName)
+	{
+		this.vendorName = vendorName;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public String getId()
+	{
+		return id;
+	}
+
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
+	public String getVendorDesc()
+	{
+		return vendorDesc;
+	}
+
+	public void setVendorDesc(String vendorDesc)
+	{
+		this.vendorDesc = vendorDesc;
+	}
 }

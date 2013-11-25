@@ -77,18 +77,18 @@ public class FavouritesTab extends AbstractNavbarTab {
 					info.add(header);
 
 					SimpleTable table = new SimpleTable(
-							"table-hover table-bordered", "Key", "Name");
+							"table-hover table-bordered", "Key", "Name", "Description");
 					List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
 
 					for (Favourite f : result)
 					{
 						table.addRow(new PageClickHandler(
 								module.VENDOR_PAGE, f.getVendorId()), f
-								.getVendorId(), f.getVendorName());
+								.getVendorId(), f.getVendorName(), f.getVendorDesc());
 						FavouriteButton fb = new FavouriteButton(
 								module, f.getVendorId(), f
 								.getVendorName(), FacebookTools
-								.getUserId());
+								.getUserId(), f.getVendorDesc());
 						hearts.add(fb);
 					}
 

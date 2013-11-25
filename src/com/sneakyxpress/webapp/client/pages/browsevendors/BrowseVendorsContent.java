@@ -261,7 +261,7 @@ public class BrowseVendorsContent extends Content {
                             // Add a quick favourite button to the table rows
                             List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
                             for (FoodVendor v : result) {
-                                FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId());
+                                FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId(), v.getDescription());
                                 hearts.add(fb);
                             }
                             table.addWidgetColumn("", hearts);

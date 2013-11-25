@@ -141,17 +141,17 @@ public class GreetingContent extends Content {
                                 favs.add(response);
 
 								SimpleTable table = new SimpleTable("table-hover table-bordered",
-										"Key", "Name", "Friend");
+										"Key", "Name", "Description", "Friend");
 								List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
 
 								for (Favourite f : result) {
 									String friendName = module.FACEBOOK_TOOLS.getUserFriends().get(f.getUserId());
 
 									table.addRow(new PageClickHandler(module.VENDOR_PAGE, f.getVendorId()),
-											f.getVendorId(), f.getVendorName(), friendName);
+											f.getVendorId(), f.getVendorName(), f.getVendorDesc(), friendName);
 
 									FavouriteButton fb = new FavouriteButton(module, f.getVendorId(), f.getVendorName(),
-											FacebookTools.getUserId());
+											FacebookTools.getUserId(), f.getVendorDesc());
 									hearts.add(fb);
 								}
 

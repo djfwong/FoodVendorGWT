@@ -58,7 +58,7 @@ public class SearchContent extends Content {
 
                         List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
                         for (FoodVendor v : search_results) {
-                            FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId());
+                            FavouriteButton fb = new FavouriteButton(module, v, FacebookTools.getUserId(), v.getDescription());
                             hearts.add(fb);
                         }
                         table.addWidgetColumn("", hearts);
