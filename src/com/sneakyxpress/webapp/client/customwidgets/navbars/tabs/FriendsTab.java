@@ -35,7 +35,7 @@ public class FriendsTab extends AbstractNavbarTab {
     public FlowPanel getContent() {
         final FlowPanel friends = new FlowPanel();
 		HTMLPanel info = new HTMLPanel(
-				"<p class=\"lead pagination-centered\">View what your friends have been up to on our site. Got none? Ask them to join our site today!</p>");
+				"<p class=\"lead pagination-centered\">Here's a list of your awesome friends that also use our site! Got none? Ask them to join our site today!</p>");
 		friends.add(info);
         
         
