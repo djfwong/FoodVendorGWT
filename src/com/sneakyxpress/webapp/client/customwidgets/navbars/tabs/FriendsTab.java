@@ -39,7 +39,7 @@ public class FriendsTab extends AbstractNavbarTab {
 		friends.add(info);
         
         
-        List<String> friendsIds = new ArrayList<String>(module.FACEBOOK_TOOLS.getUserFriends().values());
+        List<String> friendsIds = new ArrayList<String>(module.FACEBOOK_TOOLS.getUserFriends().keySet());
 
         FriendsServiceAsync friendsService = GWT.
                 create(FriendsService.class);

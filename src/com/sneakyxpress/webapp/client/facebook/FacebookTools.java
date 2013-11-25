@@ -68,7 +68,7 @@ public class FacebookTools {
 	private static boolean loggedIn = false;
 
 	// Data retrieved from facebook, by default null
-	HashMap<String, String> userFriends = new HashMap<String, String>();
+	private static final HashMap<String, String> userFriends = new HashMap<String, String>();
 	private static String userId = "";
 	private static String userName = "";
 
