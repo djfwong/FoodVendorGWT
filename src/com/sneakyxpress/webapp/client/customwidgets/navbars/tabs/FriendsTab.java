@@ -34,7 +34,11 @@ public class FriendsTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         final FlowPanel friends = new FlowPanel();
-
+		HTMLPanel info = new HTMLPanel(
+				"<p class=\"lead pagination-centered\">View what your friends have been up to on our site. Got none? Ask them to join our site today!</p>");
+		friends.add(info);
+        
+        
         List<String> friendsIds = new ArrayList<String>(module.FACEBOOK_TOOLS.getUserFriends().values());
 
         FriendsServiceAsync friendsService = GWT.

@@ -1,9 +1,10 @@
 package com.sneakyxpress.webapp.client.customwidgets.navbars.tabs;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
@@ -14,11 +15,7 @@ import com.sneakyxpress.webapp.client.pages.PageClickHandler;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesService;
 import com.sneakyxpress.webapp.client.services.favouritesservice.FavouritesServiceAsync;
 import com.sneakyxpress.webapp.shared.Favourite;
-import com.sneakyxpress.webapp.shared.FoodVendor;
 import com.sneakyxpress.webapp.shared.User;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by michael on 11/14/2013.
@@ -40,7 +37,12 @@ public class FavouritesTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         final FlowPanel favourites = new FlowPanel();
-
+        favourites.addStyleName("well");
+        
+		HTMLPanel info = new HTMLPanel(
+				"<p class=\"lead pagination-centered\">All your favourite food vendors are listed below! You may also remove any of your saved favourites.</p>");
+		favourites.add(info);
+        
         FavouritesServiceAsync favouritesService = GWT
                 .create(FavouritesService.class);
         favouritesService.getUserFavourites(user.getId(),

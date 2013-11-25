@@ -1,12 +1,15 @@
 package com.sneakyxpress.webapp.client.customwidgets.navbars.tabs;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import com.github.gwtbootstrap.client.ui.Modal;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -18,11 +21,6 @@ import com.sneakyxpress.webapp.client.pages.greeting.GreetingContent;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserService;
 import com.sneakyxpress.webapp.client.services.persistuser.PersistUserServiceAsync;
 import com.sneakyxpress.webapp.shared.User;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by michael on 11/20/2013.
@@ -51,6 +49,10 @@ public class ManageUsersTab extends AbstractNavbarTab {
 	public FlowPanel getContent()
 	{
 		final FlowPanel content = new FlowPanel();
+		
+		HTMLPanel info = new HTMLPanel(
+				"<p class=\"lead pagination-centered\">Select particular users to be removed from our database. Caution, their user data will also be deleted, so please proceed with caution.</p>");
+		content.add(info);
 
 		PersistUserServiceAsync persistUserService = GWT
 				.create(PersistUserService.class);

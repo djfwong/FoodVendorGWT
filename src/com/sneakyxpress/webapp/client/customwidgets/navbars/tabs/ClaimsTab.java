@@ -55,6 +55,12 @@ public class ClaimsTab extends AbstractNavbarTab {
 	public FlowPanel getContent()
 	{
 		final FlowPanel claimsPanel = new FlowPanel();
+		
+		HTMLPanel info = null;
+
+		info = new HTMLPanel(
+				"<p class=\"lead pagination-centered\">All submitted truck claims are shown in the table below. Click on any claim in the table to accept or reject it.</p>");
+		claimsPanel.add(info);
 
 		claimsService.retrieveClaims(new AsyncCallback<List<TruckClaim>>() {
 

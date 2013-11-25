@@ -27,6 +27,11 @@ public class RecentVendorsTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         FlowPanel recent = new FlowPanel();
+        
+		HTMLPanel info = new HTMLPanel(
+				"<p class=\"lead pagination-centered\">Revisit vendors! Note: Our application does not save visited vendors between web application refreshes, so doing so will remove them off this list.</p>");
+		recent.add(info);
+        
         recent.addStyleName("well");
 
         List<FoodVendor> recentlyViewed = module.FACEBOOK_TOOLS.getRecentlyViewed();

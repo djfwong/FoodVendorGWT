@@ -1,6 +1,7 @@
 package com.sneakyxpress.webapp.client.customwidgets.navbars.tabs;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.sneakyxpress.webapp.client.Sneaky_Xpress;
 
 /**
@@ -21,6 +22,10 @@ public class LogoutTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         FlowPanel logout = new FlowPanel();
+		HTMLPanel info = new HTMLPanel(
+				"<p class=\"lead pagination-centered\">Click to logout. See you soon!</p>");
+		logout.add(info);
+        
         logout.add(getButtonWidget(module.FACEBOOK_TOOLS.getLogoutButton()));
         return logout;
     }

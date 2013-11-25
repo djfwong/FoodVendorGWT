@@ -35,6 +35,11 @@ public class UserReviewsTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         final FlowPanel reviews = new FlowPanel();
+		HTMLPanel info = new HTMLPanel(
+				"<p class=\"lead pagination-centered\">Wow you've been busy, look at all those ratings and reviews! You may edit any of them below! Don't have one yet? Simply visit a vendor page and write one!</p>");
+		reviews.add(info);
+        
+        
         reviews.addStyleName("well");
 
         VendorFeedbackServiceAsync vendorFeedbackService = GWT
