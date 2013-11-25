@@ -1,5 +1,6 @@
 package com.sneakyxpress.webapp.client.pages.viewvendor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -161,7 +162,7 @@ public class ViewVendorContent extends Content {
                         } else {
                             // Sort the reviews
                             Set<String> friendIds = module.FACEBOOK_TOOLS.getUserFriends().keySet();
-                            for (VendorFeedback f : result) {
+                            for (VendorFeedback f : new ArrayList<VendorFeedback>(result)) { // Was getting an exception
                                 if (friendIds.contains(f.getAuthorId())) {
                                     result.remove(f);
                                     result.add(0, f);

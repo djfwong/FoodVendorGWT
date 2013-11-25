@@ -82,7 +82,7 @@ public class GreetingContent extends Content {
 							create(VendorFeedbackService.class);
 
 					List<String> friendsIds =
-							new ArrayList<String>(module.FACEBOOK_TOOLS.getUserFriends().values());
+							new ArrayList<String>(module.FACEBOOK_TOOLS.getUserFriends().keySet());
 					vendorFeedbackService.getFriendsReviews(friendsIds, new AsyncCallback<List<VendorFeedback>>() {
 						@Override
 						public void onFailure(Throwable caught) {
@@ -100,6 +100,10 @@ public class GreetingContent extends Content {
 								response.addStyleName("lead pagination-centered");
 								reviews.add(response);
 							} else {
+                                HTMLPanel response = new HTMLPanel("p", "Here are your friends\' reviews!");
+                                response.addStyleName("lead pagination-centered");
+                                reviews.add(response);
+
 								Collections.sort(result, new FeedbackComparator());
 
 								for (VendorFeedback f : result) {
@@ -132,6 +136,10 @@ public class GreetingContent extends Content {
 								favs.addStyleName("well");
 								favs.add(response);
 							} else {
+                                HTMLPanel response = new HTMLPanel("p", "Here are your friends\' favourites!");
+                                response.addStyleName("lead pagination-centered well");
+                                favs.add(response);
+
 								SimpleTable table = new SimpleTable("table-hover table-bordered",
 										"Key", "Name", "Friend");
 								List<FavouriteButton> hearts = new LinkedList<FavouriteButton>();
