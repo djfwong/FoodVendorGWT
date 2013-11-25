@@ -98,7 +98,11 @@ public class ReviewWidget extends Composite {
 
                     fieldSet.add(submitButton);
                     form.add(fieldSet);
-                    final Modal modal = module.addModal("Edit Review", form);
+
+                    final FlowPanel flow = new FlowPanel();
+                    flow.add(form);
+
+                    final Modal modal = module.addModal("Edit Review", flow);
 
                     submitButton.addStyleName("btn btn-info");
                     submitButton.addClickHandler(new ClickHandler() {
@@ -129,7 +133,7 @@ public class ReviewWidget extends Composite {
                                     }
                                 });
                             } catch (IllegalArgumentException e) {
-                                module.addMessage(true, e.getMessage());
+                                flow.insert(getMessageWidget(true, e.getMessage()), 0);
                             }
                         }
                     });
@@ -183,5 +187,13 @@ public class ReviewWidget extends Composite {
             credit.add(new InlineLabel(" "));
             credit.add(deleteAnchor);
         }
+    }
+
+    private HTML getMessageWidget(boolean error, String info) {
+        String type = error ? "alert-danger" : "alert-info";
+        HTML alert = new HTML("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">"
+                + "&times;</button>" + info);
+        alert.addStyleName(type + " alert fade in");
+        return alert;
     }
 }
