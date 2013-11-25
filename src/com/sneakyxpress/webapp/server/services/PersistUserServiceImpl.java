@@ -32,6 +32,10 @@ public class PersistUserServiceImpl extends RemoteServiceServlet implements
 	public boolean persistNewUserToDatastore(User user)
 			throws IllegalArgumentException
 	{
+        if (user.getId().contains("em")) {
+            throw new IllegalArgumentException("Error while logging into facebook. Please try again later.");
+        }
+
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		Query q = pm.newQuery("SELECT UNIQUE FROM " + User.class.getName()
