@@ -24,10 +24,9 @@ public class AdministrationTab extends AbstractNavbarTab {
 	public FlowPanel getContent()
 	{
 		FlowPanel admin = new FlowPanel();
+        admin.addStyleName("well");
 
-		HTMLPanel info = null;
-
-		info = new HTMLPanel(
+		HTMLPanel info = new HTMLPanel(
 				"<p class=\"lead pagination-centered\">Click on the Update Data button below to update to the latest food truck vendor data set.</p>");
 		admin.add(info);
 

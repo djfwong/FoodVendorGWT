@@ -52,6 +52,7 @@ public class ManageUsersTab extends AbstractNavbarTab {
 		
 		HTMLPanel info = new HTMLPanel(
 				"<p class=\"lead pagination-centered\">Select particular users to be removed from our database. Caution, their user data will also be deleted, so please proceed with caution.</p>");
+        info.addStyleName("well");
 		content.add(info);
 
 		PersistUserServiceAsync persistUserService = GWT

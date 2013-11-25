@@ -22,6 +22,7 @@ public class LogoutTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         FlowPanel logout = new FlowPanel();
+        logout.addStyleName("well");
 		HTMLPanel info = new HTMLPanel(
 				"<p class=\"lead pagination-centered\">Click to logout. See you soon!</p>");
 		logout.add(info);

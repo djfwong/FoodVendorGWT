@@ -60,6 +60,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 
 		info = new HTMLPanel(
 				"<p class=\"lead pagination-centered\">All submitted truck claims are shown in the table below. Click on any claim in the table to accept or reject it.</p>");
+        info.addStyleName("well");
 		claimsPanel.add(info);
 
 		claimsService.retrieveClaims(new AsyncCallback<List<TruckClaim>>() {

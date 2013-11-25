@@ -37,9 +37,8 @@ public class FavouritesTab extends AbstractNavbarTab {
     @Override
     public FlowPanel getContent() {
         final FlowPanel favourites = new FlowPanel();
-        favourites.addStyleName("well");
-        
-		HTMLPanel info = new HTMLPanel(
+
+		final HTMLPanel info = new HTMLPanel(
 				"<p class=\"lead pagination-centered\">All your favourite food vendors are listed below! You may also remove any of your saved favourites.</p>");
 		favourites.add(info);
         
@@ -61,9 +60,10 @@ public class FavouritesTab extends AbstractNavbarTab {
                             favourites.add(response);
                             favourites.addStyleName("well");
                         } else {
+                            info.addStyleName("well");
                             HTMLPanel header = new HTMLPanel("p", "You have " + result.size() + " favourites!");
-                            header.addStyleName("lead pagination-centered well");
-                            favourites.add(header);
+                            header.addStyleName("lead pagination-centered");
+                            info.add(header);
 
 
                             SimpleTable table = new SimpleTable("table-hover table-bordered",

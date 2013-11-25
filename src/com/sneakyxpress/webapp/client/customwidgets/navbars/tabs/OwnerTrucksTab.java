@@ -44,6 +44,7 @@ public class OwnerTrucksTab extends AbstractNavbarTab {
 	public FlowPanel getContent()
 	{
 		final FlowPanel trucks = new FlowPanel();
+        trucks.addStyleName("well");
 
 		HTMLPanel info = new HTMLPanel(
 				"<p class=\"lead pagination-centered\">Here are all your trucks! Add or edit any truck information you would like our users to see. Got an upcoming promotion? Now's the time to add it! You may also wish to delete a certain truck from your profile.</p>");
