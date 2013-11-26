@@ -17,7 +17,7 @@ import com.sneakyxpress.webapp.shared.TruckClaim;
 import com.sneakyxpress.webapp.shared.VerifiedVendor;
 
 public class ClaimServiceImpl extends RemoteServiceServlet implements
-		ClaimService {
+ClaimService {
 
 	/**
 	 * 
@@ -45,9 +45,17 @@ public class ClaimServiceImpl extends RemoteServiceServlet implements
 	public boolean acceptClaim(long id)
 	{
 		try
-		{
+		{			
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			TruckClaim tc = pm.getObjectById(TruckClaim.class, id);
+
+			if(searchVerifiedVendors(pm, tc.getFacebookId(), tc.getTruckId())!= null)
+			{		
+				tc.setViewed(true);
+				logger.log(Level.WARNING, "Truck has been claimed, can't accept claim");
+				return false;
+			}			
+
 			tc.setAccepted(true);
 			tc.setViewed(true);
 
@@ -98,18 +106,8 @@ public class ClaimServiceImpl extends RemoteServiceServlet implements
 	{
 		try
 		{
-			// Search for a particular verified ID with certain user id and
-			// truck id
-			Query q = pm.newQuery(VerifiedVendor.class);
-			q.setFilter("userId == :fbid && vendorId == :truckid");
+			List<VerifiedVendor> v = searchVerifiedVendors(pm, userId, truckId);
 
-			Map<String, String> paramValues = new HashMap<String, String>();
-			paramValues.put("fbid", userId);
-			paramValues.put("truckid", truckId);
-
-			@SuppressWarnings("unchecked")
-			List<VerifiedVendor> v = (List<VerifiedVendor>) q.executeWithMap(paramValues);
-			
 			// Should only be 1 entry for each combination of user and truck id
 			if (v.size() > 0)
 			{
@@ -125,6 +123,32 @@ public class ClaimServiceImpl extends RemoteServiceServlet implements
 					"removeFromVerifiedVendors: " + e.getMessage());
 			return false;
 		}
-
 	}
+
+	public List<VerifiedVendor> searchVerifiedVendors(PersistenceManager pm,
+			String userId, String truckId)
+			{
+		try
+		{
+			// Search for a particular verified ID with certain user id and
+			// truck id
+			Query q = pm.newQuery(VerifiedVendor.class);
+			q.setFilter("userId == :fbid && vendorId == :truckid");
+
+			Map<String, String> paramValues = new HashMap<String, String>();
+			paramValues.put("fbid", userId);
+			paramValues.put("truckid", truckId);
+
+			@SuppressWarnings("unchecked")
+			List<VerifiedVendor> v = (List<VerifiedVendor>) q
+			.executeWithMap(paramValues);
+
+			return v;
+		}
+		catch (Exception e)
+		{
+			logger.log(Level.SEVERE, e.getMessage());
+			return null;
+		}
+			}
 }
