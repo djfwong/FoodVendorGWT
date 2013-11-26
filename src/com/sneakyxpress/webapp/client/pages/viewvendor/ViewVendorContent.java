@@ -115,7 +115,8 @@ public class ViewVendorContent extends Content {
 
                     @Override
                     public void onClick(ClickEvent event) {
-                        FacebookTools.fbShare(GWT.getModuleBaseURL() + "&#35;profile&#63;" + vendor.getVendorId());
+                        FacebookTools.fbShare("Check out " + vendor.getName() + " (" + vendor.getDescription() + ")! See here: "
+                                + GWT.getModuleBaseURL() + "&#35;profile&#63;" + vendor.getVendorId());
                     }
 
                 });

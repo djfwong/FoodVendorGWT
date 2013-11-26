@@ -466,11 +466,9 @@ public class FacebookTools {
 		});
 	}
 
-	public static void fbShare(String url)
+	public static void fbShare(String message)
 	{
-        String message = "I liked a vendor on Vancouver Food Vendor Reviews!";
-		String fbURL = FACEBOOK_GRAPH_URL + "/me/feed?message=" + message + "&access_token=" + token
-                + "&link=" + url;
+		String fbURL = FACEBOOK_GRAPH_URL + "/me/feed?access_token=" + token + "&message=" + message;
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, fbURL);
 		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
 
@@ -484,7 +482,7 @@ public class FacebookTools {
 				{
 					logger.log(Level.INFO, response.getText());
                     if (response.getStatusCode() != 200) {
-                        module.addMessage(true, "Could not post to facebook! Please make sure you are logged in.");
+                        module.addMessage(true, "Could not post to facebook! Reason: " + response.getStatusText());
                     } else {
                         module.addMessage(false, "Successfully shared to facebook! Thank you.");
                     }
