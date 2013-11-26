@@ -51,7 +51,7 @@ public class ClaimServiceImpl extends RemoteServiceServlet implements
 
             boolean isTaken = false;
             for (TruckClaim c : results) {
-                if (c.getTruckId().equals(tc.getTruckId())) {
+                if (c.getTruckId().equals(tc.getTruckId()) && !c.getId().equals(id) && c.isAccepted()) {
                     isTaken = true;
                     break;
                 }
