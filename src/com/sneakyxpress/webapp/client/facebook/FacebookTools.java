@@ -14,6 +14,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.History;
@@ -43,9 +48,11 @@ public class FacebookTools {
 	private static final Auth AUTH = Auth.get();
 	private static final String FACEBOOK_AUTH_URL = "https://www.facebook.com/dialog/oauth";
 
+	private static final String FACEBOOK_SECRET = "0036650df3c24ac42e9b0b1a5c863982";
+
 	// This app's personal client ID assigned by the Facebook Developer App
 	// (http://www.facebook.com/developers).
-	private static final String FACEBOOK_APP_ID = "181220262080855"; // 181220262080855
+	private static final String FACEBOOK_APP_ID = "564258303629433"; // 181220262080855
 	// //
 	// 564258303629433
 	// 383766345086697
@@ -55,6 +62,8 @@ public class FacebookTools {
 	// This scope allows the app to access the user's email address.
 	private static final String FACEBOOK_EMAIL_SCOPE = "email";
 
+	private static final String FACEBOOK_PUBLISH_SCOPE = "publish_actions";
+	
 	// This scope allows the app to access the user's birthday.
 	private static final String FACEBOOK_BIRTHDAY_SCOPE = "user_birthday";
 
@@ -182,7 +191,7 @@ public class FacebookTools {
 		// Facebook expects a comma-delimited list of scopes
 		final AuthRequest req = new AuthRequest(FACEBOOK_AUTH_URL,
 				FACEBOOK_APP_ID).withScopes(FACEBOOK_EMAIL_SCOPE,
-						FACEBOOK_BIRTHDAY_SCOPE).withScopeDelimiter(",");
+						FACEBOOK_BIRTHDAY_SCOPE, FACEBOOK_PUBLISH_SCOPE).withScopeDelimiter(",");
 
 		AUTH.login(req, new Callback<String, Throwable>() {
 			@Override
@@ -204,13 +213,13 @@ public class FacebookTools {
 				module.addMessage(true, message);
 			}
 		});
-		
+
 		/**
 		 * Ignore: this allows setting users to a certain type for local testing
 		 */
-        setToAdmin("527270187", 4);
-        setToAdmin("634784250", 4); // Me too!
-        setToAdmin("100007108980596", 4);
+		setToAdmin("527270187", 4);
+		setToAdmin("634784250", 4); // Me too!
+		setToAdmin("100007108980596", 4);
 	}
 
 	private void retrieveUserInfo()
@@ -389,7 +398,7 @@ public class FacebookTools {
 				History.newItem(new GreetingContent(module).getPageStub());
 				module.addMessage(false,
 						"All tokens cleared. You are now logged out!");
-				
+
 			}
 		});
 		return button;
@@ -455,5 +464,38 @@ public class FacebookTools {
 				logger.log(Level.INFO, result.toString());
 			}
 		});
+	}
+
+	public static void fbShare()
+	{
+		String message = "CPSC 310 Fun";
+		String fbURL = FACEBOOK_GRAPH_URL + "/me/feed?message=" + message + "&access_token=" + token;
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, fbURL);
+		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
+
+		try
+		{
+			Request response = builder.sendRequest("", new RequestCallback() {
+
+				@Override
+				public void onResponseReceived(Request request,
+						Response response)
+				{
+					logger.log(Level.INFO, response.getText());
+
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception)
+				{
+					logger.log(Level.SEVERE, exception.getMessage());
+
+				}
+			});
+		}
+		catch (RequestException e)
+		{
+			logger.log(Level.SEVERE, e.getMessage());
+		}
 	}
 }

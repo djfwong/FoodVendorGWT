@@ -109,6 +109,20 @@ public class ViewVendorContent extends Content {
                 final HTMLPanel header = new HTMLPanel("h2", name + " ");
                 headerDiv.add(header);
 
+                Button fbShare = new Button("Share on Facebook");
+                fbShare.addStyleName("btn btn-primary");
+                fbShare.addClickHandler(new ClickHandler(){
+
+					@Override
+					public void onClick(ClickEvent event)
+					{							
+						FacebookTools.fbShare();
+						module.addMessage(false, "Message posted to Facebook!");
+					}
+                	
+                });
+                textInfo.add(getButtonWidget(fbShare));
+                
 				// Facebook Like and Share
 				textInfo.add(new Share(Window.Location.getHref()));
 
@@ -363,4 +377,12 @@ public class ViewVendorContent extends Content {
             return true;
         }
     }
+    
+	// Creates button with space in between panels
+	private HTMLPanel getButtonWidget(Button button)
+	{
+		HTMLPanel div = new HTMLPanel("<br>");
+		div.add(button);
+		return div;
+	}
 }
