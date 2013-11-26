@@ -52,10 +52,11 @@ public class FacebookTools {
 
 	// This app's personal client ID assigned by the Facebook Developer App
 	// (http://www.facebook.com/developers).
-	private static final String FACEBOOK_APP_ID = "181220262080855"; // 181220262080855
+	private static final String FACEBOOK_APP_ID = "219748354866124"; // 181220262080855 for local testing
 	// //
 	// 564258303629433
 	// 383766345086697
+    // 219748354866124 for reviews-webapp
 	// (Michael's)
 	// All available scopes are listed here:
 	// http://developers.facebook.com/docs/authentication/permissions/

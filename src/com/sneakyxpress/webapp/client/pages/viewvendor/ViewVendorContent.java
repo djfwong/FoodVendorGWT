@@ -123,7 +123,7 @@ public class ViewVendorContent extends Content {
                 textInfo.add(fbShare);
                 
 				// Facebook Like and Share
-				textInfo.add(new Share(Window.Location.getHref()));
+				//textInfo.add(new Share(Window.Location.getHref()));
 
 				textInfo.add(getInfoWidget("Description",
 						vendor.getDescription()));
