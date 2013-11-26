@@ -67,6 +67,20 @@ public class ReviewWidget extends Composite {
     private void addModifyButtons() {
         final FacebookTools facebook = module.FACEBOOK_TOOLS;
 
+        Anchor shareAnchor = new Anchor("[Share]");
+
+        shareAnchor.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                String message = f.getAuthorName() + " reviewing " + f.getVendorName() + ": "
+                        + f.getReview() + " (" + f.getRating() + " Stars)";
+                FacebookTools.fbShare(message);
+            }
+        });
+
+        credit.add(new InlineLabel(" "));
+        credit.add(shareAnchor);
+
         if (facebook.isLoggedIn() && f.getAuthorId().equals(facebook.getUserId())) {
             /*
              * Update functionality

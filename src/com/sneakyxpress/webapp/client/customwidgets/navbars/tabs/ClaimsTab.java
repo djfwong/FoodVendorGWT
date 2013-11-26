@@ -145,7 +145,7 @@ public class ClaimsTab extends AbstractNavbarTab {
 
                                 } else {
                                     module.addMessage(true,
-                                            "Error in accepting claim.");
+                                            "Error in accepting claim. Does it belong to another users?");
                                 }
                             }
 
