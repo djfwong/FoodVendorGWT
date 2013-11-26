@@ -126,7 +126,7 @@ public class FacebookTools {
     }
 
     public static void fbLike(String url) {
-        String fbURL = FACEBOOK_GRAPH_URL + "/me/?access_token=" + token + "&object=" + url;
+        String fbURL = FACEBOOK_GRAPH_URL + "/me/og.likes?access_token=" + token + "&object=" + url;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, fbURL);
         builder.setHeader("Content-type", "application/x-www-form-urlencoded");
 

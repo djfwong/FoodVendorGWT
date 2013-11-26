@@ -137,8 +137,8 @@ public class ViewVendorContent extends Content {
                 });
 
                 buttonGroup.add(fbLike);
-                buttonGroup.add(new HTML("<br>"));
                 textInfo.add(buttonGroup);
+                textInfo.add(new HTML("<br>"));
 
 				textInfo.add(getInfoWidget("Description",
 						vendor.getDescription()));
