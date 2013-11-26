@@ -116,11 +116,12 @@ public class ViewVendorContent extends Content {
                     @Override
                     public void onClick(ClickEvent event) {
                         FacebookTools.fbShare("Check out " + vendor.getName() + " (" + vendor.getDescription() + ")! See here: "
-                                + GWT.getHostPageBaseURL() + "%3Fprofile%26" + vendor.getVendorId());
+                                + GWT.getHostPageBaseURL() + "%23view%3F" + vendor.getVendorId());
                     }
 
                 });
                 textInfo.add(fbShare);
+                textInfo.add(new HTML("<br>"));
                 
 				// Facebook Like and Share
 				//textInfo.add(new Share(Window.Location.getHref()));
