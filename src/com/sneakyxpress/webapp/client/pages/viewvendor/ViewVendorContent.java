@@ -109,8 +109,12 @@ public class ViewVendorContent extends Content {
                 final HTMLPanel header = new HTMLPanel("h2", name + " ");
                 headerDiv.add(header);
 
+                HTMLPanel buttonGroup = new HTMLPanel("");
+                buttonGroup.addStyleName("btn-group");
+
+                // Facebook share
                 Button fbShare = new Button("Share on Facebook");
-                fbShare.addStyleName("btn btn-primary");
+                fbShare.addStyleName("btn btn-info");
                 fbShare.addClickHandler(new ClickHandler() {
 
                     @Override
@@ -120,11 +124,21 @@ public class ViewVendorContent extends Content {
                     }
 
                 });
-                textInfo.add(fbShare);
-                textInfo.add(new HTML("<br>"));
-                
-				// Facebook Like and Share
-				//textInfo.add(new Share(Window.Location.getHref()));
+                buttonGroup.add(fbShare);
+
+                // Facebook like
+                Button fbLike = new Button("Like on Facebook");
+                fbLike.addStyleName("btn btn-info");
+                fbLike.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        FacebookTools.fbLike(GWT.getHostPageBaseURL() + "%23view%3F" + vendor.getVendorId());
+                    }
+                });
+
+                buttonGroup.add(fbLike);
+                buttonGroup.add(new HTML("<br>"));
+                textInfo.add(buttonGroup);
 
 				textInfo.add(getInfoWidget("Description",
 						vendor.getDescription()));
