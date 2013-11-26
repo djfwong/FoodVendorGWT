@@ -483,7 +483,8 @@ public class FacebookTools {
 				{
 					logger.log(Level.INFO, response.getText());
                     if (response.getStatusCode() != 200) {
-                        module.addMessage(true, "Could not post to facebook! Reason: " + response.getStatusText());
+                        module.addMessage(true, "Could not post to facebook! Please ensure you are logged in and you have not previously shared this vendor.");
+                        logger.log(Level.SEVERE, "Error posting to facebook. " + response.getText());
                     } else {
                         module.addMessage(false, "Successfully shared to facebook! Thank you.");
                     }
