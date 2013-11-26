@@ -52,7 +52,7 @@ public class FacebookTools {
 
 	// This app's personal client ID assigned by the Facebook Developer App
 	// (http://www.facebook.com/developers).
-	private static final String FACEBOOK_APP_ID = "564258303629433"; // 181220262080855
+	private static final String FACEBOOK_APP_ID = "181220262080855"; // 181220262080855
 	// //
 	// 564258303629433
 	// 383766345086697
@@ -468,8 +468,9 @@ public class FacebookTools {
 
 	public static void fbShare(String url)
 	{
-		String message = "CPSC 310 Fun";
-		String fbURL = FACEBOOK_GRAPH_URL + "/me/feed?message=" + message + "&access_token=" + token;
+        String message = "I liked a vendor on Vancouver Food Vendor Reviews!";
+		String fbURL = FACEBOOK_GRAPH_URL + "/me/feed?message=" + message + "&access_token=" + token
+                + "&link=" + url;
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, fbURL);
 		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
 
@@ -482,6 +483,11 @@ public class FacebookTools {
 						Response response)
 				{
 					logger.log(Level.INFO, response.getText());
+                    if (response.getStatusCode() != 200) {
+                        module.addMessage(true, "Could not post to facebook! Please make sure you are logged in.");
+                    } else {
+                        module.addMessage(false, "Successfully shared to facebook! Thank you.");
+                    }
 
 				}
 
@@ -489,13 +495,14 @@ public class FacebookTools {
 				public void onError(Request request, Throwable exception)
 				{
 					logger.log(Level.SEVERE, exception.getMessage());
-
+                    module.addMessage(true, "Could not post to facebook. Reason: " + exception.getMessage());
 				}
 			});
 		}
 		catch (RequestException e)
 		{
 			logger.log(Level.SEVERE, e.getMessage());
+            module.addMessage(true, "Could not post to facebook. Reason: " + e.getMessage());
 		}
 	}
 }
