@@ -79,7 +79,7 @@ public class ViewVendorContent extends Content {
 			}
 
 			@Override
-			public void onSuccess(FoodVendor vendor) {
+			public void onSuccess(final FoodVendor vendor) {
                 ViewVendorContent.vendor = vendor;
 
                 // Mark this vendor as recently viewed
@@ -111,17 +111,16 @@ public class ViewVendorContent extends Content {
 
                 Button fbShare = new Button("Share on Facebook");
                 fbShare.addStyleName("btn btn-primary");
-                fbShare.addClickHandler(new ClickHandler(){
+                fbShare.addClickHandler(new ClickHandler() {
 
-					@Override
-					public void onClick(ClickEvent event)
-					{							
-						FacebookTools.fbShare();
-						module.addMessage(false, "Message posted to Facebook!");
-					}
-                	
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        FacebookTools.fbShare(GWT.getModuleBaseURL() + "&#35;profile&#63;" + vendor.getVendorId());
+                        module.addMessage(false, "Message posted to Facebook!");
+                    }
+
                 });
-                textInfo.add(getButtonWidget(fbShare));
+                textInfo.add(fbShare);
                 
 				// Facebook Like and Share
 				textInfo.add(new Share(Window.Location.getHref()));

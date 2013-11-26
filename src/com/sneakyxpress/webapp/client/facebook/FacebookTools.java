@@ -466,7 +466,7 @@ public class FacebookTools {
 		});
 	}
 
-	public static void fbShare()
+	public static void fbShare(String url)
 	{
 		String message = "CPSC 310 Fun";
 		String fbURL = FACEBOOK_GRAPH_URL + "/me/feed?message=" + message + "&access_token=" + token;
